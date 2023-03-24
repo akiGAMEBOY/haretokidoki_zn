@@ -22,8 +22,8 @@ https://haretokidoki-blog.com/pasocon_powershell-startup/
 サンプルプログラムのシナリオは、定期的（月／1回など）にMySQLのデータベースより集計データをCSVファイルで取得するという、シナリオを想定したツール。
 
 PowerShellでMySQLに接続する為にはMySQLバージョンに対応している「MySQL Connector/NET バージョン」を事前にインストールが必要。
-MySQLとMySQL Connector/NETの対応表（紐づけ表）については[こちらの記事](https://zenn.dev/haretokidoki/a29a84f3048cfb)をご参考ください。
-https://zenn.dev/haretokidoki/a29a84f3048cfb
+MySQLとMySQL Connector/NETの対応表（紐づけ表）については[こちらの記事](https://zenn.dev/haretokidoki/articles/a29a84f3048cfb)をご参考ください。
+https://zenn.dev/haretokidoki/articles/a29a84f3048cfb
 ### 事前準備
 #### MySQL Connector/NETのインストールとDLLのコピー
 MySQLのバージョンは`5.1`を想定し、MySQL Connector/NETは`6.8.7`をインストール。
