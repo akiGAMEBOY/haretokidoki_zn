@@ -26,26 +26,61 @@ MySQLとMySQL Connector/NETの対応表（紐づけ表）については[こち�
 https://zenn.dev/haretokidoki/articles/a29a84f3048cfb
 ### 事前準備
 #### MySQL Connector/NETのインストールとDLLのコピー
-MySQLのバージョンは`5.1`を想定し、MySQL Connector/NETは`6.8.7`をインストール。
-インストール後に`C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll`のDLLファイルを「PowerShell_mySQL-to-csv\source配下」にコピーする事で、
-サンプルプログラムではsource配下の`MySql.Data.dll`を参照しMySQLに接続している。
+MySQLのバージョンは`5.1`を想定し、MySQL Connector/NETは`6.8.7`をインストールした。
+インストール後に`C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll`のDLLファイルをプログラムの格納フォルダ[^1]にコピーし、コピー先の`MySql.Data.dll`[^2]を参照して接続する。
+[^1]: サンプルプログラムでは`PowerShell_mySQL-to-csv\source配下`
+[^2]: サンプルプログラムでは`PowerShell_mySQL-to-csv\source\MySql.Data.dll`
 
-MySQL Connector/NETのインストールフォルダを直接参照する場合は、
-```powershell:source配下を参照する場合
-[System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent
-[System.String]$dll_path = $current_dir + "\MySQL.Data.dll"                                                         # source配下
+コピー先の`MySql.Data.dll`ではなく、MySQL Connector/NETのインストールフォルダを直接参照する場合は、
+インストールしたMySQL Connector/NETのバージョンに合わせたパスの指定が必要。
+「C:\Program Files (x86)\MySQL\\**MySQL Connector Net X.X.X**\Assemblies\\**vX.X**\MySql.Data.dll」
+```diff powershell:Main.ps1
+ [System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent                                      # 他でも使用している為、削除しない
+-[System.String]$dll_path = $current_dir + "\MySQL.Data.dll"                                                            # コピー先
++[System.String]$dll_path = "C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll"     # インストール先
 ```
-から
-```powershell:インストールフォルダを参照する場合
-[System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent                                   # 他でも使用している為、残す
-[System.String]$dll_path = "C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll"  # インストールフォルダ
-```
-
 ### 仕様
+プログラム起動用：batファイルとプログラムの本体：ps1ファイル、個別の設定ファイル：setup.iniファイル、
+MySQL接続用DLLファイル：MySql.Data.dll、
+の4つで構成されたプログラム。
+
+なお、MySQLに接続する為の下記情報は設定ファイルにより変更可能とする。
+1. ホスト名、またはIPアドレス
+2. ポート番号
+3. ユーザ名
+4. パスワード
+5. データベース名
+6. SQL文
+
+```mermaid
+flowchart TB
+    A(("開始")) --- B["設定ファイル読み込み（検索文字列と検索範囲、ドライブレターの取得）"]
+    B --- C["CDトレイを自動でオープン（くり返し開始前）"]
+    C --- D(["くり返し開始"])
+    D --- E("CDトレイにCDメディアを手動で挿入（セット）")
+    E --- F("CDドライブの検証")
+    F --- G["ファイル形式（ファイル名と拡張子）の検証"]
+    G --- H["ファイル内の検証（文字列の有無を判定）"]
+    H --- I["CDトレイを自動でオープン（くり返し終了前）"]
+    I --- J{"処理結果を表示"}
+    J --> |"正常終了"| K(["くり返し終了"])
+    J --> |"異常終了"| M(("終了"))
+    K --- L{"くり返し確認"}
+    L --> |"Yes：繰り返す"| D
+    L --> |"No ：くり返し終了"| M
+```
 #### 画面仕様
 #### 機能仕様
 #### 入出力ファイル
 ##### 入力ファイル
+- PROD_ENV.SALES_JISSEKI（）
+
+| 項目名 | ORDER_NUM | SALES_DATE | CUSTOMER | UNITS | PRICE |
+| ---- | ---- | ---- | ---- | ---- | ---- |
+| 説明 | 注文番号 | 販売実績日 | 顧客名 | 販売台数 | 販売単価 |
+| 集計条件 |  | ＊ |  |  |  |
+
+
 ##### 出力ファイル
 ### GitHub
 #### フォルダ構成
