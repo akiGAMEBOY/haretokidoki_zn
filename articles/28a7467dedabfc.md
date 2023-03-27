@@ -3,7 +3,7 @@ title: "[PowerShell]MySQLのデータをCSVファイルで取得する方法 - D
 emoji: "🦾"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell", "mysql", "db", "csv"]
-published: false
+published: true
 ---
 ## 概要
 [こちらの記事](https://haretokidoki-blog.com/pasocon_powershell-startup/)で文字だけを表示するスクリプトを使い、
@@ -20,21 +20,25 @@ https://haretokidoki-blog.com/pasocon_powershell-startup/
 - 初心者でPowerShellスクリプト作成の参考にしたい方
 ## サンプルプログラムの紹介
 サンプルプログラムのシナリオは、定期的（月／1回など）にMySQLのデータベースより集計データをCSVファイルで取得するという、シナリオを想定したツール。
+### サンプルプログラム
+https://github.com/akiGAMEBOY/PowerShell_mysql-to-csv
 
 PowerShellでMySQLに接続する為にはMySQLバージョンに対応している「MySQL Connector/NET バージョン」を事前にインストールが必要。
 MySQLとMySQL Connector/NETの対応表（紐づけ表）については[こちらの記事](https://zenn.dev/haretokidoki/articles/a29a84f3048cfb)をご参考ください。
 https://zenn.dev/haretokidoki/articles/a29a84f3048cfb
-### 事前準備
-#### MySQL Connector/NETのインストールとDLLのコピー
-MySQLのバージョンは`5.1`を想定し、MySQL Connector/NETは`6.8.7`をインストールした。
-インストール後に`C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll`のDLLファイルをプログラムの格納フォルダ[^1]にコピーし、コピー先の`MySql.Data.dll`[^2]を参照して接続する。
+### MySQL Connector/NETのインストールとDLLのコピー
+接続先のデータベース、MySQLのバージョンは`5.1`を想定し、MySQL Connector/NETは`6.8.7`をインストールした。
+
+MySQL Connector/NETのインストール後に`C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll`のDLLファイルをプログラムの格納フォルダ[^1]にコピー。
+サンプルプログラムでは、このコピー先の`MySql.Data.dll`[^2]を参照してMySQLに接続する。
 [^1]: サンプルプログラムでは`PowerShell_mySQL-to-csv\source配下`
 [^2]: サンプルプログラムでは`PowerShell_mySQL-to-csv\source\MySql.Data.dll`
 
 コピー先の`MySql.Data.dll`ではなく、MySQL Connector/NETのインストールフォルダを直接参照する場合は、
-インストールしたMySQL Connector/NETのバージョンに合わせたパスの指定が必要。
-「C:\Program Files (x86)\MySQL\\**MySQL Connector Net X.X.X**\Assemblies\\**vX.X**\MySql.Data.dll」
-```diff powershell:Main.ps1
+インストールしたバージョンに合わせてパスの指定を変更する事が必要となる。
+- インストールフォルダの変化点（変化点を太文字で表記）
+C:\Program Files (x86)\MySQL\\**MySQL Connector Net X.X.X**\Assemblies\\**vX.X**\MySql.Data.dll
+```diff powershell:DLLの参照先をコピー先からインストールフォルダに変更する場合（ファイル名：Main.ps1）
  [System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent                                      # 他でも使用している為、削除しない
 -[System.String]$dll_path = $current_dir + "\MySQL.Data.dll"                                                            # コピー先
 +[System.String]$dll_path = "C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll"     # インストール先
@@ -54,23 +58,65 @@ MySQL接続用DLLファイル：MySql.Data.dll、
 
 ```mermaid
 flowchart TB
-    A(("開始")) --- B["初期設定"]
-    B --- C["入力処理（開始日付と終了日付を入力）"]
-    C --- D(["日付期間のチェック"])
-    D --- E("DB接続")
-    E --- F("データ取得")
+    A(["開始"]) --- B["初期設定"]
+    B --- C[/"入力処理（開始日付と終了日付を入力）"/]
+    C --- D{"日付のチェック"}
+    D --> |"Success"| E["DB接続"]
+    D --> |"Failure"| M[["処理中断"]]
+    subgraph "データ取得"
+    E --- F["データ取得"]
     F --- G["DB切断"]
-    G --- H["データ件数チェック"]
-    H --- I["ファイル有無"]
-    I --- J{"ファイルあり：★"}
-    J --> |"正常終了"| K(["くり返し終了"])
-    J --> |"異常終了"| M(("終了"))
-    K --- L{"くり返し確認"}
-    L --> |"Yes：繰り返す"| D
-    L --> |"No ：くり返し終了"| M
+    end
+    G --- H{"データの件数チェック"}
+    H --> |"データあり（1件以上）"| I["CSVファイル生成"]
+    H --> |"データなし（0件）"| M
+    M -->  N[/"処理結果を表示"/]
+    subgraph "CSVファイル出力"
+    I --- J{"保存先に同ファイル名の有無"}
+    J --> |"ファイルあり"| K[/"上書き保存"/]
+    J --> |"ファイルなし"| L[/"新規保存"/]
+    end
+    K --> N
+    L --> N
+    N --- O(["終了"])
 ```
 #### 画面仕様
+バッチファイル（batファイル）を使いPowerShellスクリプトを実行するので、
+画面操作はコマンドプロンプト上で行う。
+画面操作は表示された文字列に従ってキーボード入力する。
+入力操作は入力の応答待ちで指示された内容を入力する画面と、
+確認画面で一時停止している処理を「Enterキー」で続行する2種類の操作方法が主となる。
 #### 機能仕様
+1. 初期設定
+- MySQL接続用のDLL読み込み
+- ダウンロードフォルダのパスを取得
+- 設定ファイルの読み込み
+    1. ホスト名、またはIPアドレス
+    2. ポート番号
+    3. ユーザ名
+    4. パスワード
+    5. データベース名
+    6. SQL文
+2. 入力処理
+    1. 集計開始日付の入力
+    書式は[ yyyymmdd ]
+    2. 集計終了日付の入力
+    書式は[ yyyymmdd ]
+3. 日付チェック
+    1. 日付の書式チェック
+    下記の書式が正しいかチェック。
+        - 集計開始日付
+        - 集計終了日付
+    2. 日付の期間チェック
+    下記の関係性かチェック。
+        - 集計開始日付 <= 集計終了日付
+4. データ取得
+    MySQL接続用のDLL（MySQL Connector/NET）を使用し、MySQLのデータベースに接続。
+    接続後、SQL文を実行しデータを取得する。
+    なお、取得後のデータが0件の場合は処理を中断する。
+5. CSVファイル出力
+    ダウンロードフォルダ（C:¥Users¥`ユーザ名`\Downloads 等）の配下にファイル名「MySQL-to-csv_`集計開始日付`-`集計終了日付`.csv」で新規保存。
+    既にファイルが存在する場合は上書き保存する。
 #### 入出力ファイル
 ##### 入力ファイル
 - 販売実績テーブル（PROD_ENV.SALES_JISSEKI）
@@ -83,8 +129,9 @@ flowchart TB
 
 
 ##### 出力ファイル
-- CSVファイル（MySQL-to-csv_YYYYMMDD-YYYYMMDD.csv）
-保存先：ダウンロードフォルダー
+- CSVファイル（MySQL-to-csv_`YYYYMMDD`-`YYYYMMDD`.csv）
+保存先：ダウンロードフォルダー（C:¥Users¥`ユーザ名`\Downloads 等）
+
 | 注文番号 | 販売実績日 | 顧客名 | 販売台数 | 販売単価 |
 | ---- | ---- | ---- | ---- | ---- |
 | 入力1 | 入力2 | 入力3 | 入力4 | 入力5 |
