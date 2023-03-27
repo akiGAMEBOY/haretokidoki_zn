@@ -116,6 +116,7 @@ flowchart TB
     なお、取得後のデータが0件の場合は処理を中断する。
 5. CSVファイル出力
     ダウンロードフォルダ（C:¥Users¥`ユーザ名`\Downloads 等）の配下にファイル名「MySQL-to-csv_`集計開始日付`-`集計終了日付`.csv」で新規保存。
+    　
     既にファイルが存在する場合は上書き保存する。
 #### 入出力ファイル
 ##### 入力ファイル
@@ -136,5 +137,16 @@ flowchart TB
 | ---- | ---- | ---- | ---- | ---- |
 | 入力1 | 入力2 | 入力3 | 入力4 | 入力5 |
 ### GitHub
+https://github.com/akiGAMEBOY/PowerShell_mysql-to-csv
 #### フォルダ構成
+```
+PowerShell_mysql-to-csv
+│  mysql-to-csv.bat     ・・・起動用バッチファイル
+│
+└─source
+        Main.ps1        ・・・プログラム本体
+        MySql.Data.dll  ・・・MySQL接続用DLLファイル
+        setup.ini       ・・・設定ファイル
+```
 ### 参考記事
+https://zenn.dev/haretokidoki/articles/f1634c386ffc1d
