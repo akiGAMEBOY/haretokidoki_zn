@@ -140,6 +140,8 @@ https://github.com/akiGAMEBOY/PowerShell_mysql-to-csv
 ```
 PowerShell_mysql-to-csv
 │  mysql-to-csv.bat     ・・・起動用バッチファイル
+│  LICENSE.md
+│  README.md
 │
 └─source
         Main.ps1        ・・・プログラム本体
@@ -147,4 +149,7 @@ PowerShell_mysql-to-csv
         setup.ini       ・・・設定ファイル
 ```
 ### 参考記事
-https://zenn.dev/haretokidoki/articles/f1634c386ffc1d
+1. 流用元
+    https://zenn.dev/haretokidoki/articles/f1634c386ffc1d
+2. 使いやすいSQLクライアントツール（DBeaver）
+    https://wonwon-eater.com/dbeaver-review/
