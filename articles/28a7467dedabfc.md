@@ -149,7 +149,7 @@ PowerShell_mysql-to-csv
         setup.ini       ・・・設定ファイル
 ```
 ### 参考記事
-1. 流用元
+- 流用元
     https://zenn.dev/haretokidoki/articles/f1634c386ffc1d
-2. 使いやすいSQLクライアントツール（DBeaver）
+- 使いやすいSQLクライアントツール（DBeaver）
     https://wonwon-eater.com/dbeaver-review/
