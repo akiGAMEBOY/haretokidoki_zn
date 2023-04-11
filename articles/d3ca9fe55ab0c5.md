@@ -7,7 +7,7 @@ published: false
 ---
 ## 概要
 通常、nupkgファイルは直接参照する事はなく、IDE[^1]のMicrosoft Visual StudioのNuGet[^2]を介してアクセスされるファイル。
-[こちら](https://zenn.dev/haretokidoki/articles/cad8b141202136)の記事、PowerShellとiTextSharpを使い**PDFファイル内の文字列を検索し存否を判定するツール**でiTextSharpのnupkgファイルからDLLファイルのみ必要となりました。
+[こちら](https://zenn.dev/haretokidoki/articles/cad8b141202136)の記事、PowerShellとiTextSharpを使い**PDFファイル内の文字列を検索し存否を判定するツール**で[iTextSharpのnupkgファイル](https://www.nuget.org/packages/iTextSharp/5.5.13)からDLLファイルのみ必要となりました。
 [^1]: Integrated Development Environment 統合開発環境。
 [^2]: [NuGet](https://ja.wikipedia.org/wiki/NuGet)（ニューゲット）とは、.Net Frameworkに対応するパッケージマネージャー。
 
@@ -16,7 +16,7 @@ published: false
 ## ターゲット
 - nupkgファイル内にあるデータ（DLLファイル等）を取得したい方
 ## 対応方法
-nupkgファイルは特殊なファイルではなく、だだのZIP形式ファイルとなります。
+nupkgファイルは特殊な独自ファイルではなく、**だだのZIP形式ファイル**となります。
 下記の手順によりデータを取得（取り出し・抽出）が可能[^3]。
 ### 作業手順
 1. ファイルの拡張子を「.nupkg」から「.zip」に変更
