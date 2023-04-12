@@ -51,7 +51,7 @@ nupkgファイルは特殊な独自ファイルではなく、**だだのZIP形�
             .rels
     ```
 ## 関連記事
-- Windows 未登録の拡張子とソフトウェアを関連付ける（紐づける）方法
+- Windowsコマンドで拡張子とソフトを関連付ける（紐づける）方法
     https://zenn.dev/haretokidoki/articles/28e8e9430e7352
 - ファイルを開かずExcelやWord、PowerPoint内の画像データを取得する方法
     https://zenn.dev/haretokidoki/articles/d3ca9fe55ab0c5
