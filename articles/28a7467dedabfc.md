@@ -14,7 +14,7 @@ CSVファイルでダウンロードするという内容です。
 
 PowerShellの始め方（スタートアップ）としても、ご参考頂ければと思います。
 https://haretokidoki-blog.com/pasocon_powershell-startup/
-## ターゲット
+## この記事のターゲット
 - PowerShellユーザーの方
 - PowerShellでMySQLのデータをCSVファイルで収集したい方
 - 初心者でPowerShellスクリプト作成の参考にしたい方
