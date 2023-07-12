@@ -35,54 +35,52 @@ Oracle VM VirtualBox内の仮想、Windows 10 Pro 環境。
 ### IDE
 #### VS Code 本体
 ```powershell
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> code -v
+PS C:\XXXX> code -v
 1.80.0
 660393deaaa6d1996740ff4880f1bad43768c814
 x64
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> 
+PS C:\XXXX> 
 ```
 https://www.curict.com/item/00/007bbb1.html#:~:text=Visual%20Studio%20Codeのバージョン,オプションを使用します。
 #### VS Code 拡張機能
 ```powershell
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> code --list-extensions --show-versions
+PS C:\XXXX> code --list-extensions --show-versions
 GrapeCity.gc-excelviewer@4.2.57
 MS-CEINTL.vscode-language-pack-ja@1.80.2023070509
 ms-python.flake8@2023.6.0
 ms-python.isort@2023.10.0
 ms-python.python@2023.12.0
 ms-python.vscode-pylance@2023.7.10
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool>
+PS C:\XXXX>
 ```
 https://motamemo.com/vscode/vscode-tips/list-extensions-versions/
 ## [Python]バージョンを確認する方法
-下記の通り`python -V`、もしくは`--version`、`-VV`の引数（オプション）を指定することで、
+下記の通り`python -V`（もしくは`--version`、`-VV`）の引数（オプション）を指定することで、
 バージョンを確認可能。
 ```powershell:pythonバージョン確認コマンド
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> python -V
+PS C:\XXXX> python -V
 Python 3.10.5
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool>
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> python --version
+PS C:\XXXX>
+PS C:\XXXX> python --version
 Python 3.10.5
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool>
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> python -VV
+PS C:\XXXX>
+PS C:\XXXX> python -VV
 Python 3.10.5 (tags/v3.10.5:f377153, Jun  6 2022, 16:14:13) [MSC v.1929 64 bit (AMD64)]
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool>
+PS C:\XXXX>
 ```
-::::details コマンドを小文字のブイ（v）で間違えて実行した場合
-- 間違えると
-  大文字のブイ（V）で指定の`python -V`でバージョン確認しようとしたが、
-  間違えて`python -v`と小文字のブイ（v）で入力してしまうと、
-  Pythonのverbose（詳細）モードが起動する。
-
-  verboseモードでは、python環境が立ち上がり手動でプログラムの検証が可能となる。
+::::details 補足事項：間違えて小文字のブイ（v）を指定した場合
+- 間違えた場合はverbose（詳細）モードが起動
+    間違えて`python -v`と小文字のブイ（v）で入力してしまうと、
+    Pythonのverbose（詳細）モードが起動する。
+    
+    verboseモードでは、python環境が立ち上がり手動でプログラムの検証が可能となる。
 
 - 解決方法
-  **verboseモードを終了したい場合**、「`Ctrl` + `Z`」で“^Z”を入力し`Enter`キーを入力する事で、
-  終了できる。
+  **verboseモードを終了したい場合**、「`Ctrl` + `Z`」で“^Z”を入力し`Enter`キーを入力する事で終了できる。
 
-  :::details 実行例：vierboseモードの起動と終了
+  :::details 実行例：verboseモードの起動と終了
   ```powershell
-  PS C:\Users\Administrator\Documents\Git\python\PySampleTool> python -v 👈 間違えて小文字のブイ（v）で実行。
+  PS C:\XXXX> python -v 👈 間違えて小文字のブイ（v）で実行すると起動。
   import _frozen_importlib # frozen
   import _imp # builtin
   import '_thread' # <class '_frozen_importlib.BuiltinImporter'>
@@ -275,14 +273,14 @@ PS C:\Users\Administrator\Documents\Git\python\PySampleTool>
   # destroy builtins
   # destroy _multibytecodec
   # clear sys.audit hooks
-  PS C:\Users\Administrator\Documents\Git\python\PySampleTool>
+  PS C:\XXXX>
   ```
   :::
 ::::
-## [pip]インストール済みのパッケージ一覧を確認する方法
+## [pip]インストール済みの全パッケージを一覧で確認する方法
 パッケージ管理システム「pip」では、`pip list`でインストール済みのパッケージ一覧を表示可能。
-```powershell:インストール済みのパッケージ一覧コマンド
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> pip list
+```powershell:インストール済みの全パッケージを一覧表示するコマンド
+PS C:\XXXX> pip list
 Package                   Version
 ------------------------- ---------
 altgraph                  0.17.3
@@ -349,156 +347,41 @@ urllib3                   1.26.14
 
 [notice] A new release of pip is available: 23.0 -> 23.1.2
 [notice] To update, run: python.exe -m pip install --upgrade pip
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool>
+PS C:\XXXX>
 ```
 
-## [pip]更新があるパッケージのみ一括アップデートする方法
+## [pip]更新可能なパッケージのみ一括アップデートする方法
 ### pipで更新があるパッケージを確認する方法
-`pip list --uptodate`（もしくは`pip list -o`）でインストール済みのパッケージ内で、
+`pip list -o`（もしくは`pip list --outdated`）でインストール済みのパッケージ内で、
 更新があるパッケージを一覧表示する。
-★あやしい。たぶんオプションが違う。
-```powershell:更新があるパッケージの一覧表示コマンド
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> pip list -uptodate
-Package         Version
---------------- --------
-altgraph        0.17.3
-arrow           1.2.3
-binaryornot     0.4.4
-chardet         5.1.0
-colorama        0.4.6
-et-xmlfile      1.1.0
-flake8          6.0.0
-future          0.18.3
-idna            3.4
-Jinja2          3.1.2
-jinja2-time     0.2.0
-mccabe          0.7.0
-MouseInfo       0.1.3
-mypy-extensions 1.0.0
-pefile          2023.2.7
-pip-review      1.3.0
-pycodestyle     2.10.0
-pyflakes        3.0.1
-PyGetWindow     0.0.9
-PyMsgBox        1.0.9
-pyperclip       1.8.2
-PyRect          0.2.0
-pysmb           1.2.9.1
-python-dateutil 2.8.2
-PyYAML          6.0
-six             1.16.0
-text-unidecode  1.3
-tkcalendar      1.6.1
-tkinterdnd2     0.3.0
-toml            0.10.2
-tomli           2.0.1
-ttkthemes       3.2.2
-
-[notice] A new release of pip is available: 23.0 -> 23.1.2
-[notice] To update, run: python.exe -m pip install --upgrade pip
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> 
+```powershell:更新可能なパッケージの一覧表示コマンド
+PS C:\XXXX> pip list -o
 ```
-:::details 更新がない場合の結果
-```powershell
-PS C:\Users\Administrator\Documents\Git\python\PyBulkCopyTool> pip list --uptodate
-Package                   Version
-------------------------- --------
-altgraph                  0.17.3
-arrow                     1.2.3
-autopep8                  2.0.2
-Babel                     2.12.1
-binaryornot               0.4.4
-cachetools                5.3.1
-certifi                   2023.5.7
-chardet                   5.1.0
-charset-normalizer        3.2.0
-click                     8.1.4
-colorama                  0.4.6
-cookiecutter              2.2.3
-EasyProcess               1.1
-entrypoint2               1.1
-et-xmlfile                1.1.0
-flake8                    6.0.0
-future                    0.18.3
-idna                      3.4
-Jinja2                    3.1.2
-jinja2-time               0.2.0
-lxml                      4.9.3
-MarkupSafe                2.1.3
-mccabe                    0.7.0
-MouseInfo                 0.1.3
-mss                       9.0.1
-mypy                      1.4.1
-mypy-extensions           1.0.0
-numpy                     1.25.1
-openpyxl                  3.1.2
-packaging                 23.1
-pandas                    2.0.3
-pefile                    2023.2.7
-Pillow                    10.0.0
-pip                       23.1.2
-pip-review                1.3.0
-pyasn1                    0.5.0
-PyAutoGUI                 0.9.54
-pycodestyle               2.10.0
-pycryptodome              3.18.0
-pyflakes                  3.0.1
-PyGetWindow               0.0.9
-pyinstaller               5.13.0
-pyinstaller-hooks-contrib 2023.5
-PyMsgBox                  1.0.9
-pyperclip                 1.8.2
-PyRect                    0.2.0
-pyscreenshot              3.1
-PyScreeze                 0.1.29
-pysmb                     1.2.9.1
-python-dateutil           2.8.2
-python-slugify            8.0.1
-pytweening                1.0.7
-pytz                      2023.3
-pywin32-ctypes            0.2.2
-PyYAML                    6.0
-requests                  2.31.0
-setuptools                68.0.0
-six                       1.16.0
-text-unidecode            1.3
-tkcalendar                1.6.1
-tkinterdnd2               0.3.0
-toml                      0.10.2
-tomli                     2.0.1
-tqdm                      4.65.0
-ttkthemes                 3.2.2
-typing_extensions         4.7.1
-tzdata                    2023.3
-urllib3                   2.0.3
-PS C:\Users\Administrator\Documents\Git\python\PyBulkCopyTool> 
-```
-:::
-### pip-reviewで一括アップデート
-pip支援パッケージ「pip-review」で更新があるパッケージを一括でアップデートする事が可能。
-なお、pip-reviewコマンドでは下記の2種類の方法を選択できる。
-- パッケージを選択しアップデートする方法
+### pip-reviewコマンドで一括アップデート
+pip支援パッケージ「pip-review」により更新可能なパッケージを一括してアップデート可能。
+なお、pip-reviewコマンドでは下記の2種類の方法でアップデートできる。
 - すべてのパッケージを一括してアップデートする方法
+- 更新有無をパッケージごとに選択しアップデートする方法
 
-:::details pip-reviewをまだインストールしていない場合
-pipにて`pip-review`をインストール。
+:::details pip-reviewをインストールする方法
+pip-reviewをインストールしていない場合、pipにて`pip-review`を導入。
 ```powershell
-> pip install pip-review
+PS C:\XXXX> pip install pip-review
 ```
 :::
 
-#### オプション「--auto」ですべてのパッケージをアップデート
+#### オプション「--auto」で更新可能なパッケージすべてをアップデート
 ```powershell:すべてのパッケージのアップデートコマンド
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> pip-review --auto
+PS C:\XXXX> pip-review --auto
 ```
 :::details アップデートが無かった場合の表示
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> pip-review --auto                                                                   
+PS C:\XXXX> pip-review --auto                                                                   
 Everything up-to-date
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> 
+PS C:\XXXX> 
 :::
-#### オプション「--interactive」でパッケージを選択しアップデート
+#### オプション「--interactive」でパッケージごとに更新有無を選択しアップデート
 ```powershell:パッケージを選択するアップデートコマンド
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> pip-review --interactive
+PS C:\XXXX> pip-review --interactive
 autopep8==2.0.2 is available (you have 2.0.1)
 Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit y
 Babel==2.12.1 is available (you have 2.11.0)
@@ -850,11 +733,11 @@ can be found at https://github.com/pypa/pip/issues/8559
       Successfully uninstalled cookiecutter-2.1.1
       Successfully uninstalled PyAutoGUI-0.9.53
 Successfully installed Babel-2.12.1 EasyProcess-1.1 MarkupSafe-2.1.3 Pillow-10.0.0 PyAutoGUI-0.9.54 PyScreeze-0.1.29 autopep8-2.0.2 cachetools-5.3.1 certifi-2023.5.7 charset-normalizer-3.2.0 click-8.1.4 cookiecutter-2.2.3 entrypoint2-1.1 lxml-4.9.3 mss-9.0.1 mypy-1.4.1 numpy-1.25.1 openpyxl-3.1.2 packaging-23.1 pandas-2.0.3 pip-23.1.2 pyasn1-0.5.0 pycryptodome-3.18.0 pyinstaller-5.13.0 pyinstaller-hooks-contrib-2023.5 pyscreenshot-3.1 python-slugify-8.0.1 pytweening-1.0.7 pytz-2023.3 pywin32-ctypes-0.2.2 requests-2.31.0 setuptools-68.0.0 tqdm-4.65.0 typing_extensions-4.7.1 tzdata-2023.3 urllib3-2.0.3
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool>
+PS C:\XXXX>
 ```
 :::details アップデートが完了した事を確認
 ```powershell:更新後のパッケージ一覧
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool> pip list
+PS C:\XXXX> pip list
 Package                   Version
 ------------------------- --------
 altgraph                  0.17.3
@@ -924,13 +807,10 @@ ttkthemes                 3.2.2
 typing_extensions         4.7.1
 tzdata                    2023.3
 urllib3                   2.0.3
-PS C:\Users\Administrator\Documents\Git\python\PySampleTool>
+PS C:\XXXX>
 ```
 :::
-### 備考：pip-reviewで自動更新を設定する事も可能
-pip-reviewコマンドでオプション「--auto」
-```powershell
-```
+
 ## 参考情報
 https://python.softmoco.com/devenv/how-to-check-python-version-windows.php#:~:text=コマンドプロンプトで%20python%20--,することができます。
 https://magazine.techacademy.jp/magazine/46571
