@@ -1,8 +1,8 @@
 ---
-title: "Pythonとパッケージ（pip）のバージョン確認と一括アップデートする方法"
-emoji: "🎉"
+title: "Pythonとpipパッケージのバージョン確認 & 一括アップデート方法"
+emoji: "🐍"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: []
+topics: ["python", "pip"]
 published: false
 ---
 ## 環境
@@ -23,7 +23,7 @@ Oracle VM VirtualBox内の仮想、Windows 10 Pro 環境。
   | プロセッサー数<br>（仮想環境に割り当てるコア数） | 2 コア |
   | メモリー<br>（仮想環境に割り当てているメモリーサイズ） | 4 GB |
 
-:::details 参考情報: VirtualBoxで設定できるCPUの最大値と物理CPU コア数（もしくはスレッド数）と異なっている
+:::details 参考情報：VirtualBoxで設定可能なプロセッサー最大値 と 物理CPUのコア数（もしくはスレッド数）と差異あり
 [こちら](https://superuser.com/questions/540407/why-does-virtualbox-show-more-cpus-than-available)の情報を参考にするとVirtualBoxの`Processor`の設定値は、
 多くとも物理CPUの `スレッド数 - 1`（スレッド数が4の場合は、3が最大値） にしないといけない。
 仮に物理CPUのスレッド数以上で設定してしまうと、ホストOSの挙動がおかしくなる可能性ありとの事。
@@ -273,13 +273,13 @@ PS C:\XXXX>
   # destroy builtins
   # destroy _multibytecodec
   # clear sys.audit hooks
-  PS C:\XXXX>
+  PS C:\XXXX> 👈 通常のプロンプトに戻った
   ```
   :::
 ::::
 ## [pip]インストール済みの全パッケージを一覧で確認する方法
 パッケージ管理システム「pip」では、`pip list`でインストール済みのパッケージ一覧を表示可能。
-```powershell:インストール済みの全パッケージを一覧表示するコマンド
+```powershell:インストール済みの全パッケージを一覧表示するコマンド（更新前）
 PS C:\XXXX> pip list
 Package                   Version
 ------------------------- ---------
@@ -351,465 +351,591 @@ PS C:\XXXX>
 ```
 
 ## [pip]更新可能なパッケージのみ一括アップデートする方法
-### pipで更新があるパッケージを確認する方法
-`pip list -o`（もしくは`pip list --outdated`）でインストール済みのパッケージ内で、
-更新があるパッケージを一覧表示する。
-```powershell:更新可能なパッケージの一覧表示コマンド
-PS C:\XXXX> pip list -o
-```
-### pip-reviewコマンドで一括アップデート
-pip支援パッケージ「pip-review」により更新可能なパッケージを一括してアップデート可能。
-なお、pip-reviewコマンドでは下記の2種類の方法でアップデートできる。
-- すべてのパッケージを一括してアップデートする方法
-- 更新有無をパッケージごとに選択しアップデートする方法
+1. pipで更新可能なパッケージを確認
+    `pip list -o`（もしくは`--outdated`）でインストール済みのパッケージ内で、
+    更新があるパッケージを一覧表示する。
+    ```powershell:更新可能なパッケージの一覧表示コマンド
+    PS C:\XXXX> pip list -o
+    ```
+    :::details 補足情報：最新に更新済みのパッケージのみ確認する場合
+    `pip list -u`（もしくは`--uptodate`）でインストール済みのパッケージ内で、
+    更新済みのパッケージのみ（更新可能なパッケージは非表示）一覧表示する。
+    ```powershell
+    PS C:\XXXX> pip list -u
+    ```
+    :::
+1. pip-reviewコマンドで一括アップデート
+    pip支援パッケージ「pip-review」により更新可能なパッケージを一括してアップデート可能。
+    なお、pip-reviewコマンドでは下記の2種類の方法でアップデートできる。
+    - すべてのパッケージを一括してアップデートする方法
+    - パッケージごとに更新有無を選択しアップデートする方法
 
-:::details pip-reviewをインストールする方法
-pip-reviewをインストールしていない場合、pipにて`pip-review`を導入。
-```powershell
-PS C:\XXXX> pip install pip-review
-```
-:::
+    :::details 参考情報：pip-reviewをインストールしていない場合
+    インストールしていない場合、pipコマンドで`pip-review`を導入する。
+    ```powershell
+    PS C:\XXXX> pip install pip-review
+    ```
+    :::
+    - オプション「--auto」で**すべてをアップデート**する場合
+        ```powershell:すべてのパッケージのアップデートコマンド
+        PS C:\XXXX> pip-review --auto
+        ```
+        :::details 参考情報：アップデートが無かった場合の表示
+        ```powershell
+        PS C:\XXXX> pip-review --auto                                                                   
+        Everything up-to-date
+        PS C:\XXXX> 
+        ```
+        :::
+    - オプション「--interactive」で**パッケージごとに更新有無を選択**する場合
+        ```powershell:パッケージごとに更新有無を選択するアップデートコマンド - 省略あり
+        PS C:\XXXX> pip-review --interactive
+        autopep8==2.0.2 is available (you have 2.0.1)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit y
+        Babel==2.12.1 is available (you have 2.11.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        cachetools==5.3.1 is available (you have 5.3.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        certifi==2023.5.7 is available (you have 2022.12.7)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        charset-normalizer==3.2.0 is available (you have 3.0.1)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        click==8.1.4 is available (you have 8.1.3)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        
+        ～ 省略 ～
 
-#### オプション「--auto」で更新可能なパッケージすべてをアップデート
-```powershell:すべてのパッケージのアップデートコマンド
-PS C:\XXXX> pip-review --auto
-```
-:::details アップデートが無かった場合の表示
-PS C:\XXXX> pip-review --auto                                                                   
-Everything up-to-date
-PS C:\XXXX> 
-:::
-#### オプション「--interactive」でパッケージごとに更新有無を選択しアップデート
-```powershell:パッケージを選択するアップデートコマンド
-PS C:\XXXX> pip-review --interactive
-autopep8==2.0.2 is available (you have 2.0.1)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit y
-Babel==2.12.1 is available (you have 2.11.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-cachetools==5.3.1 is available (you have 5.3.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-certifi==2023.5.7 is available (you have 2022.12.7)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-charset-normalizer==3.2.0 is available (you have 3.0.1)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-click==8.1.4 is available (you have 8.1.3)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-cookiecutter==2.2.3 is available (you have 2.1.1)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-lxml==4.9.3 is available (you have 4.9.2)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-MarkupSafe==2.1.3 is available (you have 2.1.2)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-mypy==1.4.1 is available (you have 1.0.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-numpy==1.25.1 is available (you have 1.24.2)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-openpyxl==3.1.2 is available (you have 3.1.1)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-packaging==23.1 is available (you have 23.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-pandas==2.0.3 is available (you have 1.5.3)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-Pillow==10.0.0 is available (you have 9.4.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-pip==23.1.2 is available (you have 23.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-pyasn1==0.5.0 is available (you have 0.4.8)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-PyAutoGUI==0.9.54 is available (you have 0.9.53)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-pycryptodome==3.18.0 is available (you have 3.17)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-pyinstaller==5.13.0 is available (you have 5.8.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-pyinstaller-hooks-contrib==2023.5 is available (you have 2023.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-PyScreeze==0.1.29 is available (you have 0.1.28)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-python-slugify==8.0.1 is available (you have 8.0.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-pytweening==1.0.7 is available (you have 1.0.4)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-pytz==2023.3 is available (you have 2022.7.1)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-pywin32-ctypes==0.2.2 is available (you have 0.2.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-requests==2.31.0 is available (you have 2.28.2)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-setuptools==68.0.0 is available (you have 67.3.2)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-tqdm==4.65.0 is available (you have 4.64.1)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-typing_extensions==4.7.1 is available (you have 4.5.0)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-urllib3==2.0.3 is available (you have 1.26.14)
-Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
-Requirement already satisfied: autopep8 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.0.1)
-Collecting autopep8
-  Downloading autopep8-2.0.2-py2.py3-none-any.whl (45 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.2/45.2 kB 554.3 kB/s eta 0:00:00
-Requirement already satisfied: Babel in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.11.0)
-Collecting Babel
-  Downloading Babel-2.12.1-py3-none-any.whl (10.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.1/10.1 MB 7.4 MB/s eta 0:00:00
-Requirement already satisfied: cachetools in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (5.3.0)
-Collecting cachetools
-  Downloading cachetools-5.3.1-py3-none-any.whl (9.3 kB)
-Requirement already satisfied: certifi in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2022.12.7)
-Collecting certifi
-  Downloading certifi-2023.5.7-py3-none-any.whl (156 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 157.0/157.0 kB 3.1 MB/s eta 0:00:00
-Requirement already satisfied: charset-normalizer in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (3.0.1)
-Collecting charset-normalizer
-  Downloading charset_normalizer-3.2.0-cp310-cp310-win_amd64.whl (96 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 96.9/96.9 kB 2.7 MB/s eta 0:00:00
-Requirement already satisfied: click in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (8.1.3)
-Collecting click
-  Downloading click-8.1.4-py3-none-any.whl (98 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.2/98.2 kB 5.5 MB/s eta 0:00:00
-Requirement already satisfied: cookiecutter in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.1.1)
-Collecting cookiecutter
-  Downloading cookiecutter-2.2.3-py3-none-any.whl (39 kB)
-Requirement already satisfied: lxml in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (4.9.2)
-Collecting lxml
-  Downloading lxml-4.9.3-cp310-cp310-win_amd64.whl (3.8 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 7.8 MB/s eta 0:00:00
-Requirement already satisfied: MarkupSafe in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.1.2)
-Collecting MarkupSafe
-  Downloading MarkupSafe-2.1.3-cp310-cp310-win_amd64.whl (17 kB)
-Requirement already satisfied: mypy in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.0.0)
-Collecting mypy
-  Downloading mypy-1.4.1-cp310-cp310-win_amd64.whl (8.8 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.8/8.8 MB 7.6 MB/s eta 0:00:00
-Requirement already satisfied: numpy in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.24.2)
-Collecting numpy
-  Downloading numpy-1.25.1-cp310-cp310-win_amd64.whl (15.0 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.0/15.0 MB 4.6 MB/s eta 0:00:00
-Requirement already satisfied: openpyxl in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (3.1.1)
-Collecting openpyxl
-  Downloading openpyxl-3.1.2-py2.py3-none-any.whl (249 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 250.0/250.0 kB 16.0 MB/s eta 0:00:00
-Requirement already satisfied: packaging in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (23.0)
-Collecting packaging
-  Downloading packaging-23.1-py3-none-any.whl (48 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.9/48.9 kB 2.6 MB/s eta 0:00:00
-Requirement already satisfied: pandas in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.5.3)
-Collecting pandas
-  Downloading pandas-2.0.3-cp310-cp310-win_amd64.whl (10.7 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.7/10.7 MB 5.6 MB/s eta 0:00:00
-Requirement already satisfied: Pillow in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (9.4.0)
-Collecting Pillow
-  Downloading Pillow-10.0.0-cp310-cp310-win_amd64.whl (2.5 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.5/2.5 MB 3.5 MB/s eta 0:00:00
-Requirement already satisfied: pip in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (23.0)
-Collecting pip
-  Downloading pip-23.1.2-py3-none-any.whl (2.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 8.2 MB/s eta 0:00:00
-Requirement already satisfied: pyasn1 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (0.4.8)
-Collecting pyasn1
-  Downloading pyasn1-0.5.0-py2.py3-none-any.whl (83 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 83.9/83.9 kB 4.6 MB/s eta 0:00:00
-Requirement already satisfied: PyAutoGUI in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (0.9.53)
-Collecting PyAutoGUI
-  Downloading PyAutoGUI-0.9.54.tar.gz (61 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.2/61.2 kB 1.6 MB/s eta 0:00:00
-  Installing build dependencies ... done
-  Getting requirements to build wheel ... done
-  Preparing metadata (pyproject.toml) ... done
-Requirement already satisfied: pycryptodome in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (3.17)
-Collecting pycryptodome
-  Downloading pycryptodome-3.18.0-cp35-abi3-win_amd64.whl (1.7 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 9.2 MB/s eta 0:00:00
-Requirement already satisfied: pyinstaller in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (5.8.0)
-Collecting pyinstaller
-  Downloading pyinstaller-5.13.0-py3-none-win_amd64.whl (1.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 7.3 MB/s eta 0:00:00
-Requirement already satisfied: pyinstaller-hooks-contrib in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2023.0)
-Collecting pyinstaller-hooks-contrib
-  Downloading pyinstaller_hooks_contrib-2023.5-py2.py3-none-any.whl (273 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 273.1/273.1 kB 5.6 MB/s eta 0:00:00
-Requirement already satisfied: PyScreeze in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (0.1.28)
-Collecting PyScreeze
-  Downloading PyScreeze-0.1.29.tar.gz (25 kB)
-  Installing build dependencies ... done
-  Getting requirements to build wheel ... done
-  Preparing metadata (pyproject.toml) ... done
-Requirement already satisfied: python-slugify in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (8.0.0)
-Collecting python-slugify
-  Downloading python_slugify-8.0.1-py2.py3-none-any.whl (9.7 kB)
-Requirement already satisfied: pytweening in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.0.4)
-Collecting pytweening
-  Downloading pytweening-1.0.7.tar.gz (168 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.2/168.2 kB 4.9 MB/s eta 0:00:00
-  Preparing metadata (setup.py) ... done
-Requirement already satisfied: pytz in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2022.7.1)
-Collecting pytz
-  Downloading pytz-2023.3-py2.py3-none-any.whl (502 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 502.3/502.3 kB 4.5 MB/s eta 0:00:00
-Requirement already satisfied: pywin32-ctypes in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (0.2.0)
-Collecting pywin32-ctypes
-  Downloading pywin32_ctypes-0.2.2-py3-none-any.whl (30 kB)
-Requirement already satisfied: requests in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.28.2)
-Collecting requests
-  Downloading requests-2.31.0-py3-none-any.whl (62 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.6/62.6 kB 1.6 MB/s eta 0:00:00
-Requirement already satisfied: setuptools in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (67.3.2)
-Collecting setuptools
-  Using cached setuptools-68.0.0-py3-none-any.whl (804 kB)
-Requirement already satisfied: tqdm in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (4.64.1)
-Collecting tqdm
-  Downloading tqdm-4.65.0-py3-none-any.whl (77 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 77.1/77.1 kB 4.5 MB/s eta 0:00:00
-Requirement already satisfied: typing_extensions in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (4.5.0)
-Collecting typing_extensions
-  Downloading typing_extensions-4.7.1-py3-none-any.whl (33 kB)
-Requirement already satisfied: urllib3 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.26.14)
-Collecting urllib3
-  Downloading urllib3-2.0.3-py3-none-any.whl (123 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 123.6/123.6 kB 3.7 MB/s eta 0:00:00
-Requirement already satisfied: tomli in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from autopep8) (2.0.1)
-Requirement already satisfied: pycodestyle>=2.10.0 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from autopep8) (2.10.0)
-Requirement already satisfied: colorama in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from click) (0.4.6)
-Requirement already satisfied: arrow in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from cookiecutter) (1.2.3)
-Requirement already satisfied: pyyaml>=5.3.1 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from cookiecutter) (6.0)
-Requirement already satisfied: Jinja2<4.0.0,>=2.7 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from cookiecutter) (3.1.2)
-Requirement already satisfied: binaryornot>=0.4.4 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from cookiecutter) (0.4.4)
-Requirement already satisfied: mypy-extensions>=1.0.0 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from mypy) (1.0.0)
-Requirement already satisfied: et-xmlfile in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from openpyxl) (1.1.0)
-Requirement already satisfied: python-dateutil>=2.8.2 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pandas) (2.8.2)
-Collecting tzdata>=2022.1
-  Downloading tzdata-2023.3-py2.py3-none-any.whl (341 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 341.8/341.8 kB 10.7 MB/s eta 0:00:00
-Requirement already satisfied: pygetwindow>=0.0.5 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from PyAutoGUI) (0.0.9)
-Requirement already satisfied: pymsgbox in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from PyAutoGUI) (1.0.9)
-Requirement already satisfied: mouseinfo in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from PyAutoGUI) (0.1.3)
-Requirement already satisfied: altgraph in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pyinstaller) (0.17.3)
-Requirement already satisfied: pefile>=2022.5.30 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pyinstaller) (2023.2.7)
-Collecting pyscreenshot
-  Downloading pyscreenshot-3.1-py3-none-any.whl (28 kB)
-Requirement already satisfied: text-unidecode>=1.3 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from python-slugify) (1.3)
-Requirement already satisfied: idna<4,>=2.5 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from requests) (3.4)
-Requirement already satisfied: chardet>=3.0.2 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from binaryornot>=0.4.4->cookiecutter) (5.1.0)
-Requirement already satisfied: pyrect in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pygetwindow>=0.0.5->PyAutoGUI) (0.2.0)
-Requirement already satisfied: six>=1.5 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from python-dateutil>=2.8.2->pandas) (1.16.0)
-Requirement already satisfied: pyperclip in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from mouseinfo->PyAutoGUI) (1.8.2)
-Collecting mss
-  Downloading mss-9.0.1-py3-none-any.whl (22 kB)
-Collecting entrypoint2
-  Downloading entrypoint2-1.1-py2.py3-none-any.whl (9.9 kB)
-Collecting EasyProcess
-  Downloading EasyProcess-1.1-py3-none-any.whl (8.7 kB)
-Building wheels for collected packages: PyAutoGUI, PyScreeze
-  Building wheel for PyAutoGUI (pyproject.toml) ... done
-  Created wheel for PyAutoGUI: filename=PyAutoGUI-0.9.54-py3-none-any.whl size=37601 sha256=cc5057c3905bdeafe8485347005d969b7ff6cf98f70c31141ef03df8b94047bc
-  Stored in directory: c:\users\administrator\appdata\local\pip\cache\wheels\23\a7\1c\5a51aaff3bbe110be4ddf766d429cc9d2fae7a72fc1b843e56
-  Building wheel for PyScreeze (pyproject.toml) ... done
-  Created wheel for PyScreeze: filename=PyScreeze-0.1.29-py3-none-any.whl size=13485 sha256=cde2baab75fd783a396cc512b1599a89cf58c583e981925483b3f12565df168c
-  Stored in directory: c:\users\administrator\appdata\local\pip\cache\wheels\43\aa\46\e91ba85339451aeec47733e4038d7ed73c0b4b633c6270a2ba
-Successfully built PyAutoGUI PyScreeze
-Installing collected packages: pytz, pytweening, entrypoint2, EasyProcess, urllib3, tzdata, typing_extensions, tqdm, setuptools, pywin32-ctypes, python-slugify, pyinstaller-hooks-contrib, pycryptodome, pyasn1, pip, Pillow, packaging, openpyxl, numpy, mss, MarkupSafe, lxml, click, charset-normalizer, certifi, cachetools, Babel, autopep8, requests, pyscreenshot, pyinstaller, pandas, mypy, PyScreeze, cookiecutter, PyAutoGUI
-  Attempting uninstall: pytz
-    Found existing installation: pytz 2022.7.1
-    Uninstalling pytz-2022.7.1:
-      Successfully uninstalled pytz-2022.7.1
-  Attempting uninstall: pytweening
-    Found existing installation: pytweening 1.0.4
-    Uninstalling pytweening-1.0.4:
-      Successfully uninstalled pytweening-1.0.4
-  DEPRECATION: pytweening is being installed using the legacy 'setup.py install' method, because it does not have a 'pyproject.toml' and the 'wheel' package is not installed. pip 23.1 will enforce this behaviour change. A possible replacement is to enable the '--use-pep517' option. Discussion 
-can be found at https://github.com/pypa/pip/issues/8559
-  Running setup.py install for pytweening ... done
-  Attempting uninstall: urllib3
-    Found existing installation: urllib3 1.26.14
-    Uninstalling urllib3-1.26.14:
-      Successfully uninstalled urllib3-1.26.14
-  Attempting uninstall: typing_extensions
-    Found existing installation: typing_extensions 4.5.0
-    Uninstalling typing_extensions-4.5.0:
-      Successfully uninstalled typing_extensions-4.5.0
-  Attempting uninstall: tqdm
-    Found existing installation: tqdm 4.64.1
-    Uninstalling tqdm-4.64.1:
-      Successfully uninstalled tqdm-4.64.1
-  Attempting uninstall: setuptools
-    Found existing installation: setuptools 67.3.2
-    Uninstalling setuptools-67.3.2:
-      Successfully uninstalled setuptools-67.3.2
-  Attempting uninstall: pywin32-ctypes
-    Found existing installation: pywin32-ctypes 0.2.0
-    Uninstalling pywin32-ctypes-0.2.0:
-      Successfully uninstalled pywin32-ctypes-0.2.0
-  Attempting uninstall: python-slugify
-    Found existing installation: python-slugify 8.0.0
-    Uninstalling python-slugify-8.0.0:
-      Successfully uninstalled python-slugify-8.0.0
-  Attempting uninstall: pyinstaller-hooks-contrib
-    Found existing installation: pyinstaller-hooks-contrib 2023.0
-    Uninstalling pyinstaller-hooks-contrib-2023.0:
-      Successfully uninstalled pyinstaller-hooks-contrib-2023.0
-  Attempting uninstall: pycryptodome
-    Found existing installation: pycryptodome 3.17
-    Uninstalling pycryptodome-3.17:
-      Successfully uninstalled pycryptodome-3.17
-  Attempting uninstall: pyasn1
-    Found existing installation: pyasn1 0.4.8
-    Uninstalling pyasn1-0.4.8:
-      Successfully uninstalled pyasn1-0.4.8
-  Attempting uninstall: pip
-    Found existing installation: pip 23.0
-    Uninstalling pip-23.0:
-      Successfully uninstalled pip-23.0
-  Attempting uninstall: Pillow
-    Found existing installation: Pillow 9.4.0
-    Uninstalling Pillow-9.4.0:
-      Successfully uninstalled Pillow-9.4.0
-  Attempting uninstall: packaging
-    Found existing installation: packaging 23.0
-    Uninstalling packaging-23.0:
-      Successfully uninstalled packaging-23.0
-  Attempting uninstall: openpyxl
-    Found existing installation: openpyxl 3.1.1
-    Uninstalling openpyxl-3.1.1:
-      Successfully uninstalled openpyxl-3.1.1
-  Attempting uninstall: numpy
-    Found existing installation: numpy 1.24.2
-    Uninstalling numpy-1.24.2:
-      Successfully uninstalled numpy-1.24.2
-  Attempting uninstall: MarkupSafe
-    Found existing installation: MarkupSafe 2.1.2
-    Uninstalling MarkupSafe-2.1.2:
-      Successfully uninstalled MarkupSafe-2.1.2
-  Attempting uninstall: lxml
-    Found existing installation: lxml 4.9.2
-    Uninstalling lxml-4.9.2:
-      Successfully uninstalled lxml-4.9.2
-  Attempting uninstall: click
-    Found existing installation: click 8.1.3
-    Uninstalling click-8.1.3:
-      Successfully uninstalled click-8.1.3
-  Attempting uninstall: charset-normalizer
-    Found existing installation: charset-normalizer 3.0.1
-    Uninstalling charset-normalizer-3.0.1:
-      Successfully uninstalled charset-normalizer-3.0.1
-  Attempting uninstall: certifi
-    Found existing installation: certifi 2022.12.7
-    Uninstalling certifi-2022.12.7:
-      Successfully uninstalled certifi-2022.12.7
-  Attempting uninstall: cachetools
-    Found existing installation: cachetools 5.3.0
-    Uninstalling cachetools-5.3.0:
-      Successfully uninstalled cachetools-5.3.0
-  Attempting uninstall: Babel
-    Found existing installation: Babel 2.11.0
-    Uninstalling Babel-2.11.0:
-      Successfully uninstalled Babel-2.11.0
-  Attempting uninstall: autopep8
-    Found existing installation: autopep8 2.0.1
-    Uninstalling autopep8-2.0.1:
-      Successfully uninstalled autopep8-2.0.1
-  Attempting uninstall: requests
-    Found existing installation: requests 2.28.2
-    Uninstalling requests-2.28.2:
-      Successfully uninstalled requests-2.28.2
-  Attempting uninstall: pyinstaller
-    Found existing installation: pyinstaller 5.8.0
-    Uninstalling pyinstaller-5.8.0:
-      Successfully uninstalled pyinstaller-5.8.0
-  Attempting uninstall: pandas
-    Found existing installation: pandas 1.5.3
-    Uninstalling pandas-1.5.3:
-      Successfully uninstalled pandas-1.5.3
-  Attempting uninstall: mypy
-    Found existing installation: mypy 1.0.0
-    Uninstalling mypy-1.0.0:
-      Successfully uninstalled mypy-1.0.0
-  Attempting uninstall: PyScreeze
-    Found existing installation: PyScreeze 0.1.28
-    Uninstalling PyScreeze-0.1.28:
-      Successfully uninstalled PyScreeze-0.1.28
-  Attempting uninstall: cookiecutter
-    Found existing installation: cookiecutter 2.1.1
-    Uninstalling cookiecutter-2.1.1:
-      Successfully uninstalled cookiecutter-2.1.1
-      Successfully uninstalled PyAutoGUI-0.9.53
-Successfully installed Babel-2.12.1 EasyProcess-1.1 MarkupSafe-2.1.3 Pillow-10.0.0 PyAutoGUI-0.9.54 PyScreeze-0.1.29 autopep8-2.0.2 cachetools-5.3.1 certifi-2023.5.7 charset-normalizer-3.2.0 click-8.1.4 cookiecutter-2.2.3 entrypoint2-1.1 lxml-4.9.3 mss-9.0.1 mypy-1.4.1 numpy-1.25.1 openpyxl-3.1.2 packaging-23.1 pandas-2.0.3 pip-23.1.2 pyasn1-0.5.0 pycryptodome-3.18.0 pyinstaller-5.13.0 pyinstaller-hooks-contrib-2023.5 pyscreenshot-3.1 python-slugify-8.0.1 pytweening-1.0.7 pytz-2023.3 pywin32-ctypes-0.2.2 requests-2.31.0 setuptools-68.0.0 tqdm-4.65.0 typing_extensions-4.7.1 tzdata-2023.3 urllib3-2.0.3
-PS C:\XXXX>
-```
-:::details アップデートが完了した事を確認
-```powershell:更新後のパッケージ一覧
-PS C:\XXXX> pip list
-Package                   Version
-------------------------- --------
-altgraph                  0.17.3
-arrow                     1.2.3
-autopep8                  2.0.2
-Babel                     2.12.1
-binaryornot               0.4.4
-cachetools                5.3.1
-certifi                   2023.5.7
-chardet                   5.1.0
-charset-normalizer        3.2.0
-click                     8.1.4
-colorama                  0.4.6
-cookiecutter              2.2.3
-EasyProcess               1.1
-entrypoint2               1.1
-et-xmlfile                1.1.0
-flake8                    6.0.0
-future                    0.18.3
-idna                      3.4
-Jinja2                    3.1.2
-jinja2-time               0.2.0
-lxml                      4.9.3
-MarkupSafe                2.1.3
-mccabe                    0.7.0
-MouseInfo                 0.1.3
-mss                       9.0.1
-mypy                      1.4.1
-mypy-extensions           1.0.0
-numpy                     1.25.1
-openpyxl                  3.1.2
-packaging                 23.1
-pandas                    2.0.3
-pefile                    2023.2.7
-Pillow                    10.0.0
-pip                       23.1.2
-pip-review                1.3.0
-pyasn1                    0.5.0
-PyAutoGUI                 0.9.54
-pycodestyle               2.10.0
-pycryptodome              3.18.0
-pyflakes                  3.0.1
-PyGetWindow               0.0.9
-pyinstaller               5.13.0
-pyinstaller-hooks-contrib 2023.5
-PyMsgBox                  1.0.9
-pyperclip                 1.8.2
-PyRect                    0.2.0
-pyscreenshot              3.1
-PyScreeze                 0.1.29
-pysmb                     1.2.9.1
-python-dateutil           2.8.2
-python-slugify            8.0.1
-pytweening                1.0.7
-pytz                      2023.3
-pywin32-ctypes            0.2.2
-PyYAML                    6.0
-requests                  2.31.0
-setuptools                68.0.0
-six                       1.16.0
-text-unidecode            1.3
-tkinterdnd2               0.3.0
-toml                      0.10.2
-tomli                     2.0.1
-tqdm                      4.65.0
-ttkthemes                 3.2.2
-typing_extensions         4.7.1
-tzdata                    2023.3
-urllib3                   2.0.3
-PS C:\XXXX>
-```
-:::
+        typing_extensions==4.7.1 is available (you have 4.5.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        urllib3==2.0.3 is available (you have 1.26.14)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        Requirement already satisfied: autopep8 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.0.1)
+        Collecting autopep8
+        Downloading autopep8-2.0.2-py2.py3-none-any.whl (45 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.2/45.2 kB 554.3 kB/s eta 0:00:00
+        Requirement already satisfied: Babel in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.11.0)
+        Collecting Babel
+        Downloading Babel-2.12.1-py3-none-any.whl (10.1 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.1/10.1 MB 7.4 MB/s eta 0:00:00
+        Requirement already satisfied: cachetools in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (5.3.0)
+        Collecting cachetools
+        Downloading cachetools-5.3.1-py3-none-any.whl (9.3 kB)
+        Requirement already satisfied: certifi in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2022.12.7)
+        
+        ～ 省略 ～
+
+        Collecting tzdata>=2022.1
+        Downloading tzdata-2023.3-py2.py3-none-any.whl (341 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 341.8/341.8 kB 10.7 MB/s eta 0:00:00
+        Requirement already satisfied: pygetwindow>=0.0.5 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from PyAutoGUI) (0.0.9)
+        Requirement already satisfied: pymsgbox in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from PyAutoGUI) (1.0.9)
+        Requirement already satisfied: mouseinfo in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from PyAutoGUI) (0.1.3)
+        Requirement already satisfied: altgraph in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pyinstaller) (0.17.3)
+        Requirement already satisfied: pefile>=2022.5.30 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pyinstaller) (2023.2.7)
+        Collecting pyscreenshot
+        Downloading pyscreenshot-3.1-py3-none-any.whl (28 kB)
+        Requirement already satisfied: text-unidecode>=1.3 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from python-slugify) (1.3)
+        Requirement already satisfied: idna<4,>=2.5 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from requests) (3.4)
+        Requirement already satisfied: chardet>=3.0.2 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from binaryornot>=0.4.4->cookiecutter) (5.1.0)
+        Requirement already satisfied: pyrect in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pygetwindow>=0.0.5->PyAutoGUI) (0.2.0)
+        Requirement already satisfied: six>=1.5 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from python-dateutil>=2.8.2->pandas) (1.16.0)
+        Requirement already satisfied: pyperclip in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from mouseinfo->PyAutoGUI) (1.8.2)
+        Collecting mss
+        Downloading mss-9.0.1-py3-none-any.whl (22 kB)
+        Collecting entrypoint2
+        Downloading entrypoint2-1.1-py2.py3-none-any.whl (9.9 kB)
+        Collecting EasyProcess
+        Downloading EasyProcess-1.1-py3-none-any.whl (8.7 kB)
+        Building wheels for collected packages: PyAutoGUI, PyScreeze
+        Building wheel for PyAutoGUI (pyproject.toml) ... done
+        Created wheel for PyAutoGUI: filename=PyAutoGUI-0.9.54-py3-none-any.whl size=37601 sha256=cc5057c3905bdeafe8485347005d969b7ff6cf98f70c31141ef03df8b94047bc
+        Stored in directory: c:\users\administrator\appdata\local\pip\cache\wheels\23\a7\1c\5a51aaff3bbe110be4ddf766d429cc9d2fae7a72fc1b843e56
+        Building wheel for PyScreeze (pyproject.toml) ... done
+        Created wheel for PyScreeze: filename=PyScreeze-0.1.29-py3-none-any.whl size=13485 sha256=cde2baab75fd783a396cc512b1599a89cf58c583e981925483b3f12565df168c
+        Stored in directory: c:\users\administrator\appdata\local\pip\cache\wheels\43\aa\46\e91ba85339451aeec47733e4038d7ed73c0b4b633c6270a2ba
+        Successfully built PyAutoGUI PyScreeze
+        Installing collected packages: pytz, pytweening, entrypoint2, EasyProcess, urllib3, tzdata, typing_extensions, tqdm, setuptools, pywin32-ctypes, python-slugify, pyinstaller-hooks-contrib, pycryptodome, pyasn1, pip, Pillow, packaging, openpyxl, numpy, mss, MarkupSafe, lxml, click, charset-normalizer, certifi, cachetools, Babel, autopep8, requests, pyscreenshot, pyinstaller, pandas, mypy, PyScreeze, cookiecutter, PyAutoGUI
+        Attempting uninstall: pytz
+            Found existing installation: pytz 2022.7.1
+            Uninstalling pytz-2022.7.1:
+            Successfully uninstalled pytz-2022.7.1
+        Attempting uninstall: pytweening
+            Found existing installation: pytweening 1.0.4
+            Uninstalling pytweening-1.0.4:
+            Successfully uninstalled pytweening-1.0.4
+        DEPRECATION: pytweening is being installed using the legacy 'setup.py install' method, because it does not have a 'pyproject.toml' and the 'wheel' package is not installed. pip 23.1 will enforce this behaviour change. A possible replacement is to enable the '--use-pep517' option. Discussion 
+        can be found at https://github.com/pypa/pip/issues/8559
+        Running setup.py install for pytweening ... done
+        Attempting uninstall: urllib3
+            Found existing installation: urllib3 1.26.14
+            Uninstalling urllib3-1.26.14:
+            Successfully uninstalled urllib3-1.26.14
+        Attempting uninstall: typing_extensions
+            Found existing installation: typing_extensions 4.5.0
+            Uninstalling typing_extensions-4.5.0:
+            Successfully uninstalled typing_extensions-4.5.0
+        Attempting uninstall: tqdm
+            Found existing installation: tqdm 4.64.1
+            Uninstalling tqdm-4.64.1:
+            Successfully uninstalled tqdm-4.64.1
+        
+        ～ 省略 ～
+
+        Attempting uninstall: PyScreeze
+            Found existing installation: PyScreeze 0.1.28
+            Uninstalling PyScreeze-0.1.28:
+            Successfully uninstalled PyScreeze-0.1.28
+        Attempting uninstall: cookiecutter
+            Found existing installation: cookiecutter 2.1.1
+            Uninstalling cookiecutter-2.1.1:
+            Successfully uninstalled cookiecutter-2.1.1
+            Successfully uninstalled PyAutoGUI-0.9.53
+        Successfully installed Babel-2.12.1 EasyProcess-1.1 MarkupSafe-2.1.3 Pillow-10.0.0 PyAutoGUI-0.9.54 PyScreeze-0.1.29 autopep8-2.0.2 cachetools-5.3.1 certifi-2023.5.7 charset-normalizer-3.2.0 click-8.1.4 cookiecutter-2.2.3 entrypoint2-1.1 lxml-4.9.3 mss-9.0.1 mypy-1.4.1 numpy-1.25.1 openpyxl-3.1.2 packaging-23.1 pandas-2.0.3 pip-23.1.2 pyasn1-0.5.0 pycryptodome-3.18.0 pyinstaller-5.13.0 pyinstaller-hooks-contrib-2023.5 pyscreenshot-3.1 python-slugify-8.0.1 pytweening-1.0.7 pytz-2023.3 pywin32-ctypes-0.2.2 requests-2.31.0 setuptools-68.0.0 tqdm-4.65.0 typing_extensions-4.7.1 tzdata-2023.3 urllib3-2.0.3
+        PS C:\XXXX>
+        ```
+        ::: details 参考情報：パッケージごとに更新有無を選択するアップデートコマンド - すべての結果を表示
+        上記は省略したコマンド結果だが、ここでは省略せずに、すべてのコマンド結果を表示。
+        ```powershell
+        PS C:\XXXX> pip-review --interactive
+        autopep8==2.0.2 is available (you have 2.0.1)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit y
+        Babel==2.12.1 is available (you have 2.11.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        cachetools==5.3.1 is available (you have 5.3.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        certifi==2023.5.7 is available (you have 2022.12.7)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        charset-normalizer==3.2.0 is available (you have 3.0.1)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        click==8.1.4 is available (you have 8.1.3)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        cookiecutter==2.2.3 is available (you have 2.1.1)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        lxml==4.9.3 is available (you have 4.9.2)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        MarkupSafe==2.1.3 is available (you have 2.1.2)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        mypy==1.4.1 is available (you have 1.0.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        numpy==1.25.1 is available (you have 1.24.2)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        openpyxl==3.1.2 is available (you have 3.1.1)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        packaging==23.1 is available (you have 23.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        pandas==2.0.3 is available (you have 1.5.3)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        Pillow==10.0.0 is available (you have 9.4.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        pip==23.1.2 is available (you have 23.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        pyasn1==0.5.0 is available (you have 0.4.8)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        PyAutoGUI==0.9.54 is available (you have 0.9.53)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        pycryptodome==3.18.0 is available (you have 3.17)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        pyinstaller==5.13.0 is available (you have 5.8.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        pyinstaller-hooks-contrib==2023.5 is available (you have 2023.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        PyScreeze==0.1.29 is available (you have 0.1.28)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        python-slugify==8.0.1 is available (you have 8.0.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        pytweening==1.0.7 is available (you have 1.0.4)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        pytz==2023.3 is available (you have 2022.7.1)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        pywin32-ctypes==0.2.2 is available (you have 0.2.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        requests==2.31.0 is available (you have 2.28.2)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        setuptools==68.0.0 is available (you have 67.3.2)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        tqdm==4.65.0 is available (you have 4.64.1)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        typing_extensions==4.7.1 is available (you have 4.5.0)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        urllib3==2.0.3 is available (you have 1.26.14)
+        Upgrade now? [Y]es, [N]o, [A]ll, [Q]uit (y) y
+        Requirement already satisfied: autopep8 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.0.1)
+        Collecting autopep8
+        Downloading autopep8-2.0.2-py2.py3-none-any.whl (45 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.2/45.2 kB 554.3 kB/s eta 0:00:00
+        Requirement already satisfied: Babel in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.11.0)
+        Collecting Babel
+        Downloading Babel-2.12.1-py3-none-any.whl (10.1 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.1/10.1 MB 7.4 MB/s eta 0:00:00
+        Requirement already satisfied: cachetools in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (5.3.0)
+        Collecting cachetools
+        Downloading cachetools-5.3.1-py3-none-any.whl (9.3 kB)
+        Requirement already satisfied: certifi in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2022.12.7)
+        Collecting certifi
+        Downloading certifi-2023.5.7-py3-none-any.whl (156 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 157.0/157.0 kB 3.1 MB/s eta 0:00:00
+        Requirement already satisfied: charset-normalizer in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (3.0.1)
+        Collecting charset-normalizer
+        Downloading charset_normalizer-3.2.0-cp310-cp310-win_amd64.whl (96 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 96.9/96.9 kB 2.7 MB/s eta 0:00:00
+        Requirement already satisfied: click in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (8.1.3)
+        Collecting click
+        Downloading click-8.1.4-py3-none-any.whl (98 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.2/98.2 kB 5.5 MB/s eta 0:00:00
+        Requirement already satisfied: cookiecutter in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.1.1)
+        Collecting cookiecutter
+        Downloading cookiecutter-2.2.3-py3-none-any.whl (39 kB)
+        Requirement already satisfied: lxml in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (4.9.2)
+        Collecting lxml
+        Downloading lxml-4.9.3-cp310-cp310-win_amd64.whl (3.8 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 7.8 MB/s eta 0:00:00
+        Requirement already satisfied: MarkupSafe in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.1.2)
+        Collecting MarkupSafe
+        Downloading MarkupSafe-2.1.3-cp310-cp310-win_amd64.whl (17 kB)
+        Requirement already satisfied: mypy in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.0.0)
+        Collecting mypy
+        Downloading mypy-1.4.1-cp310-cp310-win_amd64.whl (8.8 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.8/8.8 MB 7.6 MB/s eta 0:00:00
+        Requirement already satisfied: numpy in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.24.2)
+        Collecting numpy
+        Downloading numpy-1.25.1-cp310-cp310-win_amd64.whl (15.0 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.0/15.0 MB 4.6 MB/s eta 0:00:00
+        Requirement already satisfied: openpyxl in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (3.1.1)
+        Collecting openpyxl
+        Downloading openpyxl-3.1.2-py2.py3-none-any.whl (249 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 250.0/250.0 kB 16.0 MB/s eta 0:00:00
+        Requirement already satisfied: packaging in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (23.0)
+        Collecting packaging
+        Downloading packaging-23.1-py3-none-any.whl (48 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.9/48.9 kB 2.6 MB/s eta 0:00:00
+        Requirement already satisfied: pandas in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.5.3)
+        Collecting pandas
+        Downloading pandas-2.0.3-cp310-cp310-win_amd64.whl (10.7 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.7/10.7 MB 5.6 MB/s eta 0:00:00
+        Requirement already satisfied: Pillow in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (9.4.0)
+        Collecting Pillow
+        Downloading Pillow-10.0.0-cp310-cp310-win_amd64.whl (2.5 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.5/2.5 MB 3.5 MB/s eta 0:00:00
+        Requirement already satisfied: pip in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (23.0)
+        Collecting pip
+        Downloading pip-23.1.2-py3-none-any.whl (2.1 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 8.2 MB/s eta 0:00:00
+        Requirement already satisfied: pyasn1 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (0.4.8)
+        Collecting pyasn1
+        Downloading pyasn1-0.5.0-py2.py3-none-any.whl (83 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 83.9/83.9 kB 4.6 MB/s eta 0:00:00
+        Requirement already satisfied: PyAutoGUI in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (0.9.53)
+        Collecting PyAutoGUI
+        Downloading PyAutoGUI-0.9.54.tar.gz (61 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.2/61.2 kB 1.6 MB/s eta 0:00:00
+        Installing build dependencies ... done
+        Getting requirements to build wheel ... done
+        Preparing metadata (pyproject.toml) ... done
+        Requirement already satisfied: pycryptodome in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (3.17)
+        Collecting pycryptodome
+        Downloading pycryptodome-3.18.0-cp35-abi3-win_amd64.whl (1.7 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 9.2 MB/s eta 0:00:00
+        Requirement already satisfied: pyinstaller in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (5.8.0)
+        Collecting pyinstaller
+        Downloading pyinstaller-5.13.0-py3-none-win_amd64.whl (1.3 MB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 7.3 MB/s eta 0:00:00
+        Requirement already satisfied: pyinstaller-hooks-contrib in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2023.0)
+        Collecting pyinstaller-hooks-contrib
+        Downloading pyinstaller_hooks_contrib-2023.5-py2.py3-none-any.whl (273 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 273.1/273.1 kB 5.6 MB/s eta 0:00:00
+        Requirement already satisfied: PyScreeze in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (0.1.28)
+        Collecting PyScreeze
+        Downloading PyScreeze-0.1.29.tar.gz (25 kB)
+        Installing build dependencies ... done
+        Getting requirements to build wheel ... done
+        Preparing metadata (pyproject.toml) ... done
+        Requirement already satisfied: python-slugify in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (8.0.0)
+        Collecting python-slugify
+        Downloading python_slugify-8.0.1-py2.py3-none-any.whl (9.7 kB)
+        Requirement already satisfied: pytweening in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.0.4)
+        Collecting pytweening
+        Downloading pytweening-1.0.7.tar.gz (168 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.2/168.2 kB 4.9 MB/s eta 0:00:00
+        Preparing metadata (setup.py) ... done
+        Requirement already satisfied: pytz in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2022.7.1)
+        Collecting pytz
+        Downloading pytz-2023.3-py2.py3-none-any.whl (502 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 502.3/502.3 kB 4.5 MB/s eta 0:00:00
+        Requirement already satisfied: pywin32-ctypes in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (0.2.0)
+        Collecting pywin32-ctypes
+        Downloading pywin32_ctypes-0.2.2-py3-none-any.whl (30 kB)
+        Requirement already satisfied: requests in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (2.28.2)
+        Collecting requests
+        Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.6/62.6 kB 1.6 MB/s eta 0:00:00
+        Requirement already satisfied: setuptools in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (67.3.2)
+        Collecting setuptools
+        Using cached setuptools-68.0.0-py3-none-any.whl (804 kB)
+        Requirement already satisfied: tqdm in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (4.64.1)
+        Collecting tqdm
+        Downloading tqdm-4.65.0-py3-none-any.whl (77 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 77.1/77.1 kB 4.5 MB/s eta 0:00:00
+        Requirement already satisfied: typing_extensions in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (4.5.0)
+        Collecting typing_extensions
+        Downloading typing_extensions-4.7.1-py3-none-any.whl (33 kB)
+        Requirement already satisfied: urllib3 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (1.26.14)
+        Collecting urllib3
+        Downloading urllib3-2.0.3-py3-none-any.whl (123 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 123.6/123.6 kB 3.7 MB/s eta 0:00:00
+        Requirement already satisfied: tomli in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from autopep8) (2.0.1)
+        Requirement already satisfied: pycodestyle>=2.10.0 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from autopep8) (2.10.0)
+        Requirement already satisfied: colorama in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from click) (0.4.6)
+        Requirement already satisfied: arrow in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from cookiecutter) (1.2.3)
+        Requirement already satisfied: pyyaml>=5.3.1 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from cookiecutter) (6.0)
+        Requirement already satisfied: Jinja2<4.0.0,>=2.7 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from cookiecutter) (3.1.2)
+        Requirement already satisfied: binaryornot>=0.4.4 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from cookiecutter) (0.4.4)
+        Requirement already satisfied: mypy-extensions>=1.0.0 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from mypy) (1.0.0)
+        Requirement already satisfied: et-xmlfile in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from openpyxl) (1.1.0)
+        Requirement already satisfied: python-dateutil>=2.8.2 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pandas) (2.8.2)
+        Collecting tzdata>=2022.1
+        Downloading tzdata-2023.3-py2.py3-none-any.whl (341 kB)
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 341.8/341.8 kB 10.7 MB/s eta 0:00:00
+        Requirement already satisfied: pygetwindow>=0.0.5 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from PyAutoGUI) (0.0.9)
+        Requirement already satisfied: pymsgbox in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from PyAutoGUI) (1.0.9)
+        Requirement already satisfied: mouseinfo in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from PyAutoGUI) (0.1.3)
+        Requirement already satisfied: altgraph in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pyinstaller) (0.17.3)
+        Requirement already satisfied: pefile>=2022.5.30 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pyinstaller) (2023.2.7)
+        Collecting pyscreenshot
+        Downloading pyscreenshot-3.1-py3-none-any.whl (28 kB)
+        Requirement already satisfied: text-unidecode>=1.3 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from python-slugify) (1.3)
+        Requirement already satisfied: idna<4,>=2.5 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from requests) (3.4)
+        Requirement already satisfied: chardet>=3.0.2 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from binaryornot>=0.4.4->cookiecutter) (5.1.0)
+        Requirement already satisfied: pyrect in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from pygetwindow>=0.0.5->PyAutoGUI) (0.2.0)
+        Requirement already satisfied: six>=1.5 in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from python-dateutil>=2.8.2->pandas) (1.16.0)
+        Requirement already satisfied: pyperclip in c:\users\administrator\appdata\local\programs\python\python310\lib\site-packages (from mouseinfo->PyAutoGUI) (1.8.2)
+        Collecting mss
+        Downloading mss-9.0.1-py3-none-any.whl (22 kB)
+        Collecting entrypoint2
+        Downloading entrypoint2-1.1-py2.py3-none-any.whl (9.9 kB)
+        Collecting EasyProcess
+        Downloading EasyProcess-1.1-py3-none-any.whl (8.7 kB)
+        Building wheels for collected packages: PyAutoGUI, PyScreeze
+        Building wheel for PyAutoGUI (pyproject.toml) ... done
+        Created wheel for PyAutoGUI: filename=PyAutoGUI-0.9.54-py3-none-any.whl size=37601 sha256=cc5057c3905bdeafe8485347005d969b7ff6cf98f70c31141ef03df8b94047bc
+        Stored in directory: c:\users\administrator\appdata\local\pip\cache\wheels\23\a7\1c\5a51aaff3bbe110be4ddf766d429cc9d2fae7a72fc1b843e56
+        Building wheel for PyScreeze (pyproject.toml) ... done
+        Created wheel for PyScreeze: filename=PyScreeze-0.1.29-py3-none-any.whl size=13485 sha256=cde2baab75fd783a396cc512b1599a89cf58c583e981925483b3f12565df168c
+        Stored in directory: c:\users\administrator\appdata\local\pip\cache\wheels\43\aa\46\e91ba85339451aeec47733e4038d7ed73c0b4b633c6270a2ba
+        Successfully built PyAutoGUI PyScreeze
+        Installing collected packages: pytz, pytweening, entrypoint2, EasyProcess, urllib3, tzdata, typing_extensions, tqdm, setuptools, pywin32-ctypes, python-slugify, pyinstaller-hooks-contrib, pycryptodome, pyasn1, pip, Pillow, packaging, openpyxl, numpy, mss, MarkupSafe, lxml, click, charset-normalizer, certifi, cachetools, Babel, autopep8, requests, pyscreenshot, pyinstaller, pandas, mypy, PyScreeze, cookiecutter, PyAutoGUI
+        Attempting uninstall: pytz
+            Found existing installation: pytz 2022.7.1
+            Uninstalling pytz-2022.7.1:
+            Successfully uninstalled pytz-2022.7.1
+        Attempting uninstall: pytweening
+            Found existing installation: pytweening 1.0.4
+            Uninstalling pytweening-1.0.4:
+            Successfully uninstalled pytweening-1.0.4
+        DEPRECATION: pytweening is being installed using the legacy 'setup.py install' method, because it does not have a 'pyproject.toml' and the 'wheel' package is not installed. pip 23.1 will enforce this behaviour change. A possible replacement is to enable the '--use-pep517' option. Discussion 
+        can be found at https://github.com/pypa/pip/issues/8559
+        Running setup.py install for pytweening ... done
+        Attempting uninstall: urllib3
+            Found existing installation: urllib3 1.26.14
+            Uninstalling urllib3-1.26.14:
+            Successfully uninstalled urllib3-1.26.14
+        Attempting uninstall: typing_extensions
+            Found existing installation: typing_extensions 4.5.0
+            Uninstalling typing_extensions-4.5.0:
+            Successfully uninstalled typing_extensions-4.5.0
+        Attempting uninstall: tqdm
+            Found existing installation: tqdm 4.64.1
+            Uninstalling tqdm-4.64.1:
+            Successfully uninstalled tqdm-4.64.1
+        Attempting uninstall: setuptools
+            Found existing installation: setuptools 67.3.2
+            Uninstalling setuptools-67.3.2:
+            Successfully uninstalled setuptools-67.3.2
+        Attempting uninstall: pywin32-ctypes
+            Found existing installation: pywin32-ctypes 0.2.0
+            Uninstalling pywin32-ctypes-0.2.0:
+            Successfully uninstalled pywin32-ctypes-0.2.0
+        Attempting uninstall: python-slugify
+            Found existing installation: python-slugify 8.0.0
+            Uninstalling python-slugify-8.0.0:
+            Successfully uninstalled python-slugify-8.0.0
+        Attempting uninstall: pyinstaller-hooks-contrib
+            Found existing installation: pyinstaller-hooks-contrib 2023.0
+            Uninstalling pyinstaller-hooks-contrib-2023.0:
+            Successfully uninstalled pyinstaller-hooks-contrib-2023.0
+        Attempting uninstall: pycryptodome
+            Found existing installation: pycryptodome 3.17
+            Uninstalling pycryptodome-3.17:
+            Successfully uninstalled pycryptodome-3.17
+        Attempting uninstall: pyasn1
+            Found existing installation: pyasn1 0.4.8
+            Uninstalling pyasn1-0.4.8:
+            Successfully uninstalled pyasn1-0.4.8
+        Attempting uninstall: pip
+            Found existing installation: pip 23.0
+            Uninstalling pip-23.0:
+            Successfully uninstalled pip-23.0
+        Attempting uninstall: Pillow
+            Found existing installation: Pillow 9.4.0
+            Uninstalling Pillow-9.4.0:
+            Successfully uninstalled Pillow-9.4.0
+        Attempting uninstall: packaging
+            Found existing installation: packaging 23.0
+            Uninstalling packaging-23.0:
+            Successfully uninstalled packaging-23.0
+        Attempting uninstall: openpyxl
+            Found existing installation: openpyxl 3.1.1
+            Uninstalling openpyxl-3.1.1:
+            Successfully uninstalled openpyxl-3.1.1
+        Attempting uninstall: numpy
+            Found existing installation: numpy 1.24.2
+            Uninstalling numpy-1.24.2:
+            Successfully uninstalled numpy-1.24.2
+        Attempting uninstall: MarkupSafe
+            Found existing installation: MarkupSafe 2.1.2
+            Uninstalling MarkupSafe-2.1.2:
+            Successfully uninstalled MarkupSafe-2.1.2
+        Attempting uninstall: lxml
+            Found existing installation: lxml 4.9.2
+            Uninstalling lxml-4.9.2:
+            Successfully uninstalled lxml-4.9.2
+        Attempting uninstall: click
+            Found existing installation: click 8.1.3
+            Uninstalling click-8.1.3:
+            Successfully uninstalled click-8.1.3
+        Attempting uninstall: charset-normalizer
+            Found existing installation: charset-normalizer 3.0.1
+            Uninstalling charset-normalizer-3.0.1:
+            Successfully uninstalled charset-normalizer-3.0.1
+        Attempting uninstall: certifi
+            Found existing installation: certifi 2022.12.7
+            Uninstalling certifi-2022.12.7:
+            Successfully uninstalled certifi-2022.12.7
+        Attempting uninstall: cachetools
+            Found existing installation: cachetools 5.3.0
+            Uninstalling cachetools-5.3.0:
+            Successfully uninstalled cachetools-5.3.0
+        Attempting uninstall: Babel
+            Found existing installation: Babel 2.11.0
+            Uninstalling Babel-2.11.0:
+            Successfully uninstalled Babel-2.11.0
+        Attempting uninstall: autopep8
+            Found existing installation: autopep8 2.0.1
+            Uninstalling autopep8-2.0.1:
+            Successfully uninstalled autopep8-2.0.1
+        Attempting uninstall: requests
+            Found existing installation: requests 2.28.2
+            Uninstalling requests-2.28.2:
+            Successfully uninstalled requests-2.28.2
+        Attempting uninstall: pyinstaller
+            Found existing installation: pyinstaller 5.8.0
+            Uninstalling pyinstaller-5.8.0:
+            Successfully uninstalled pyinstaller-5.8.0
+        Attempting uninstall: pandas
+            Found existing installation: pandas 1.5.3
+            Uninstalling pandas-1.5.3:
+            Successfully uninstalled pandas-1.5.3
+        Attempting uninstall: mypy
+            Found existing installation: mypy 1.0.0
+            Uninstalling mypy-1.0.0:
+            Successfully uninstalled mypy-1.0.0
+        Attempting uninstall: PyScreeze
+            Found existing installation: PyScreeze 0.1.28
+            Uninstalling PyScreeze-0.1.28:
+            Successfully uninstalled PyScreeze-0.1.28
+        Attempting uninstall: cookiecutter
+            Found existing installation: cookiecutter 2.1.1
+            Uninstalling cookiecutter-2.1.1:
+            Successfully uninstalled cookiecutter-2.1.1
+            Successfully uninstalled PyAutoGUI-0.9.53
+        Successfully installed Babel-2.12.1 EasyProcess-1.1 MarkupSafe-2.1.3 Pillow-10.0.0 PyAutoGUI-0.9.54 PyScreeze-0.1.29 autopep8-2.0.2 cachetools-5.3.1 certifi-2023.5.7 charset-normalizer-3.2.0 click-8.1.4 cookiecutter-2.2.3 entrypoint2-1.1 lxml-4.9.3 mss-9.0.1 mypy-1.4.1 numpy-1.25.1 openpyxl-3.1.2 packaging-23.1 pandas-2.0.3 pip-23.1.2 pyasn1-0.5.0 pycryptodome-3.18.0 pyinstaller-5.13.0 pyinstaller-hooks-contrib-2023.5 pyscreenshot-3.1 python-slugify-8.0.1 pytweening-1.0.7 pytz-2023.3 pywin32-ctypes-0.2.2 requests-2.31.0 setuptools-68.0.0 tqdm-4.65.0 typing_extensions-4.7.1 tzdata-2023.3 urllib3-2.0.3
+        PS C:\XXXX>
+        ```
+1. アップデートが完了した事を確認
+    ```powershell:インストール済みの全パッケージを一覧表示するコマンド（更新後）
+    PS C:\XXXX> pip list
+    Package                   Version
+    ------------------------- --------
+    altgraph                  0.17.3
+    arrow                     1.2.3
+    autopep8                  2.0.2
+    Babel                     2.12.1
+    binaryornot               0.4.4
+    cachetools                5.3.1
+    certifi                   2023.5.7
+    chardet                   5.1.0
+    charset-normalizer        3.2.0
+    click                     8.1.4
+    colorama                  0.4.6
+    cookiecutter              2.2.3
+    EasyProcess               1.1
+    entrypoint2               1.1
+    et-xmlfile                1.1.0
+    flake8                    6.0.0
+    future                    0.18.3
+    idna                      3.4
+    Jinja2                    3.1.2
+    jinja2-time               0.2.0
+    lxml                      4.9.3
+    MarkupSafe                2.1.3
+    mccabe                    0.7.0
+    MouseInfo                 0.1.3
+    mss                       9.0.1
+    mypy                      1.4.1
+    mypy-extensions           1.0.0
+    numpy                     1.25.1
+    openpyxl                  3.1.2
+    packaging                 23.1
+    pandas                    2.0.3
+    pefile                    2023.2.7
+    Pillow                    10.0.0
+    pip                       23.1.2
+    pip-review                1.3.0
+    pyasn1                    0.5.0
+    PyAutoGUI                 0.9.54
+    pycodestyle               2.10.0
+    pycryptodome              3.18.0
+    pyflakes                  3.0.1
+    PyGetWindow               0.0.9
+    pyinstaller               5.13.0
+    pyinstaller-hooks-contrib 2023.5
+    PyMsgBox                  1.0.9
+    pyperclip                 1.8.2
+    PyRect                    0.2.0
+    pyscreenshot              3.1
+    PyScreeze                 0.1.29
+    pysmb                     1.2.9.1
+    python-dateutil           2.8.2
+    python-slugify            8.0.1
+    pytweening                1.0.7
+    pytz                      2023.3
+    pywin32-ctypes            0.2.2
+    PyYAML                    6.0
+    requests                  2.31.0
+    setuptools                68.0.0
+    six                       1.16.0
+    text-unidecode            1.3
+    tkinterdnd2               0.3.0
+    toml                      0.10.2
+    tomli                     2.0.1
+    tqdm                      4.65.0
+    ttkthemes                 3.2.2
+    typing_extensions         4.7.1
+    tzdata                    2023.3
+    urllib3                   2.0.3
+    PS C:\XXXX>
+    ```
+## まとめ
+- Pythonのバージョン確認するコマンド
+    `python -V` 👈 大文字のブイ
+- pipでインストール済みのパッケージをすべて確認するコマンド
+    `pip list`
+- pipでインストール済みのパッケージ内で更新可能なパッケージを確認するコマンド
+    `pip list -o`
+- pipでインストール済みのパッケージ内で更新可能なパッケージをアップデートするコマンド
+    - すべてをアップデートする場合
+        `pip-review --auto`
+    - パッケージごと更新有無を選択する場合
+        `pip-review --interactive`
 
 ## 参考情報
 https://python.softmoco.com/devenv/how-to-check-python-version-windows.php#:~:text=コマンドプロンプトで%20python%20--,することができます。
