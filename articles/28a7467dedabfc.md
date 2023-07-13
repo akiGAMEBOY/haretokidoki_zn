@@ -38,14 +38,14 @@ MySQL Connector/NETのインストール後に`C:\Program Files (x86)\MySQL\MySQ
 インストールしたバージョンに合わせてパスの指定を変更する事が必要となる。
 - インストールフォルダの変化点（変化点を太文字で表記）
 C:\Program Files (x86)\MySQL\\**MySQL Connector Net X.X.X**\Assemblies\\**vX.X**\MySql.Data.dll
-```diff powershell:DLLの参照先をインストールフォルダに変更する場合（ファイル名: Main.ps1）
+```diff powershell:DLLの参照先をインストールフォルダに変更する場合（ファイル名：Main.ps1）
  [System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent                                      # 他でも使用している為、削除しない
 -[System.String]$dll_path = $current_dir + "\MySQL.Data.dll"                                                            # コピー先
 +[System.String]$dll_path = "C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll"     # インストール先
 ```
 ### 仕様
-プログラム起動用: batファイルとプログラムの本体: ps1ファイル、個別の設定ファイル: setup.iniファイル、
-MySQL接続用DLLファイル: MySql.Data.dll、
+プログラム起動用：batファイルとプログラムの本体：ps1ファイル、個別の設定ファイル：setup.iniファイル、
+MySQL接続用DLLファイル：MySql.Data.dll、
 の4つで構成されたプログラム。
 
 なお、MySQLに接続する為の下記情報は設定ファイルにより変更可能とする。
@@ -130,7 +130,7 @@ MySQL接続用のDLL（MySQL Connector/NET）を使用し、MySQLのデータベ
 
 ##### 出力ファイル
 - CSVファイル（MySQL-to-csv_`YYYYMMDD`-`YYYYMMDD`.csv）
-保存先: ダウンロードフォルダー（C:¥Users¥`ユーザ名`\Downloads 等）
+    保存先：ダウンロードフォルダー（C:¥Users¥`ユーザ名`\Downloads 等）
     | 注文番号 | 販売実績日 | 顧客名 | 販売台数 | 販売単価 |
     | ---- | ---- | ---- | ---- | ---- |
     | 入力1 | 入力2 | 入力3 | 入力4 | 入力5 |
