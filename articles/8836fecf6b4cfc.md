@@ -27,7 +27,7 @@ Oracle VM VirtualBox内の仮想、Windows 10 Pro 環境。
 [こちら](https://superuser.com/questions/540407/why-does-virtualbox-show-more-cpus-than-available)の情報を参考にするとVirtualBoxの`Processor`の設定値は、
 多くとも物理CPUの `スレッド数 - 1`（スレッド数が4の場合は、3が最大値） にしないといけない。
 仮に物理CPUのスレッド数以上で設定してしまうと、ホストOSの挙動がおかしくなる可能性ありとの事。
-なぜ、VirtualBox側でスレッド数を超える値が設定できるのかという点は、よくわからなかった。
+そもそも何故、VirtualBox側でスレッド数を超える値が設定可能なのかという点は、よくわからなかった。
 - 参考情報
     https://superuser.com/questions/540407/why-does-virtualbox-show-more-cpus-than-available
     https://atmarkit.itmedia.co.jp/ait/articles/1010/14/news128.html#:~:text=VirtualBoxの仕様では,倍までしか設定できない。
