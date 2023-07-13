@@ -6,9 +6,8 @@ topics: ["python", "pip"]
 published: true
 ---
 ## 環境
-### ホスト（物理）とゲスト（仮想）の環境
-Oracle VM VirtualBox内の仮想、Windows 10 Pro 環境。
-- ホストOSのスペック
+### ホスト（物理）OSのスペック
+Windows 10 Pro 環境にOracle VM VirtualBoxをインストール。
   | 種類 | 内容 |
   | ---- | ---- |
   | CPU | [Intel(R) Core(TM) i3-8100T CPU @ 3.10GHz](https://www.intel.co.jp/content/www/jp/ja/products/sku/129944/intel-core-i38100t-processor-6m-cache-3-10-ghz/specifications.html) |
@@ -17,7 +16,8 @@ Oracle VM VirtualBox内の仮想、Windows 10 Pro 環境。
   | スレッド数 | 4 スレッド |
   | メモリー | 16GB |
 
-- ゲストOSの割り当て
+### ゲスト（仮想）OSの割り当て
+VirtualBox内のゲストOSもWindows 10 Pro 環境。
   | 種類 | 内容 |
   | ---- | ---- |
   | プロセッサー数<br>（仮想環境に割り当てるコア数） | 2 コア |
