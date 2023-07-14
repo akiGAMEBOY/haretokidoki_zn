@@ -3,7 +3,7 @@ title: "[VS Code]エクスプローラー内を更新日付順に並べ替える
 emoji: "🗃"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["vscode", "zenn"]
-published: false
+published: true
 ---
 ## 概要
 このサイト、[Zenn.dev](https://zenn.dev)で記事を投稿する際、[Zenn CLI](https://zenn.dev/zenn/articles/install-zenn-cli)を使用する事により、
@@ -59,14 +59,14 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
     > 引用元：VS Code - 設定 - ユーザータブ - 機能 - エクスプローラー - Sort Order 欄より
 
 ### 更新日付順（modified）以外の設定項目を紹介
-[公式のヘルプページ](https://code.visualstudio.com/docs/getstarted/settings)を参考に設定項目の表を作成しました。原文が英語で機械翻訳（[DeepL翻訳]()）を使用しています。
+[公式のヘルプページ](https://code.visualstudio.com/docs/getstarted/settings)を参考に設定項目の表を作成しました。原文が英語で機械翻訳（[DeepL翻訳]()）を使用。
 | 設定値 | 内容 |
 | ---- | ---- |
-| default（デフォルト順） | ファイルとフォルダは名前順に並べ替えられます。フォルダはファイルの前に表示されます。 |
-| mixed（混合順） | ファイルとフォルダは名前順に並べ替えられます。ファイルはフォルダと一緒に表示されます。 |
+| default（デフォルト順） | ファイルとフォルダは名前順にソートされます。フォルダはファイルの前に表示されます。 |
+| mixed（混合順） | ファイルとフォルダは名前順にソートされます。ファイルはフォルダと一緒に表示されます。 |
 | filesFirst（ファイルファースト順） | ファイルとフォルダは名前順にソートされます。ファイルはフォルダより先に表示される。 |
-| type（タイプ順） | ファイルとフォルダーは拡張子の種類でグループ化され、名前順に並べ替えられます。フォルダはファイルの前に表示されます。 |
-| modified（更新日付順）<br>👆 **今回変更した設定** | ファイルとフォルダーは拡張子の種類でグループ化され、名前順に並べ替えられます。フォルダはファイルの前に表示されます。 |
+| type（タイプ順） | ファイルとフォルダーは拡張子の種類でグループ化され、名前順にソートされます。フォルダはファイルの前に表示されます。 |
+| modified（更新日付順）<br>👆 **今回変更した設定** | ファイルとフォルダーは最終更新日順にソートされます。フォルダーはファイルの前に表示されます。 |
 | foldersNestsFiles（フォルダーネストファイル順） | ファイルとフォルダーは名前順にソートされます。フォルダはファイルの前に表示。ネストされた子を持つファイルは、他のファイルの前に表示されます。 |
 
 :::details 公式サイトの原文（英語）
@@ -79,6 +79,7 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
     >   //  - modified: Files and folders are sorted by last modified date in descending order. Folders are displayed before files.
     >   //  - foldersNestsFiles: Files and folders are sorted by their names. Folders are displayed before files. Files with nested children are displayed before other files.
     >   "explorer.sortOrder": "default",
+    > 
     > 引用元：Visual Sutdio Code 公式サイト - [User and Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings)より
 
 - DeepL翻訳した結果
