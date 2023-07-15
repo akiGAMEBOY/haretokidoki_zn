@@ -864,16 +864,16 @@ PS C:\XXXX>
     ------------------------- --------
     altgraph                  0.17.3
     arrow                     1.2.3
-    autopep8                  2.0.2
-    Babel                     2.12.1
+    autopep8                  2.0.2		👈 今回、更新
+    Babel                     2.12.1	👈 今回、更新
     binaryornot               0.4.4
-    cachetools                5.3.1
-    certifi                   2023.5.7
+    cachetools                5.3.1		👈 今回、更新
+    certifi                   2023.5.7	👈 今回、更新
     chardet                   5.1.0
-    charset-normalizer        3.2.0
-    click                     8.1.4
+    charset-normalizer        3.2.0		👈 今回、更新
+    click                     8.1.4		👈 今回、更新
     colorama                  0.4.6
-    cookiecutter              2.2.3
+    cookiecutter              2.2.3		👈 今回、更新
     EasyProcess               1.1
     entrypoint2               1.1
     et-xmlfile                1.1.0
@@ -882,53 +882,53 @@ PS C:\XXXX>
     idna                      3.4
     Jinja2                    3.1.2
     jinja2-time               0.2.0
-    lxml                      4.9.3
-    MarkupSafe                2.1.3
+    lxml                      4.9.3		👈 今回、更新
+    MarkupSafe                2.1.3		👈 今回、更新
     mccabe                    0.7.0
     MouseInfo                 0.1.3
     mss                       9.0.1
-    mypy                      1.4.1
+    mypy                      1.4.1		👈 今回、更新
     mypy-extensions           1.0.0
-    numpy                     1.25.1
-    openpyxl                  3.1.2
-    packaging                 23.1
-    pandas                    2.0.3
+    numpy                     1.25.1	👈 今回、更新
+    openpyxl                  3.1.2		👈 今回、更新
+    packaging                 23.1		👈 今回、更新
+    pandas                    2.0.3		👈 今回、更新
     pefile                    2023.2.7
-    Pillow                    10.0.0
-    pip                       23.1.2
+    Pillow                    10.0.0	👈 今回、更新
+    pip                       23.1.2	👈 今回、更新
     pip-review                1.3.0
-    pyasn1                    0.5.0
-    PyAutoGUI                 0.9.54
+    pyasn1                    0.5.0		👈 今回、更新
+    PyAutoGUI                 0.9.54	👈 今回、更新
     pycodestyle               2.10.0
-    pycryptodome              3.18.0
+    pycryptodome              3.18.0	👈 今回、更新
     pyflakes                  3.0.1
     PyGetWindow               0.0.9
-    pyinstaller               5.13.0
-    pyinstaller-hooks-contrib 2023.5
+    pyinstaller               5.13.0	👈 今回、更新
+    pyinstaller-hooks-contrib 2023.5	👈 今回、更新
     PyMsgBox                  1.0.9
     pyperclip                 1.8.2
     PyRect                    0.2.0
     pyscreenshot              3.1
-    PyScreeze                 0.1.29
+    PyScreeze                 0.1.29	👈 今回、更新
     pysmb                     1.2.9.1
     python-dateutil           2.8.2
-    python-slugify            8.0.1
-    pytweening                1.0.7
-    pytz                      2023.3
-    pywin32-ctypes            0.2.2
+    python-slugify            8.0.1		👈 今回、更新
+    pytweening                1.0.7		👈 今回、更新
+    pytz                      2023.3	👈 今回、更新
+    pywin32-ctypes            0.2.2		👈 今回、更新
     PyYAML                    6.0
-    requests                  2.31.0
-    setuptools                68.0.0
+    requests                  2.31.0	👈 今回、更新
+    setuptools                68.0.0	👈 今回、更新
     six                       1.16.0
     text-unidecode            1.3
     tkinterdnd2               0.3.0
     toml                      0.10.2
     tomli                     2.0.1
-    tqdm                      4.65.0
+    tqdm                      4.65.0	👈 今回、更新
     ttkthemes                 3.2.2
-    typing_extensions         4.7.1
+    typing_extensions         4.7.1		👈 今回、更新
     tzdata                    2023.3
-    urllib3                   2.0.3
+    urllib3                   2.0.3		👈 今回、更新
     PS C:\XXXX>
     ```
 ## まとめ
