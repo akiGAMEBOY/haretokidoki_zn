@@ -134,7 +134,7 @@ MySQL接続用のDLL（MySQL Connector/NET）を使用し、MySQLのデータベ
     | 注文番号 | 販売実績日 | 顧客名 | 販売台数 | 販売単価 |
     | ---- | ---- | ---- | ---- | ---- |
     | 入力1 | 入力2 | 入力3 | 入力4 | 入力5 |
-### GitHub
+### GitHub Repository
 https://github.com/akiGAMEBOY/PowerShell_mysql-to-csv
 #### フォルダ構成
 ```
