@@ -2,12 +2,12 @@
 title: "[PowerShell]MySQLのデータをCSVファイルで取得する方法 - DB to CSVファイル"
 emoji: "🦾"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["powershell", "mysql", "db", "csv", "サンプルプログラム"]
+topics: ["powershell", "mysql", "db", "csv", "サンプルコード", "サンプルプログラム"]
 published: true
 ---
 ## 概要
 [こちらの記事](https://haretokidoki-blog.com/pasocon_powershell-startup/)で文字だけを表示するスクリプトを使い、
-PowerShellのはじめ方を紹介しましたが、より実践に近いサンプルプログラム（サンプルコード）を作成しました。
+PowerShellのはじめ方を紹介しましたが、より実践に近いサンプルコード（サンプルプログラム）を作成しました。
 
 今回作成したPowerShellスクリプトはデータベース、MySQLよりデータを取得し、
 CSVファイルでダウンロードするという内容です。
