@@ -30,7 +30,7 @@ VirtualBox内のゲストOSもWindows 10 Pro 環境。
   | プロセッサー数<br>（仮想環境に割り当てるコア数） | 2 コア |
   | メモリー<br>（仮想環境に割り当てているメモリーサイズ） | 4 GB |
 
-:::details 参考情報：VirtualBoxで設定可能なプロセッサー最大値 と 物理CPUのコア数（もしくはスレッド数）と差異あり
+:::details 参考情報：VirtualBoxで設定可能なプロセッサー最大値 と 物理CPUのコア数（もしくはスレッド数）と差異あり（このブロックを選択すると折りたたみが開く）
 [こちら](https://superuser.com/questions/540407/why-does-virtualbox-show-more-cpus-than-available)の情報を参考にするとVirtualBoxの`Processor`の設定値は、
 多くとも物理CPUの `スレッド数 - 1`（スレッド数が4の場合は、3が最大値） にしないといけない。
 仮に物理CPUのスレッド数以上で設定してしまうと、ホストOSの挙動がおかしくなる可能性ありとの事。
@@ -75,7 +75,7 @@ PS C:\XXXX> python -VV
 Python 3.10.5 (tags/v3.10.5:f377153, Jun  6 2022, 16:14:13) [MSC v.1929 64 bit (AMD64)]
 PS C:\XXXX>
 ```
-::::details 補足事項：間違えて小文字のブイ（v）を指定した場合
+::::details 補足事項：間違えて小文字のブイ（v）を指定した場合（このブロックを選択すると折りたたみが開く）
 - 間違えた場合はverbose（詳細）モードが起動
     間違えて`python -v`と小文字のブイ（v）で入力してしまうと、
     Pythonのverbose（詳細）モードが起動する。
@@ -85,7 +85,7 @@ PS C:\XXXX>
 - 解決方法
   **verboseモードを終了したい場合**、「`Ctrl` + `Z`」で“^Z”を入力し`Enter`キーを入力する事で終了できる。
 
-  :::details 実行例：verboseモードの起動と終了
+  :::details 実行例：verboseモードの起動と終了（このブロックを選択すると折りたたみが開く）
   ```powershell
   PS C:\XXXX> python -v 👈 間違えて小文字のブイ（v）で実行すると起動。
   import _frozen_importlib # frozen
@@ -378,7 +378,7 @@ PS C:\XXXX>
     [notice] To update, run: python.exe -m pip install --upgrade pip
     PS C:\XXXX> 
     ```
-    :::details 補足情報：最新に更新済みのパッケージのみ確認する場合
+    :::details 補足情報：最新に更新済みのパッケージのみ確認する場合（このブロックを選択すると折りたたみが開く）
     `pip list -u`（もしくは`--uptodate`）でインストール済みのパッケージ内で、
     更新済みのパッケージのみ（更新可能なパッケージは非表示）一覧表示する。
     ```powershell
@@ -462,7 +462,7 @@ PS C:\XXXX>
     - すべてのパッケージを一括してアップデートする方法
     - パッケージごとに更新有無を選択しアップデートする方法
 
-    :::details 参考情報：pip-reviewをインストールしていない場合
+    :::details 参考情報：pip-reviewをインストールしていない場合（このブロックを選択すると折りたたみが開く）
     インストールしていない場合、pipコマンドで`pip-review`を導入する。
     ```powershell
     PS C:\XXXX> pip install pip-review
@@ -472,7 +472,7 @@ PS C:\XXXX>
         ```powershell:すべてのパッケージのアップデートコマンド
         PS C:\XXXX> pip-review --auto
         ```
-        :::details 参考情報：アップデートが無かった場合の表示
+        :::details 参考情報：アップデートが無かった場合の表示（このブロックを選択すると折りたたみが開く）
         ```powershell
         PS C:\XXXX> pip-review --auto                                                                   
         Everything up-to-date
