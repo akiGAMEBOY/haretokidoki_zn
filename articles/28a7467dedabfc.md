@@ -153,3 +153,6 @@ PowerShell_mysql-to-csv
     https://zenn.dev/haretokidoki/articles/f1634c386ffc1d
 - 使いやすいSQLクライアントツール（DBeaver）
     https://wonwon-eater.com/dbeaver-review/
+## 関連記事
+https://haretokidoki-blog.com/pasocon_powershell-startup/
+https://zenn.dev/haretokidoki/articles/7e6924ff0cc960
