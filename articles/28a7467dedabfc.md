@@ -2,7 +2,7 @@
 title: "[PowerShell]MySQLのデータをCSVファイルで取得する方法 - DB to CSVファイル"
 emoji: "🦾"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["powershell", "mysql", "db", "csv", "サンプルコード", "サンプルプログラム"]
+topics: ["powershell", "mysql", "db", "csv", "サンプルプログラム"]
 published: true
 ---
 ## 概要
