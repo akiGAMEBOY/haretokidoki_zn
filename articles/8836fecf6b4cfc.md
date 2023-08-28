@@ -1,5 +1,5 @@
 ---
-title: "Pythonとpipパッケージのバージョン確認 & 一括アップデート方法"
+title: "Pythonとpipパッケージのバージョン確認＆一括アップデート方法"
 emoji: "🐍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["python", "pip"]

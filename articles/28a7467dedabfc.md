@@ -1,5 +1,5 @@
 ---
-title: "[PowerShell]MySQLのデータをCSVファイルで取得する方法 - DB to CSVファイル"
+title: "[PowerShell]MySQLデータをCSVファイルで取得する方法 - DB to CSV"
 emoji: "🦾"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell", "mysql", "db", "csv", "サンプルプログラム"]

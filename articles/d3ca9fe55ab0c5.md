@@ -1,5 +1,5 @@
 ---
-title: "nupkgファイル内のDLLファイル等を取得（抽出・取り出し）する方法"
+title: "nupkgファイル内のDLLファイルを取り出す方法"
 emoji: "🤹‍♀️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["nuget", "nupkg", "dll"]
