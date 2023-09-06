@@ -1,5 +1,5 @@
 ---
-title: "[VS Code]エクスプローラー内を更新日付順に並べ替える方法"
+title: "[VS Code]エクスプローラー内を更新日付（降順）で並べ替える方法"
 emoji: "🗃"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["vscode", "zenn"]
