@@ -12,6 +12,9 @@ published: true
     https://zenn.dev/haretokidoki/scraps/9319e748e3120e
 
 Zenn CLIのコマンド`npx zenn new:articles`で新規記事を作成すると“ランダム14桁の半角英数字のMarkdownファイル（例：`12345678901234.md`）”が自動的に生成されます。
+
+![](https://storage.googleapis.com/zenn-user-upload/eaf255130328-20230906.png)
+*画像：Zennn CLIで自動生成されたMarkdownファイルの一覧*
 　
 VS Codeの左側にアイコンがあるエクスプローラーの並び順の初期値が名前順となっており、
 最近、ファイル数が増えた影響で特定のMarkdownファイルを探すのが不便になっていました。
