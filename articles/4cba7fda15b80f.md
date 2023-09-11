@@ -54,7 +54,7 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
     ::::
 1. Sort Orderを「modified」に変更
     設定を「`default`」から「`modified`」に変更。
-    ![](https://storage.googleapis.com/zenn-user-upload/97b70c5baede-20230713.png =600x)
+    ![](https://storage.googleapis.com/zenn-user-upload/97b70c5baede-20230713.png =800x)
     *画像：変更後の画面。VS Code - 設定 - ユーザータブ - 機能 - エクスプローラー - Sort Order 「modified」*
     > Sort Order
     > 
