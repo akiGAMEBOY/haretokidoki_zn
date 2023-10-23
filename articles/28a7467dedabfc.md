@@ -29,16 +29,16 @@ https://zenn.dev/haretokidoki/articles/a29a84f3048cfb
 ### MySQL Connector/NETのインストールとDLLのコピー
 接続先のデータベース、MySQLのバージョンは`5.1`を想定し、MySQL Connector/NETは`6.8.7`をインストールした。
 
-MySQL Connector/NETのインストール後に`C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll`のDLLファイルをプログラムの格納フォルダ[^1]にコピー。
+MySQL Connector/NETのインストール後に`C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll`のDLLファイルをプログラムの格納フォルダー[^1]にコピー。
 サンプルプログラムでは、このコピー先の`MySql.Data.dll`[^2]を参照してMySQLに接続する。
 [^1]: サンプルプログラムでは`PowerShell_mySQL-to-csv\source配下`
 [^2]: サンプルプログラムでは`PowerShell_mySQL-to-csv\source\MySql.Data.dll`
 
-コピー先の`MySql.Data.dll`ではなく、MySQL Connector/NETのインストールフォルダを直接参照する場合は、
+コピー先の`MySql.Data.dll`ではなく、MySQL Connector/NETのインストールフォルダーを直接参照する場合は、
 インストールしたバージョンに合わせてパスの指定を変更する事が必要となる。
-- インストールフォルダの変化点（変化点を太文字で表記）
+- インストールフォルダーの変化点（変化点を太文字で表記）
 C:\Program Files (x86)\MySQL\\**MySQL Connector Net X.X.X**\Assemblies\\**vX.X**\MySql.Data.dll
-```diff powershell:DLLの参照先をインストールフォルダに変更する場合（ファイル名：Main.ps1）
+```diff powershell:DLLの参照先をインストールフォルダーに変更する場合（ファイル名：Main.ps1）
  [System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent                                      # 他でも使用している為、削除しない
 -[System.String]$dll_path = $current_dir + "\MySQL.Data.dll"                                                            # コピー先
 +[System.String]$dll_path = "C:\Program Files (x86)\MySQL\MySQL Connector Net 6.8.7\Assemblies\v4.5\MySql.Data.dll"     # インストール先
@@ -90,7 +90,7 @@ flowchart TB
 #### 機能仕様
 1. 初期設定
     - MySQL接続用のDLL読み込み
-    - ダウンロードフォルダのパスを取得
+    - ダウンロードフォルダーのパスを取得
     - 設定ファイルの読み込み
         1. ホスト名、またはIPアドレス
         1. ポート番号
@@ -116,7 +116,7 @@ MySQL接続用のDLL（MySQL Connector/NET）を使用し、MySQLのデータベ
 接続後、SQL文を実行しデータを取得する。
 なお、取得後のデータが0件の場合は処理を中断する。
 1. CSVファイル出力
-ダウンロードフォルダ（C:¥Users¥`ユーザ名`\Downloads 等）の配下に、
+ダウンロードフォルダー（C:¥Users¥`ユーザ名`\Downloads 等）の配下に、
 ファイル名「MySQL-to-csv_`集計開始日付`-`集計終了日付`.csv」で新規保存。
 既にファイルが存在する場合は上書き保存する。
 #### 入出力ファイル
@@ -136,7 +136,7 @@ MySQL接続用のDLL（MySQL Connector/NET）を使用し、MySQLのデータベ
     | 入力1 | 入力2 | 入力3 | 入力4 | 入力5 |
 ### GitHub Repository
 https://github.com/akiGAMEBOY/PowerShell_mysql-to-csv
-#### フォルダ構成
+#### フォルダー構成
 ```
 PowerShell_mysql-to-csv
 │  mysql-to-csv.bat     ・・・起動用バッチファイル
