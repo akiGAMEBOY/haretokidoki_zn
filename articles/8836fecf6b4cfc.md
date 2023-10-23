@@ -592,6 +592,13 @@ PS C:\XXXX>
     urllib3                   2.0.3
     PS C:\XXXX>
     ```
+
+## 参考情報
+https://python.softmoco.com/devenv/how-to-check-python-version-windows.php#:~:text=コマンドプロンプトで%20python%20--,することができます。
+https://magazine.techacademy.jp/magazine/46571
+https://pkunallnet.com/pcinfo/windows/pipupdate/
+https://dragstar.hatenablog.com/entry/2016/09/02/113243
+
 ## まとめ
 - Pythonのバージョン確認するコマンド
     `python -V` 👈 大文字のブイ
@@ -604,9 +611,3 @@ PS C:\XXXX>
         `pip-review --auto`
     - パッケージごと更新有無を選択する場合
         `pip-review --interactive`
-
-## 参考情報
-https://python.softmoco.com/devenv/how-to-check-python-version-windows.php#:~:text=コマンドプロンプトで%20python%20--,することができます。
-https://magazine.techacademy.jp/magazine/46571
-https://pkunallnet.com/pcinfo/windows/pipupdate/
-https://dragstar.hatenablog.com/entry/2016/09/02/113243
