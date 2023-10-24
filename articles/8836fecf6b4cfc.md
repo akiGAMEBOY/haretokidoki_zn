@@ -41,6 +41,9 @@ VirtualBox内のゲストOSもWindows 10 Pro 環境。
 :::
 ### IDE
 #### VS Code 本体
+```powershell:コピー用
+code -v
+```
 ```powershell
 PS C:\XXXX> code -v
 1.80.0
@@ -50,6 +53,9 @@ PS C:\XXXX>
 ```
 https://www.curict.com/item/00/007bbb1.html#:~:text=Visual%20Studio%20Codeのバージョン,オプションを使用します。
 #### VS Code 拡張機能
+```powershell:コピー用
+code --list-extensions --show-versions
+```
 ```powershell
 PS C:\XXXX> code --list-extensions --show-versions
 GrapeCity.gc-excelviewer@4.2.57
@@ -64,6 +70,11 @@ https://motamemo.com/vscode/vscode-tips/list-extensions-versions/
 ## [Python]バージョンを確認する方法
 下記の通り`python -V`（もしくは`--version`、`-VV`）の引数（オプション）を指定することで、
 バージョンを確認可能。
+```powershell:コピー用
+python -V
+python --version
+python -VV
+```
 ```powershell:pythonバージョン確認コマンド
 PS C:\XXXX> python -V
 Python 3.10.5
@@ -286,6 +297,9 @@ PS C:\XXXX>
 ::::
 ## [pip]インストール済みの全パッケージを一覧で確認する方法
 パッケージ管理システム「pip」では、`pip list`でインストール済みのパッケージ一覧を表示可能。
+```powershell:コピー用
+pip list
+```
 ```powershell:インストール済みの全パッケージを一覧表示するコマンド（更新前）
 PS C:\XXXX> pip list
 Package                   Version
@@ -366,6 +380,9 @@ PS C:\XXXX>
 1. pipで更新可能なパッケージを確認
     `pip list -o`（もしくは`--outdated`）でインストール済みのパッケージ内で、
     更新があるパッケージを一覧表示する。
+    ```powershell:コピー用
+    pip list -o
+    ```
     ```powershell:更新可能なパッケージの一覧表示コマンド
     PS C:\XXXX> pip list -o
     Package Version Latest Type
@@ -469,6 +486,9 @@ PS C:\XXXX>
     ```
     :::
     - オプション「--auto」で**すべてをアップデート**する場合
+        ```powershell:コピー用
+        pip-review --auto
+        ```
         ```powershell:すべてのパッケージのアップデートコマンド
         PS C:\XXXX> pip-review --auto
         ```
@@ -480,6 +500,9 @@ PS C:\XXXX>
         ```
         :::
     - オプション「--interactive」で**パッケージごとに更新有無を選択**する場合
+        ```powershell:コピー用
+        pip-review --interactive
+        ```
         ```powershell:パッケージごとに更新有無を選択するアップデートコマンド
         PS C:\XXXX> pip-review --interactive
         click==8.1.6 is available (you have 8.1.4)
@@ -518,6 +541,9 @@ PS C:\XXXX>
         PS C:\XXXX>
         ```
 1. アップデートが完了した事を確認
+    ```powershell:コピー用
+    pip list
+    ```
     ```powershell:インストール済みの全パッケージを一覧表示するコマンド（更新後）
     PS C:\XXXX> pip list
     Package                   Version
