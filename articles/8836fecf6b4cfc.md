@@ -44,7 +44,7 @@ VirtualBox内のゲストOSもWindows 10 Pro 環境。
 ```powershell:コピー用
 code -v
 ```
-```powershell
+```powershell:VS Code 1.80.0
 PS C:\XXXX> code -v
 1.80.0
 660393deaaa6d1996740ff4880f1bad43768c814
@@ -56,7 +56,7 @@ https://www.curict.com/item/00/007bbb1.html#:~:text=Visual%20Studio%20Codeのバ
 ```powershell:コピー用
 code --list-extensions --show-versions
 ```
-```powershell
+```powershell:VS Code 拡張機能の一覧
 PS C:\XXXX> code --list-extensions --show-versions
 GrapeCity.gc-excelviewer@4.2.57
 MS-CEINTL.vscode-language-pack-ja@1.80.2023070509
@@ -66,6 +66,7 @@ ms-python.python@2023.12.0
 ms-python.vscode-pylance@2023.7.10
 PS C:\XXXX>
 ```
+
 https://motamemo.com/vscode/vscode-tips/list-extensions-versions/
 ## [Python]バージョンを確認する方法
 下記の通り`python -V`（もしくは`--version`、`-VV`）の引数（オプション）を指定することで、
