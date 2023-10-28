@@ -6,14 +6,20 @@ topics: ["python", "pip"]
 published: true
 ---
 ## 概要
+
 仮想の開発環境を立ち上げて`pip list`でインストール済みのパッケージ一覧を確認した結果、
 **pip**自体が更新可能な状態でした。
 pip以外のパッケージについても一括でアップデートしたいと思い調べた内容を紹介します。
+
 ## この記事のターゲット
+
 - Python 初級者・初学者の方
 - Pythonのパッケージ管理システム「pip」で一括アップデートしたい方
+
 ## 環境
+
 ### ホスト（物理）OSのスペック
+
 Windows 10 Pro 環境にOracle VM VirtualBoxをインストール。
   | 種類 | 内容 |
   | ---- | ---- |
@@ -24,6 +30,7 @@ Windows 10 Pro 環境にOracle VM VirtualBoxをインストール。
   | メモリー | 16GB |
 
 ### ゲスト（仮想）OSの割り当て
+
 VirtualBox内のゲストOSもWindows 10 Pro 環境。
   | 種類 | 内容 |
   | ---- | ---- |
@@ -35,15 +42,20 @@ VirtualBox内のゲストOSもWindows 10 Pro 環境。
 多くとも物理CPUの `スレッド数 - 1`（スレッド数が4の場合は、3が最大値） にしないといけない。
 仮に物理CPUのスレッド数以上で設定してしまうと、ホストOSの挙動がおかしくなる可能性ありとの事。
 そもそも何故、VirtualBox側でスレッド数を超える値が設定可能なのかという点は、よくわからなかった。
+
 - 参考情報
-    https://superuser.com/questions/540407/why-does-virtualbox-show-more-cpus-than-available
-    https://atmarkit.itmedia.co.jp/ait/articles/1010/14/news128.html#:~:text=VirtualBoxの仕様では,倍までしか設定できない。
+    <https://superuser.com/questions/540407/why-does-virtualbox-show-more-cpus-than-available>
+    <https://atmarkit.itmedia.co.jp/ait/articles/1010/14/news128.html#:~:text=VirtualBoxの仕様では,倍までしか設定できない。>
 :::
+
 ### IDE
+
 #### VS Code 本体
+
 ```powershell:コピー用
 code -v
 ```
+
 ```powershell:VS Code 1.80.0
 PS C:\XXXX> code -v
 1.80.0
@@ -51,11 +63,15 @@ PS C:\XXXX> code -v
 x64
 PS C:\XXXX> 
 ```
-https://www.curict.com/item/00/007bbb1.html#:~:text=Visual%20Studio%20Codeのバージョン,オプションを使用します。
+
+<https://www.curict.com/item/00/007bbb1.html>
+
 #### VS Code 拡張機能
+
 ```powershell:コピー用
 code --list-extensions --show-versions
 ```
+
 ```powershell:VS Code 拡張機能の一覧
 PS C:\XXXX> code --list-extensions --show-versions
 GrapeCity.gc-excelviewer@4.2.57
@@ -67,15 +83,19 @@ ms-python.vscode-pylance@2023.7.10
 PS C:\XXXX>
 ```
 
-https://motamemo.com/vscode/vscode-tips/list-extensions-versions/
+<https://motamemo.com/vscode/vscode-tips/list-extensions-versions/>
+
 ## [Python]バージョンを確認する方法
+
 下記の通り`python -V`（もしくは`--version`、`-VV`）の引数（オプション）を指定することで、
 バージョンを確認可能。
+
 ```powershell:コピー用
 python -V
 python --version
 python -VV
 ```
+
 ```powershell:pythonバージョン確認コマンド
 PS C:\XXXX> python -V
 Python 3.10.5
@@ -87,7 +107,9 @@ PS C:\XXXX> python -VV
 Python 3.10.5 (tags/v3.10.5:f377153, Jun  6 2022, 16:14:13) [MSC v.1929 64 bit (AMD64)]
 PS C:\XXXX>
 ```
+
 ::::details 補足事項：間違えて小文字のブイ（v）を指定した場合（このブロックを選択すると折りたたみが開く）
+
 - 間違えた場合はverbose（詳細）モードが起動
     間違えて`python -v`と小文字のブイ（v）で入力してしまうと、
     Pythonのverbose（詳細）モードが起動する。
@@ -98,6 +120,7 @@ PS C:\XXXX>
   **verboseモードを終了したい場合**、「`Ctrl` + `Z`」で“^Z”を入力し`Enter`キーを入力する事で終了できる。
 
   :::details 実行例：verboseモードの起動と終了（このブロックを選択すると折りたたみが開く）
+
   ```powershell
   PS C:\XXXX> python -v 👈 間違えて小文字のブイ（v）で実行すると起動。
   import _frozen_importlib # frozen
@@ -294,13 +317,18 @@ PS C:\XXXX>
   # clear sys.audit hooks
   PS C:\XXXX> 👈 通常のプロンプトに戻った
   ```
+
   :::
 ::::
+
 ## [pip]インストール済みの全パッケージを一覧で確認する方法
+
 パッケージ管理システム「pip」では、`pip list`でインストール済みのパッケージ一覧を表示可能。
+
 ```powershell:コピー用
 pip list
 ```
+
 ```powershell:インストール済みの全パッケージを一覧表示するコマンド（更新前）
 PS C:\XXXX> pip list
 Package                   Version
@@ -378,12 +406,15 @@ PS C:\XXXX>
 ```
 
 ## [pip]更新可能なパッケージのみ一括アップデートする方法
+
 1. pipで更新可能なパッケージを確認
     `pip list -o`（もしくは`--outdated`）でインストール済みのパッケージ内で、
     更新があるパッケージを一覧表示する。
+
     ```powershell:コピー用
     pip list -o
     ```
+
     ```powershell:更新可能なパッケージの一覧表示コマンド
     PS C:\XXXX> pip list -o
     Package Version Latest Type
@@ -396,9 +427,11 @@ PS C:\XXXX>
     [notice] To update, run: python.exe -m pip install --upgrade pip
     PS C:\XXXX> 
     ```
+
     :::details 補足情報：最新に更新済みのパッケージのみ確認する場合（このブロックを選択すると折りたたみが開く）
     `pip list -u`（もしくは`--uptodate`）でインストール済みのパッケージ内で、
     更新済みのパッケージのみ（更新可能なパッケージは非表示）一覧表示する。
+
     ```powershell
     PS C:\XXXX> pip list -u
     Package                   Version
@@ -473,6 +506,7 @@ PS C:\XXXX>
     [notice] To update, run: python.exe -m pip install --upgrade pip
     PS C:\XXXX> 
     ```
+
     :::
 1. pip-reviewコマンドで一括アップデート
     pip支援パッケージ「pip-review」により更新可能なパッケージを一括してアップデート可能。
@@ -482,28 +516,37 @@ PS C:\XXXX>
 
     :::details 参考情報：pip-reviewをインストールしていない場合（このブロックを選択すると折りたたみが開く）
     インストールしていない場合、pipコマンドで`pip-review`を導入する。
+
     ```powershell
     PS C:\XXXX> pip install pip-review
     ```
+
     :::
     - オプション「--auto」で**すべてをアップデート**する場合
+
         ```powershell:コピー用
         pip-review --auto
         ```
+
         ```powershell:すべてのパッケージのアップデートコマンド
         PS C:\XXXX> pip-review --auto
         ```
+
         :::details 参考情報：アップデートが無かった場合の表示（このブロックを選択すると折りたたみが開く）
+
         ```powershell
         PS C:\XXXX> pip-review --auto                                                                   
         Everything up-to-date
         PS C:\XXXX> 
         ```
+
         :::
     - オプション「--interactive」で**パッケージごとに更新有無を選択**する場合
+
         ```powershell:コピー用
         pip-review --interactive
         ```
+
         ```powershell:パッケージごとに更新有無を選択するアップデートコマンド
         PS C:\XXXX> pip-review --interactive
         click==8.1.6 is available (you have 8.1.4)
@@ -541,10 +584,13 @@ PS C:\XXXX>
         Successfully installed PyYAML-6.0.1 click-8.1.6 pip-23.2
         PS C:\XXXX>
         ```
+
 1. アップデートが完了した事を確認
+
     ```powershell:コピー用
     pip list
     ```
+
     ```powershell:インストール済みの全パッケージを一覧表示するコマンド（更新後）
     PS C:\XXXX> pip list
     Package                   Version
@@ -558,7 +604,7 @@ PS C:\XXXX>
     certifi                   2023.5.7
     chardet                   5.1.0
     charset-normalizer        3.2.0
-    click                     8.1.6		👈 今回、更新
+    click                     8.1.6        👈 今回、更新
     colorama                  0.4.6
     cookiecutter              2.2.3
     EasyProcess               1.1
@@ -582,7 +628,7 @@ PS C:\XXXX>
     pandas                    2.0.3
     pefile                    2023.2.7
     Pillow                    10.0.0
-    pip                       23.2		👈 今回、更新
+    pip                       23.2        👈 今回、更新
     pip-review                1.3.0
     pyasn1                    0.5.0
     PyAutoGUI                 0.9.54
@@ -603,7 +649,7 @@ PS C:\XXXX>
     pytweening                1.0.7
     pytz                      2023.3
     pywin32-ctypes            0.2.2
-    PyYAML                    6.0.1		 👈 今回、更新
+    PyYAML                    6.0.1         👈 今回、更新
     requests                  2.31.0
     setuptools                68.0.0
     six                       1.16.0
@@ -621,12 +667,14 @@ PS C:\XXXX>
     ```
 
 ## 参考情報
-https://python.softmoco.com/devenv/how-to-check-python-version-windows.php#:~:text=コマンドプロンプトで%20python%20--,することができます。
-https://magazine.techacademy.jp/magazine/46571
-https://pkunallnet.com/pcinfo/windows/pipupdate/
-https://dragstar.hatenablog.com/entry/2016/09/02/113243
+
+<https://python.softmoco.com/devenv/how-to-check-python-version-windows.php#:~:text=コマンドプロンプトで%20python%20,することができます。>
+<https://magazine.techacademy.jp/magazine/46571>
+<https://pkunallnet.com/pcinfo/windows/pipupdate/>
+<https://dragstar.hatenablog.com/entry/2016/09/02/113243>
 
 ## まとめ
+
 - Pythonのバージョン確認するコマンド
     `python -V` 👈 大文字のブイ
 - pipでインストール済みのパッケージをすべて確認するコマンド
