@@ -64,7 +64,7 @@ x64
 PS C:\XXXX> 
 ```
 
-<https://www.curict.com/item/00/007bbb1.html>
+https://www.curict.com/item/00/007bbb1.html
 
 #### VS Code 拡張機能
 
@@ -83,7 +83,7 @@ ms-python.vscode-pylance@2023.7.10
 PS C:\XXXX>
 ```
 
-<https://motamemo.com/vscode/vscode-tips/list-extensions-versions/>
+https://motamemo.com/vscode/vscode-tips/list-extensions-versions/
 
 ## [Python]バージョンを確認する方法
 
@@ -668,10 +668,10 @@ PS C:\XXXX>
 
 ## 参考情報
 
-<https://python.softmoco.com/devenv/how-to-check-python-version-windows.php#:~:text=コマンドプロンプトで%20python%20,することができます。>
-<https://magazine.techacademy.jp/magazine/46571>
-<https://pkunallnet.com/pcinfo/windows/pipupdate/>
-<https://dragstar.hatenablog.com/entry/2016/09/02/113243>
+https://python.softmoco.com/devenv/how-to-check-python-version-windows.php#:~:text=コマンドプロンプトで%20python%20,することができます。
+https://magazine.techacademy.jp/magazine/46571
+https://pkunallnet.com/pcinfo/windows/pipupdate/
+https://dragstar.hatenablog.com/entry/2016/09/02/113243
 
 ## まとめ
 
