@@ -6,14 +6,16 @@ topics: ["vscode", "zenn"]
 published: true
 ---
 ## 概要
+
 このサイト、[Zenn.dev](https://zenn.dev)で記事を投稿する際、[Zenn CLI](https://zenn.dev/zenn/articles/install-zenn-cli)を使用する事により、
 「 [VS Code](https://code.visualstudio.com/) × [GitHub](https://github.co.jp/) × [Zenn.dev](https://zenn.dev) 」を連携し記事を投稿しています。
+
 - 参考情報：最初にZenn CLIを導入した際の覚え書き
     https://zenn.dev/haretokidoki/scraps/9319e748e3120e
 
 Zenn CLIのコマンド`npx zenn new:articles`で新規記事を作成すると“ランダム14桁の半角英数字のMarkdownファイル（例：`12345678901234.md`）”が自動的に生成されます。
 
-![](https://storage.googleapis.com/zenn-user-upload/eaf255130328-20230906.png =450x)
+![Zenn CLIで記事作成コマンドを実行すると自動生成されるMarkdownファイルのリスト](https://storage.googleapis.com/zenn-user-upload/eaf255130328-20230906.png =450x)
 *画像：Zennn CLIで自動生成されたMarkdownファイルの一覧*
 　
 VS Codeの左側にアイコンがあるエクスプローラーの並び順の初期値が名前順となっており、
@@ -25,10 +27,12 @@ VS Codeの左側にアイコンがあるエクスプローラーの並び順の�
 なお、**更新日付順以外**の設定項目についても公式サイトのヘルプを見つけたので合わせて紹介します。
 
 ## この記事のターゲット
+
 - VS Codeを利用している方
 - アクティビティ バー（左側にあるアイコン群） - エクスプローラー 内の並び順を変更したい方
 
 ## 設定方法
+
 Visual Studio Code（VS Code）の左側にある [アクティビティ バー](https://code.visualstudio.com/api/ux-guidelines/activity-bar)（Activity Bar） - [エクスプローラー](https://code.visualstudio.com/docs/getstarted/userinterface#_explorer)（Explorer）内、
 フォルダーやファイルの並び順を更新日付順に変更する方法。
 
@@ -54,7 +58,7 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
     ::::
 1. Sort Orderを「modified」に変更
     設定を「`default`」から「`modified`」に変更。
-    ![](https://storage.googleapis.com/zenn-user-upload/97b70c5baede-20230713.png =800x)
+    ![VS Codeの設定 - Sort Orderで「modified」に変更した状態](https://storage.googleapis.com/zenn-user-upload/97b70c5baede-20230713.png =800x)
     *画像：変更後の画面。VS Code - 設定 - ユーザータブ - 機能 - エクスプローラー - Sort Order 「modified」*
     > Sort Order
     > 
@@ -62,7 +66,8 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
     > 引用元：VS Code - 設定 - ユーザータブ - 機能 - エクスプローラー - Sort Order 欄より
 
 ### 更新日付順（modified）以外の設定項目を紹介
-[公式のヘルプページ](https://code.visualstudio.com/docs/getstarted/settings)を参考に設定項目の表を作成しました。原文が英語で機械翻訳（[DeepL翻訳]()）を使用。
+
+[公式のヘルプページ](https://code.visualstudio.com/docs/getstarted/settings)を参考に設定項目の表を作成しました。原文が英語で機械翻訳（[DeepL翻訳](https://www.deepl.com/ja/translator)）を使用。
 | 設定値 | 内容 |
 | ---- | ---- |
 | default（デフォルト順） | ファイルとフォルダーは名前順にソートされます。フォルダーはファイルの前に表示されます。 |
@@ -73,6 +78,7 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
 | foldersNestsFiles（フォルダーネストファイル順） | ファイルとフォルダーは名前順にソートされます。フォルダーはファイルの前に表示。ネストされた子を持つファイルは、他のファイルの前に表示されます。 |
 
 :::details 公式サイトの原文 - 英語（このブロックを選択すると折りたたみが開く）
+
 - 原文（英語）
     >   // Controls the property-based sorting of files and folders in the Explorer.
     >   //  - default: Files and folders are sorted by their names. Folders are displayed before files.
@@ -90,8 +96,10 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
 :::
 
 ## 参考情報
+
 https://note.com/esweat/n/nb8d5764150a5
 
 ## まとめ
+
 - アクティビティ バー - エクスプローラー の名前順を更新日付順に変更する場合
     設定を開き、ユーザータブ（もしくはワークスペースタブ） - 機能 - エクスプローラー内のSort Orderを「`default`」から「`modified`」に変更。
