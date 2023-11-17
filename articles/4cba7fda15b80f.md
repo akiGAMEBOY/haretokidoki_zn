@@ -93,8 +93,7 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
 
 - DeepL翻訳した結果
     [DeepL翻訳 - English to 日本語](https://www.deepl.com/translator#en/ja/%20%20%5C%2F%5C%2F%20Controls%20the%20property-based%20sorting%20of%20files%20and%20folders%20in%20the%20Explorer.%0A%20%20%5C%2F%5C%2F%20%20-%20default%3A%20Files%20and%20folders%20are%20sorted%20by%20their%20names.%20Folders%20are%20displayed%20before%20files.%0A%20%20%5C%2F%5C%2F%20%20-%20mixed%3A%20Files%20and%20folders%20are%20sorted%20by%20their%20names.%20Files%20are%20interwoven%20with%20folders.%0A%20%20%5C%2F%5C%2F%20%20-%20filesFirst%3A%20Files%20and%20folders%20are%20sorted%20by%20their%20names.%20Files%20are%20displayed%20before%20folders.%0A%20%20%5C%2F%5C%2F%20%20-%20type%3A%20Files%20and%20folders%20are%20grouped%20by%20extension%20type%20then%20sorted%20by%20their%20names.%20Folders%20are%20displayed%20before%20files.%0A%20%20%5C%2F%5C%2F%20%20-%20modified%3A%20Files%20and%20folders%20are%20sorted%20by%20last%20modified%20date%20in%20descending%20order.%20Folders%20are%20displayed%20before%20files.%0A%20%20%5C%2F%5C%2F%20%20-%20foldersNestsFiles%3A%20Files%20and%20folders%20are%20sorted%20by%20their%20names.%20Folders%20are%20displayed%20before%20files.%20Files%20with%20nested%20children%20are%20displayed%20before%20other%20files.%0A%20%20%22explorer.sortOrder%22%3A%20%22default%22%2C)
-
-
+:::
 
 ## 参考情報
 
