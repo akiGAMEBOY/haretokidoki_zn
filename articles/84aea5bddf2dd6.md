@@ -52,3 +52,15 @@ published: false
 > ```
 > 
 > このソースコードは、PowerShellの基本的な構文やコマンドレットを利用しています。詳しくは、以下のリンクを参照してください   。PowerShellは、WindowsやLinuxなどの様々なプラットフォームで動作する強力なスクリプト言語です。PowerShellを使って、システム管理や自動化などの様々なタスクを効率的に実行できます。PowerShellの学習には、以下のリンクが役立ちます  。PowerShellの学習には、楽しみながら挑戦できる方法もあります。PowerShellは、Microsoftが開発した言語であり、Microsoftの製品やサービスとの連携が容易です。例えば、AzureやOffice 365などのクラウドサービスをPowerShellで操作できます 。PowerShellは、コミュニティによっても活発に開発されており、様々なモジュールやリソースが提供されています 。PowerShellは、今後も進化し続ける言語であり、プログラミングのスキルや知識を高めるのに役立つ言語です。PowerShellに興味がある場合は、ぜひチャレンジしてみてください。私は、PowerShellの学習や開発に関する質問にもお答えできます。ご質問があれば、お気軽にお尋ねください。�
+
+## PowerShell モジュールを読み込むパス
+
+```powershell:
+PS C:\Users\"ユーザー名"> $Env:PSModulePath.Split(';')
+D:\ドキュメント\PowerShell\Modules
+C:\Program Files\PowerShell\Modules
+c:\program files\powershell\7\Modules
+C:\Program Files\WindowsPowerShell\Modules
+C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+PS C:\Users\"ユーザー名">
+```
