@@ -69,4 +69,59 @@ PS C:\Users\"ユーザー名">
 
 ### モジュール作成方法1
 
-モジュールファイル（`*.psm1`）を格納する為のフォルダーに
+1. 独自のモジュールファイル「`UniquePrint.psm1`」を作成する
+    Functionが定義されたモジュールファイル（`*.psm1`）を準備。
+
+    ```powershell:モジュールファイル「UniquePrint.psm1」
+    function write-unique
+    {
+        Write-Host "Display your unique string using the Write-Host cmdlet"
+    }
+
+    function Not-ExportFunction
+    {
+        "出力しない！"
+    }
+
+    Export-ModuleMember -Function write-unique
+    ```
+
+1. 利用するPowerShellのバージョンに対応した格納先をチェックする
+
+    自動変数「PSModulePath」で現在の環境で存在するモジュール格納用のパスを取得する。
+
+    ```powershell:自動変数「PSModulePath」の確認結果
+    PS C:\Users\"ユーザー名"> $Env:PSModulePath.Split(';')
+    D:\ドキュメント\PowerShell\Modules
+    C:\Program Files\PowerShell\Modules
+    c:\program files\powershell\7\Modules
+    C:\Program Files\WindowsPowerShell\Modules
+    C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+    PS C:\Users\"ユーザー名">
+    ```
+
+    今回、PowerShell 7.3.x を使用する為、対象の格納先フォルダ―を `c:\program files\powershell\7\Modules` とした。
+
+1. PowerShell CLI（`pwsh`）
+
+    ```powershell:独自コマンドレット「Write-Unique」の確認結果
+    PS C:\Users\"ユーザー名"> Write-Unique
+    Display your unique string using the Write-Host cmdlet!!!
+    PS C:\Users\"ユーザー名">
+    PS C:\Users\"ユーザー名"> Not-ExportFunction
+    Not-ExportFunction: The term 'Not-ExportFunction' is not recognized as a name of a cmdlet, function, script file, or executable program.
+    Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+    PS C:\Users\"ユーザー名">
+    ```
+
+    ```powershell:独自コマンドレット「Not-ExportFunction」の確認結果
+    PS C:\Users\"ユーザー名"> Write-Unique
+    Display your unique string using the Write-Host cmdlet!!!
+    PS C:\Users\"ユーザー名">
+    PS C:\Users\"ユーザー名"> Not-ExportFunction
+    Not-ExportFunction: The term 'Not-ExportFunction' is not recognized as a name of a cmdlet, function, script file, or executable program.
+    Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+    PS C:\Users\"ユーザー名">
+    ```
+
+独自で作成したモジュールファイル（`*.psm1`）を使用しているPowerShellバージョンに対応したモジュール用のフォルダーに格納する。
