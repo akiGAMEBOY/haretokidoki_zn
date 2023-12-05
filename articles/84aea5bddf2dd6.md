@@ -195,7 +195,9 @@ Get-HotFix | Sort-Object InstalledOn -Descending
 ```
 
 ```powershell:ホスト名
-$Env:COMPUTERNAME
+PS C:\Users\"ユーザー名"> $Env:COMPUTERNAME
+XXXX
+PS C:\Users\"ユーザー名">
 ```
 
 ```powershell:インストール一覧
