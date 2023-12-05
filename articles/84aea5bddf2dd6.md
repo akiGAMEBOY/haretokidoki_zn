@@ -100,7 +100,7 @@ PS C:\Users\"ユーザー名">
     PS C:\Users\"ユーザー名">
     ```
 
-    今回、PowerShell 7.3.x を使用する為、対象の格納先フォルダ―を `c:\program files\powershell\7\Modules` とした。
+    今回、PowerShell 7.3.x を使用する為、対象の格納先フォルダーを `c:\program files\powershell\7\Modules` とした。
 
 1. PowerShell CLI（`pwsh`）
 
