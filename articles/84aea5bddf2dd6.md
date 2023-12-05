@@ -207,6 +207,8 @@ PS C:\Users\"ユーザー名"> Get-CimInstance -Class CIM_Product | Select-Objec
 PS C:\Users\"ユーザー名">
 ```
 
+上記は「`$FormatEnumerationLimit = -1`」だと実現できなかった。
+
 たとえば、ホスト名 と ポート番号 のデータが格納されている2次元配列を繰り返し実行して、
 ポートの疎通確認を行う場合、
 
