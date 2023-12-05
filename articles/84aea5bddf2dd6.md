@@ -165,7 +165,7 @@ ComputerName     : google.com
 RemoteAddress    : 142.250.206.206
 RemotePort       : 443
 InterfaceAlias   : イーサネット
-SourceAddress    : 192.168.0.5
+SourceAddress    : 192.168.XXX.XXX
 TcpTestSucceeded : True
 
 
@@ -176,7 +176,7 @@ ComputerName     : smtp.gmail.com
 RemoteAddress    : 64.233.187.109
 RemotePort       : 25
 InterfaceAlias   : イーサネット
-SourceAddress    : 192.168.0.5
+SourceAddress    : 192.168.XXX.XXX
 TcpTestSucceeded : True
 
 
