@@ -125,3 +125,60 @@ PS C:\Users\"ユーザー名">
     ```
 
 独自で作成したモジュールファイル（`*.psm1`）を使用しているPowerShellバージョンに対応したモジュール用のフォルダーに格納する。
+
+```powershell
+PowerShell 7.3.10
+
+   A new PowerShell stable release is available: v7.4.0
+   Upgrade now, or check out the release page at:
+     https://aka.ms/PowerShell-Release?tag=v7.4.0
+
+PS C:\Users\"ユーザー名"> Test-NetConnection localhost -port 8080
+WARNING: TCP connect to (::1 : 8080) failed
+WARNING: TCP connect to (127.0.0.1 : 8080) failed
+
+ComputerName           : localhost
+RemoteAddress          : ::1
+RemotePort             : 8080
+InterfaceAlias         : Loopback Pseudo-Interface 1
+SourceAddress          : ::1
+PingSucceeded          : True
+PingReplyDetails (RTT) : 0 ms
+TcpTestSucceeded       : False
+
+
+PS C:\Users\"ユーザー名">
+PS C:\Users\"ユーザー名"> Test-NetConnection localhost -port 8000
+
+ComputerName     : localhost
+RemoteAddress    : ::1
+RemotePort       : 8000
+InterfaceAlias   : Loopback Pseudo-Interface 1
+SourceAddress    : ::1
+TcpTestSucceeded : True
+
+
+PS C:\Users\"ユーザー名">  
+PS C:\Users\"ユーザー名"> Test-NetConnection google.com -port 443
+
+ComputerName     : google.com
+RemoteAddress    : 142.250.206.206
+RemotePort       : 443
+InterfaceAlias   : イーサネット
+SourceAddress    : 192.168.160.189
+TcpTestSucceeded : True
+
+
+PS C:\Users\"ユーザー名">
+PS C:\Users\"ユーザー名"> Test-NetConnection smtp.gmail.com -port 25
+
+ComputerName     : smtp.gmail.com
+RemoteAddress    : 64.233.187.109
+RemotePort       : 25
+InterfaceAlias   : イーサネット
+SourceAddress    : 192.168.160.189
+TcpTestSucceeded : True
+
+
+PS C:\Users\"ユーザー名">  
+```
