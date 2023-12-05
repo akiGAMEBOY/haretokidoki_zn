@@ -182,3 +182,42 @@ TcpTestSucceeded : True
 
 PS C:\Users\"ユーザー名">  
 ```
+
+コマンドレットを実行して、実行した端末情報を収集する場合
+
+```powershell:IPアドレス
+(Get-CimInstance -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled=$true).IPAddress
+Get-CimInstance -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled=$true | Select-Object -ExpandProperty IPAddress
+```
+
+```powershell:Windows Updateの状況
+Get-HotFix | Sort-Object InstalledOn -Descending
+```
+
+```powershell:ホスト名
+$Env:COMPUTERNAME
+```
+
+```powershell:インストール一覧
+PS C:\Users\"ユーザー名"> Get-CimInstance -Class CIM_Product | Select-Object Name,Vendor,InstallDate,Version | Sort-Object InstallDate -Descending | Format-Table -AutoSize -Wrap > D:\Downloads\20231205_memo.txt
+PS C:\Users\"ユーザー名">
+```
+
+たとえば、ホスト名 と ポート番号 のデータが格納されている2次元配列を繰り返し実行して、
+ポートの疎通確認を行う場合、
+
+```powershell:ポートの疎通確認
+$port_check_lists = @(
+    @('localhost','8080'),
+    @('localhost','8000'),
+    @('google.com','443'),
+    @('smtp.google.com','25')
+)
+
+for($i = 0; $i -lt $port_check_lists.Count; $i++) {
+    $port_check_command = 'Test-NetConnection '
+    $target_row = $port_check_lists[$i]
+
+    Test-NetConnection $target_row[0] -Port $target_row[1]
+}
+```
