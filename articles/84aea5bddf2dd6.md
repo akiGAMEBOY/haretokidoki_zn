@@ -199,6 +199,8 @@ $Env:COMPUTERNAME
 ```
 
 ```powershell:インストール一覧
+PS C:\Users\"ユーザー名"> $FormatEnumerationLimit = 500
+PS C:\Users\"ユーザー名">
 PS C:\Users\"ユーザー名"> Get-CimInstance -Class CIM_Product | Select-Object Name,Vendor,InstallDate,Version | Sort-Object InstallDate -Descending | Format-Table -AutoSize -Wrap > D:\Downloads\20231205_memo.txt
 PS C:\Users\"ユーザー名">
 ```
