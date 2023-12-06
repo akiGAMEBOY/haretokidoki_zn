@@ -8,13 +8,13 @@ published: false
 ## 概要
 
 PowerShell CLIで毎回、決まったコマンドレット複数個を実行する運用がありました。
-作業ミスの防止や作業工数を短縮化など作業効率化をはかる為、文字列配列をFunctionに渡すと配列内にあるコマンドの文字列を一つひとつ読み実行してくれるコードを作成しました。
+実用性があるかわかりませんが（あまりなさそう）、文字列配列をFunctionに渡すと配列内にあるコマンドの文字列を一つひとつ読み実行してくれるコードを作成しました。
 
 それでは詳しく紹介します。
 
 ## この記事のターゲット
 
-- ヒューマンエラーの撲滅や作業精度の向上など作業効率化をはかりたい方
+- PowerShellユーザーの方
 - 定期的に同じコマンドレットを実行している方
 - 定期的に覚えにくいコマンドを実行している方
     ※ 覚えにくいコマンドの例：引数やパイプラインがたくさんあるケースなど
@@ -318,13 +318,14 @@ Invoke-MultipleCommands -commands @(
     ```
 
     いくつかのネット記事で「`$FormatEnumerationLimit = -1`」で無制限？になるという情報があったが、
-    今回のコマンドだと実現できず見切れてしまった為、`500`で設定。
+    私の環境 と 今回、実行したコマンドだと有効にならず見切れてしまった。
+    その為、デフォルトの「`4`」から「`500`」で設定変更した事で解消。
     　
-    ちなみに `$FormatEnumerationLimit` は画面表示の際の項目数らしい。
-    その為、コマンドを実行する**PowerShell ウィンドウのサイズが小さい場合でも途中で見切れてしまう**ので、
-    必要に応じてPowerShell ウィンドウ自体をマウス操作で大きくしてあげる必要がある。
+    ちなみに [$FormatEnumerationLimit](https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-7.4#formatenumerationlimit) は画面表示の際の項目数らしい。
+    コマンドを実行する際、**PowerShell ウィンドウのサイズが小さい場合でも途中で見切れてしまう**ので、
+    画面に表示する場合は設定変更だけでなくPowerShell ウィンドウのサイズも調整が必要なケースもある。
     　
-    ファイルとして出力時には、`Foreach-Object` などを使用し見切れないよう出力する必要があるとの事。
+    また、ファイルとして出力時には、`Foreach-Object` などを活用して見切れないよう調整が必要との事。
     https://stackoverflow.com/questions/37847285/formatenumerationlimit-1-within-a-powershell-script
 
 :::
@@ -332,7 +333,7 @@ Invoke-MultipleCommands -commands @(
 ## 参考情報
 
 :::details 参考情報：Bing AIで確認した結果
-> ❓ Bing AIへの質問
+> ❓ Bing AIへの依頼内容
 > 
 > 以下の要件を満たすソースコードを作成して。
 > ・言語はPowerShell
@@ -340,7 +341,7 @@ Invoke-MultipleCommands -commands @(
 > ・繰り返し処理で配列内にあるコマンドを一つひとつ実行
 > ・流用できるようモジュール化する
 
-> ✅ Bing AIの回答
+> ✅ Bing AIからの回答
 > 
 > 以下の要件を満たすソースコードを作成しました。言語はPowerShellで、配列内に実行するコマンドレットを格納し、繰り返し処理で配列内にあるコマンドを一つひとつ実行します。また、流用できるようにモジュール化しています。ソースコードは以下の通りです。
 > 
