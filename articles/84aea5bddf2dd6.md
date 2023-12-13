@@ -301,7 +301,7 @@ Invoke-MultipleCommands -commands @(
     $Env:COMPUTERNAME
     ```
 
-    ```powershell:コマンドレット「Get-CimInstance -Class Win32_NetworkAdapterConfiguration」でIPアドレスを確認
+    ```powershell:コマンドレット「Get-CimInstance」でIPアドレスを確認
     Get-CimInstance -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled=$true | Select-Object -ExpandProperty IPAddress
     # これでも同じ結果
     # (Get-CimInstance -Class Win32_NetworkAdapterConfiguration -Filter IPEnabled=$true).IPAddress
@@ -311,7 +311,7 @@ Invoke-MultipleCommands -commands @(
     Get-HotFix | Sort-Object InstalledOn -Descending
     ```
 
-    ```powershell:コマンドレット「Get-CimInstance -Class CIM_Product」でインストール済みソフトの一覧を確認
+    ```powershell:コマンドレット「Get-CimInstance」でインストール済みソフトの一覧を確認
     # 表示する項目数の最大値を500に拡張
     $FormatEnumerationLimit = 500
     # インストール一覧を確認するコマンド
@@ -334,7 +334,7 @@ Invoke-MultipleCommands -commands @(
 ## 参考情報
 
 :::details 参考情報：Bing AIで確認した結果
-ほぼ、Bing AIが作成。
+ほぼ、Bing AIがソースコードを作成。
 > ❓ Bing AIへの依頼内容
 > 
 > 以下の要件を満たすソースコードを作成して。
