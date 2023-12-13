@@ -166,7 +166,7 @@ Invoke-MultipleCommands -commands @('Get-Date', 'Get-Item .\', 'Get-PSDrive C')
 
 1. モジュールの格納先一覧を確認する
 
-    自動変数「PSModulePath」で現在の環境におけるモジュール格納用のパスを取得する。
+    自動変数「`PSModulePath`」で現在の環境におけるモジュール格納用のパスを取得する。
 
     ```powershell:自動変数「PSModulePath」の確認結果
     PS C:\Users\"ユーザー名"> $Env:PSModulePath.Split(';')
