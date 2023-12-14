@@ -221,7 +221,7 @@ Invoke-MultipleCommands -commands @(
 )
 ```
 
-:::details 上記のコマンド実行結果 と 個々のコマンドについて解説
+:::details 上記のコマンド実行結果 と 個々のコマンドについて解説 < クリックで折りたたみが開く >
 
 - 上記のコマンドの実行結果
 
@@ -334,7 +334,7 @@ Invoke-MultipleCommands -commands @(
 
 ## 参考情報
 
-:::details 参考情報：Bing AIで確認した結果
+:::details 参考情報：Bing AIで確認した結果 < クリックで折りたたみが開く >
 ほぼ、Bing AIがソースコードを作成。
 > ❓ Bing AIへの依頼内容
 > 

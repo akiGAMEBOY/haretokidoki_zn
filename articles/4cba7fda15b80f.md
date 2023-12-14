@@ -51,7 +51,7 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
     - ワークスペースタブ
         ワークスペースごとに反映される設定。
     
-    :::details 参考情報 <クリックで折りたたみが開く>
+    :::details 参考情報 < クリックで折りたたみが開く >
     - [設定にある ユーザータブ と ワークスペースタブ の違い](https://qiita.com/tatsuyayamakawa/items/df7e5b1b0d7c336af124#:~:text=Visual%20Studio%20Code（以下、VSCode,スペースごとの設定だ。)
     - [VS Codeでワークスペースを活用する方法](https://www.javadrive.jp/vscode/file/index4.html)
     :::
@@ -77,7 +77,7 @@ Visual Studio Code（VS Code）の左側にある [アクティビティ バー]
 | modified（更新日付順）<br>👆 **今回変更した設定** | ファイルとフォルダーは最終更新日順にソートされます。フォルダーはファイルの前に表示されます。 |
 | foldersNestsFiles（フォルダーネストファイル順） | ファイルとフォルダーは名前順にソートされます。フォルダーはファイルの前に表示。ネストされた子を持つファイルは、他のファイルの前に表示されます。 |
 
-:::details 公式サイトの原文 - 英語 <クリックで折りたたみが開く>
+:::details 公式サイトの原文 - 英語 < クリックで折りたたみが開く >
 
 - 原文（英語）
     >   // Controls the property-based sorting of files and folders in the Explorer.
