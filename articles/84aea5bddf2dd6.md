@@ -43,7 +43,7 @@ PS C:\Users\"ユーザー名">
 
 ## PowerShellで実行する方法
 
-**CLIで実行する方法** と **Functionで定義して実行する方法** という代表的な2つの方法、
+**CLIで実行する方法** と **Functionとして定義し実行する方法** という代表的な2つの方法、
 さらに **モジュールとして定義し実行する方法** の合計3つの方法を紹介。
 
 ### CLIで実行する方法
@@ -109,7 +109,7 @@ Free                   : 39867117568
 PS C:\Users\"ユーザー名">
 ```
 
-### Functionで定義して実行する方法
+### Functionとして定義し実行する方法
 
 ```powershell:Function「Invoke-MultipleCommands」を作成し実行
 # 関数として定義
