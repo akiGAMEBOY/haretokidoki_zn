@@ -1,9 +1,9 @@
 ---
-title: "[PowerShell]複数コマンドがある文字列配列を一つひとつ実行する方法"
+title: "[PowerShell]複数コマンドを格納した文字列配列を一つひとつ自動で実行する方法"
 emoji: "🎲"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
-published: false
+published: true
 ---
 ## 概要
 
@@ -19,6 +19,7 @@ PowerShell CLIで毎回、決まったコマンドレットをいくつか実行
 - 定期的に同じコマンドレットを実行している方
 - 定期的に覚えにくいコマンドを実行している方
     ※ 覚えにくいコマンドの例：引数やパイプライン、セミコロン（複数実行）がたくさんあるケースなど
+- Function（関数）をモジュールとして定義する方法を知りたい方
 
 ## 環境
 
@@ -111,7 +112,7 @@ PS C:\Users\"ユーザー名">
 ### Functionで定義して実行する方法
 
 ```powershell:Function「Invoke-MultipleCommands」を作成し実行
-# 関数に定義
+# 関数として定義
 function Invoke-MultipleCommands {
     param (
         # 必須項目：実行するコマンドレットがある文字列配列用のパラメーター
@@ -180,7 +181,7 @@ Invoke-MultipleCommands -commands @('Get-Date', 'Get-Item .\', 'Get-PSDrive C')
 
 1. モジュール格納用のフォルダーにフォルダー「Invoke-MultipleCommands」を作成
     私の場合、PowerShell 7.3.x を使用しているので対象の格納先フォルダーを `c:\program files\powershell\7\Modules` とし、
-    その配下にフォルダーを「`Invoke-MultipleCommands`」作成した。
+    その配下にフォルダー「`Invoke-MultipleCommands`」を作成。
 
 1. 独自のモジュールファイル「`Invoke-MultipleCommands.psm1`」を格納用のフォルダーにコピー
     作成した独自のモジュールファイル `Invoke-MultipleCommands.psm1` を 「`c:\program files\powershell\7\Modules\Invoke-MultipleCommands`」配下に格納する。
@@ -190,7 +191,7 @@ Invoke-MultipleCommands -commands @('Get-Date', 'Get-Item .\', 'Get-PSDrive C')
     ```powershell:作成したFunction「Invoke-MultipleCommands」が実行できること
     PS C:\Users\"ユーザー名"> Invoke-MultipleCommands -commands @("Get-Date", "Get-Item .\", "Get-PSDrive C")
     
-    ～～～ 省略（結果が同様の為） ～～～
+    ～～～ 省略（前述した結果と同様の為） ～～～
 
     PS C:\Users\"ユーザー名">
     ```
@@ -392,14 +393,14 @@ Invoke-MultipleCommands -commands @(
 
 ## まとめ
 
-下記の方法で文字列配列内のコマンド群を個々に実行する事ができた。
+下記の方法で文字列配列のコマンド群を個々に実行する事ができた。
 
 - 文字列配列は `foreach` でまわし個々に処理する
 - 個々の処理内容
-    - `"ScriptBlockの変数" = [ScriptBlock]::Create("文字列（コマンド記載あり）")` で文字列をScriptBlockに変換
-    - Invoke-Commandの引数である"-ScriptBlock"に上記で変換した「ScriptBlockの変数」を渡し実行
+    - `"ScriptBlockの変数" = [ScriptBlock]::Create("コマンドが記載された文字列")` で文字列をScriptBlockに変換
+    - Invoke-Commandの引数である"-ScriptBlock"に変換した「ScriptBlockの変数」を渡し実行
 
-ここまで書いといて何ですが、**セミコロン（;）で区切り複数個のコマンドを一括実行した方が手っ取り早い**と思います。
+ここまで書いといて何ですが普通にPowerShellウィンドウでCLI実行する場合、わざわざ文字列配列にコマンドを格納するのではなく、コマンドを**セミコロン（;）で区切り複数個を一括実行した方が手っ取り早い**と思います。
 
 ## 関連記事
 
