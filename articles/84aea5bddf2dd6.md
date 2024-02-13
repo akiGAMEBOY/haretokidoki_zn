@@ -1,5 +1,5 @@
 ---
-title: "[PowerShell]複数コマンドを格納した文字列配列を一つひとつ自動で実行する方法"
+title: "[PowerShell]複数コマンド格納した文字列配列を一つひとつ実行する方法"
 emoji: "🎲"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
