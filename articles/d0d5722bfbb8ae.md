@@ -56,3 +56,25 @@ PS C:\Users\"ユーザー名">
 ```powershell:
 Start-Process -Verb RunAs -FilePath powershell.exe -ArgumentList "-Command 'Get-Date;Get-EventLog -LogName Application -Source HogeHoge';Read-Host 'Pause Start.'"
 ```
+
+管理者権限で実行して標準出力やエラー出力も取得する場合
+
+```powershell:
+$pinfo = New-Object System.Diagnostics.ProcessStartInfo
+$pinfo.FileName = "powershell.exe"
+$pinfo.RedirectStandardError = $true
+$pinfo.RedirectStandardOutput = $true
+$pinfo.UseShellExecute = $false
+$pinfo.Arguments = "-Command 'Get-Date;Get-EventLog -LogName Application -Source HogeHoge';Read-Host 'Pause Start.'"
+$p = New-Object System.Diagnostics.Process
+$p.StartInfo = $pinfo
+$p.Start() | Out-Null
+$p.WaitForExit()
+$stdout = $p.StandardOutput.ReadToEnd()
+$stderr = $p.StandardError.ReadToEnd()
+Write-Host "stdout: $stdout"
+Write-Host "stderr: $stderr"
+Write-Host "exit code: " + $p.ExitCode
+```
+
+https://stackoverflow.com/questions/8761888/capturing-standard-out-and-error-with-start-process
