@@ -50,3 +50,9 @@ Container          :
 PS C:\Users\"ユーザー名">
 PS C:\Users\"ユーザー名">
 ```
+
+管理者権限で実行する場合
+
+```powershell:
+Start-Process -Verb RunAs -FilePath powershell.exe -ArgumentList "-Command 'Get-Date;Get-EventLog -LogName Application -Source HogeHoge';Read-Host 'Pause Start.'"
+```
