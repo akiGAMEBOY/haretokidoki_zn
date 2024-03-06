@@ -57,7 +57,23 @@ PS C:\Users\"ユーザー名">
 Start-Process -Verb RunAs -FilePath powershell.exe -ArgumentList "-Command 'Get-Date;Get-EventLog -LogName Application -Source HogeHoge';Read-Host 'Pause Start.'"
 ```
 
-管理者権限で実行して標準出力やエラー出力も取得する場合
+```powershell:実行するコマンドを変数に代入
+$command_text = @"
+-Command 
+Get-Date > D:\Downloads\output.txt
+Get-EventLog -LogName Application -Source HogeHoge >> D:\Downloads\output.txt
+"@
+```
+
+```powershell:管理者としてPowerShell（バージョン5.1）を実行
+Start-Process -Verb RunAs -FilePath powershell.exe -ArgumentList $command_text
+```
+
+```powershell:実行した結果を表示
+Get-Content D:\Downloads\output.txt
+```
+
+.Net frameworkで実行する方法
 
 ```powershell:
 $pinfo = New-Object System.Diagnostics.ProcessStartInfo
