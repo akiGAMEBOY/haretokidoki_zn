@@ -1,6 +1,6 @@
 ---
 title: "PowerShell Coreから5.1環境のコマンドを実行する方法"
-emoji: "🐈"
+emoji: "🔀"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell", "windows"]
 published: false
