@@ -132,7 +132,7 @@ sequenceDiagram
     powershell -Command $command_text
     ```
 
-:::details 実際に実行した結果
+:::details 実際に実行した結果 < クリックで折りたたみが開く >
 
 ```powershell:実際に実行した結果
 PS C:\Users\"ユーザー名"> [System.String]$command_text = @"
@@ -232,7 +232,7 @@ PS C:\Users\"ユーザー名">
 
 上記は、管理者権限があるので問題なく5.1環境で実行できる。
 
-:::details 補足情報：powershellコマンドの実行ファイルの場所
+:::details 補足情報：powershellコマンドの実行ファイルの場所 < クリックで折りたたみが開く >
 
 Get-Command（gcm）で確認可能。
 私の環境では「`C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe`」だった。
@@ -299,7 +299,7 @@ PS C:\Users\"ユーザー名">
     Get-Content D:\Downloads\output.txt
     ```
 
-:::details 実際に実行した結果
+:::details 実際に実行した結果 < クリックで折りたたみが開く >
 
 ```powershell:実際に実行した結果
 PS C:\Users\"ユーザー名"> $command_text = @"
@@ -361,7 +361,7 @@ Write-Host "Exit Code: [$($ps.ExitCode)]"
 Write-Host ''
 ```
 
-:::details 実際に実行した結果
+:::details 実際に実行した結果 < クリックで折りたたみが開く >
 
 ```powershell:実際に実行した結果
 PS C:\Users\"ユーザー名"> $ps_setdata = New-Object System.Diagnostics.ProcessStartInfo
