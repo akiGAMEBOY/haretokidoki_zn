@@ -102,9 +102,9 @@ sequenceDiagram
 
 以降より下記3つの方法を記載。
 
-- A\. powershellコマンドで実行
-- B\. 一般権限の状態でコマンド実行時に管理者として実行
-- C\. \.NET Frameworkで実行
+- [A. powershellコマンドで実行](#a.-powershellコマンドで実行)
+- [B. 一般権限の状態でコマンド実行時に管理者として実行](#b.-一般権限の状態でコマンド実行時に管理者として実行)
+- [C. dotNET Frameworkで実行](#c.-dotnet-frameworkで実行)
 
 ### A\. powershellコマンドで実行
 
@@ -114,7 +114,7 @@ sequenceDiagram
 
     “ファイル名を指定して実行”の起動後、最後のEnterキーを「 `Ctrl ＋ Shift ＋ Enter` 」とすると対応可能。
     :::
-    「 ⊞Windowsキー ＋ R 」で“ファイル名を指定して実行”を起動し「 `pwsh` 」と入力しEnter。
+    「 `⊞ Windowsキー ＋ R` 」で“ファイル名を指定して実行”を起動し「 `pwsh` 」と入力しEnter。
 
 1. 実行するコマンドを変数に代入
     5.1環境のみ動作する`Get-EventLog`コマンドレットを記述。
@@ -187,7 +187,7 @@ PS C:\Users\"ユーザー名">
 
 :::
 
-なお、実行元のPowerShell Core ウィンドウ（6.0以降の環境）のコンソールを管理者として実行した場合、
+前述しているとおり、実行元のPowerShell Core ウィンドウ（6.0以降の環境）のコンソールを管理者として実行した場合、
 実行先の5.1環境でも管理者権限がある状態で実行されます。
 
 下記は管理者権限が必要なコマンドレット`New-EventLog`を実行したケース。
@@ -252,14 +252,15 @@ PS C:\Users\"ユーザー名">
 ### B\. 一般権限の状態でコマンド実行時に管理者として実行
 
 1. PowerShell Core ウィンドウを一般権限で起動
-    「 ⊞Windowsキー ＋ R 」で“ファイル名を指定して実行”を起動し「 `pwsh` 」と入力しEnter。
+    「 `⊞ Windowsキー ＋ R` 」で“ファイル名を指定して実行”を起動し「 `pwsh` 」と入力しEnter。
 
 1. 実行するコマンドを変数に代入
 
     :::message
-    **注意事項："-Command"の後ろには半角スペースがあり**
+    **注意事項："-Command␣"の後ろには半角スペース「`␣`」があり**
 
-    半角スペースがないと"-Command" と 次の"Get-Date"コマンドレットをわけて解釈されません。
+    半角スペース「`␣`」がないと"-Command" と 次の"Get-Date"コマンドレットをわけて解釈されなかった為、
+    「 `-Command␣` 」としています。
     :::
 
     ```powershell:実行するコマンドを変数に代入
@@ -273,7 +274,7 @@ PS C:\Users\"ユーザー名">
 1. Start-Process経由で管理者として実行
 
     :::message
-    **注意事項：ココのコマンド実行するとユーザーアカウント制御（UAC）が起動します。**
+    **注意事項：実行するとユーザーアカウント制御（UAC）が起動します。**
 
     Windows PowerShell “このアプリがデバイスに変更を加えることを許可しますか？”というメッセージが表示。
     「はい」ボタンで応答してください。
@@ -291,13 +292,14 @@ PS C:\Users\"ユーザー名">
     **注意事項：Start-Process経由で実行すると標準出力やエラー出力がされない。**
 
     今回の例では実行するコマンドレットすべての出力結果を外部ファイル（`D:\Downloads\output.txt`）にリダイレクトしています。
+    出力結果を確認する場合は各コマンドへのリダイレクト処理と処理後に確認する処理を入れてください。
     :::
 
     ```powershell:実行した結果を表示
     Get-Content D:\Downloads\output.txt
     ```
 
-:::deitails 実際に実行した結果
+:::details 実際に実行した結果
 
 ```powershell:実際に実行した結果
 PS C:\Users\"ユーザー名"> $command_text = @"
@@ -316,15 +318,15 @@ PS C:\Users\"ユーザー名"> Get-Content D:\Downloads\output.txt
 PS C:\Users\"ユーザー名">
 ```
 
-::
+:::
 
-### C\. \.NET Frameworkで実行
+### C\. dotNET Frameworkで実行
 
-PowerShell Core ウィンドウを起動するまでは、「1\. powershellコマンドで実行」と同じ手順。
+PowerShell Core ウィンドウを起動するまでは、「[A. powershellコマンドで実行](#a.-powershellコマンドで実行)」と同じ手順。
 その後、下記を実行することで\.NET Frameworkのコードを実行できます。
 
-なお、5.1環境で管理者権限が必要なコマンドレットを実行したい場合は「1\. powershellコマンドで実行」と同様、
-PowerShell Core ウィンドウを起動する際に、管理者として実行してください。
+なお、5.1環境で管理者権限が必要なコマンドレットを実行したい場合は「[A. powershellコマンドで実行](#a.-powershellコマンドで実行)」と同様、
+PowerShell Core ウィンドウを起動する際に、管理者権限で起動することが必要です。
 
 ```powershell:.NET Frameworkで実行
 $ps_setdata = New-Object System.Diagnostics.ProcessStartInfo
@@ -420,21 +422,23 @@ Exit Code: [1]
 PS C:\Users\"ユーザー名">
 ```
 
+:::
+
 ## 参考情報
 
-[Windows PowerShell 5.1 と PowerShell 7.x の違い](https://learn.microsoft.com/en-us/powershell/scripting/whats-new/differences-from-windows-powershell)
+@[card](https://learn.microsoft.com/en-us/powershell/scripting/whats-new/differences-from-windows-powershell)
 
-[Capturing standard out and error with Start-Process - Stack Overflow](https://stackoverflow.com/questions/8761888/capturing-standard-out-and-error-with-start-process)
+@[card](https://stackoverflow.com/questions/8761888/capturing-standard-out-and-error-with-start-process)
 
 ## まとめ
 
 それぞれの実行方法を試した結果、
 
-- powershellコマンドで実行
+- **A\. powershellコマンドで実行**
     一番対応しやすい方法。ちょっとした5.1環境のコマンドを実行するのであればオススメ。
-- 一般権限の状態でコマンド実行時に管理者として実行
-    ちょっとクセがある方法だが、ログインユーザーが一般ユーザーだった場合に活用できるかも。
-- \.NET Frameworkで実行
+- **B\. 一般権限の状態でコマンド実行時に管理者として実行**
+    ちょっとクセがある方法だが、ログインユーザーが一般ユーザーだった場合に管理者権限の付与を最小限にできるかも。
+- **A\. dotNET Frameworkで実行**
     C#のコードを使用できるので、実施できる範囲が広い。ただ、処理速度は遅いのがネック。
 
 という感触でした。
