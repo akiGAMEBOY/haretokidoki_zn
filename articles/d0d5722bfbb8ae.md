@@ -3,7 +3,7 @@ title: "[PowerShell]6.0以降の環境下で5.1のコマンドレットを実行
 emoji: "🔀"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell", "windows"]
-published: false
+published: true
 ---
 ## 概要
 
