@@ -102,11 +102,11 @@ sequenceDiagram
 
 以降より下記3つの方法を記載。
 
-1. powershellコマンドで実行
-1. 一般権限の状態でコマンド実行時に管理者として実行
-1. \.NET Frameworkで実行
+- A\. powershellコマンドで実行
+- B\. 一般権限の状態でコマンド実行時に管理者として実行
+- C\. \.NET Frameworkで実行
 
-### 1\. powershellコマンドで実行
+### A\. powershellコマンドで実行
 
 1. PowerShell Core ウィンドウを起動
     :::message
@@ -249,7 +249,7 @@ PS C:\Users\"ユーザー名">
 
 :::
 
-### 2\. 一般権限の状態でコマンド実行時に管理者として実行
+### B\. 一般権限の状態でコマンド実行時に管理者として実行
 
 1. PowerShell Core ウィンドウを一般権限で起動
     「 ⊞Windowsキー ＋ R 」で“ファイル名を指定して実行”を起動し「 `pwsh` 」と入力しEnter。
@@ -318,7 +318,7 @@ PS C:\Users\"ユーザー名">
 
 ::
 
-### 3\. \.NET Frameworkで実行
+### C\. \.NET Frameworkで実行
 
 PowerShell Core ウィンドウを起動するまでは、「1\. powershellコマンドで実行」と同じ手順。
 その後、下記を実行することで\.NET Frameworkのコードを実行できます。
@@ -369,6 +369,7 @@ PS C:\Users\"ユーザー名"> $ps_setdata = New-Object System.Diagnostics.Proce
 >> $ps_setdata.UseShellExecute = $false
 >> $ps_setdata.Arguments = @"
 >> Get-Date
+>> New-EventLog -LogName 'Application' -Source 'MyAppSource'
 >> Get-EventLog -LogName 'Application' -EntryType Error -Source 'System Restore'
 >> "@
 >> $ps = New-Object System.Diagnostics.Process
