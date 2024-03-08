@@ -190,9 +190,9 @@ PS C:\Users\"ユーザー名">
 前述しているとおり、実行元のPowerShell Core ウィンドウ（6.0以降の環境）のコンソールを管理者として実行した場合、
 実行先の5.1環境でも管理者権限がある状態で実行されます。
 
-下記は管理者権限が必要なコマンドレット`New-EventLog`を実行したケース。
+下記は管理者権限が必要なコマンドレット`New-EventLog`を一般権限と管理者権限で実行してみました。
 
-```PowerShell Core（pwsh）を一般権限で起動し実行した場合はエラー
+```powershell:一般権限で実行するとエラー
 PS C:\Users\"ユーザー名"> [System.String]$command_text = @"
 >> Get-Date
 >> New-EventLog -LogName Application -Source MyAppSource
@@ -214,9 +214,9 @@ New-EventLog : アクセスが拒否されました。昇格されたユーザ�
 PS C:\Users\"ユーザー名">
 ```
 
-上記の場合、5.1環境で実行するも管理者権限が必要なコマンドがあった為、異常終了する。
+上記の場合、管理者権限がなかったので異常終了。
 
-```PowerShell Core（pwsh）を管理者権限で起動し実行した場合は正常終了
+```powershell:管理者権限で実行すると正常終了
 PS C:\Users\"ユーザー名"> [System.String]$command_text = @"
 >> Get-Date
 >> New-EventLog -LogName Application -Source MyAppSource
@@ -230,7 +230,7 @@ PS C:\Users\"ユーザー名"> powershell -Command $command_text
 PS C:\Users\"ユーザー名">
 ```
 
-上記は、管理者権限があるので問題なく5.1環境で実行できる。
+上記は、管理者権限があり問題なく5.1環境で実行できた。
 
 :::details 補足情報：powershellコマンドの実行ファイルの場所 < クリックで折りたたみが開く >
 
@@ -325,8 +325,8 @@ PS C:\Users\"ユーザー名">
 PowerShell Core ウィンドウを起動するまでは、「[A. powershellコマンドで実行](#a.-powershellコマンドで実行)」と同じ手順。
 その後、下記を実行することで\.NET Frameworkのコードを実行できます。
 
-なお、5.1環境で管理者権限が必要なコマンドレットを実行したい場合は「[A. powershellコマンドで実行](#a.-powershellコマンドで実行)」と同様、
-PowerShell Core ウィンドウを起動する際に、管理者権限で起動することが必要です。
+なお、管理者権限が必要なコマンドレットを実行したい場合、「[A. powershellコマンドで実行](#a.-powershellコマンドで実行)」と同様、
+管理者権限（“管理者として実行”）でPowerShell Core ウィンドウを起動する事が必要となります。
 
 ```powershell:.NET Frameworkで実行
 $ps_setdata = New-Object System.Diagnostics.ProcessStartInfo
