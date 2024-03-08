@@ -326,7 +326,7 @@ PowerShell Core ウィンドウを起動するまでは、「[A. powershellコ�
 その後、下記を実行することで\.NET Frameworkのコードを実行できます。
 
 なお、管理者権限が必要なコマンドレットを実行したい場合、「[A. powershellコマンドで実行](#a.-powershellコマンドで実行)」と同様、
-管理者権限（“管理者として実行”）でPowerShell Core ウィンドウを起動する事が必要となります。
+管理者権限（“管理者として実行”）でPowerShell Core ウィンドウの起動が必要となります。
 
 ```powershell:.NET Frameworkで実行
 $ps_setdata = New-Object System.Diagnostics.ProcessStartInfo
