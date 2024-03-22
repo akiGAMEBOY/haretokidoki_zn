@@ -136,7 +136,7 @@ Invoke-MultipleCommands -commands @('Get-Date', 'Get-Item .\', 'Get-PSDrive C')
 
 モジュールとして事前に定義・設定する事で、いつでも関数の呼び出しが可能となる。
 
-1. 独自のモジュールファイル「`Invoke-MultipleCommands.psm1`」を作成する
+1. 自作のモジュールファイル「`Invoke-MultipleCommands.psm1`」を作成する
     Functionが定義されたモジュールファイル（`*.psm1`）を準備。
 
     ```powershell:モジュールファイル「Invoke-MultipleCommands.psm1」
@@ -183,10 +183,10 @@ Invoke-MultipleCommands -commands @('Get-Date', 'Get-Item .\', 'Get-PSDrive C')
     私の場合、PowerShell 7.3.x を使用しているので対象の格納先フォルダーを `c:\program files\powershell\7\Modules` とし、
     その配下にフォルダー「`Invoke-MultipleCommands`」を作成。
 
-1. 独自のモジュールファイル「`Invoke-MultipleCommands.psm1`」を格納用のフォルダーにコピー
-    作成した独自のモジュールファイル `Invoke-MultipleCommands.psm1` を 「`c:\program files\powershell\7\Modules\Invoke-MultipleCommands`」配下に格納する。
+1. 自作のモジュールファイル「`Invoke-MultipleCommands.psm1`」を格納用のフォルダーにコピー
+    作成した自作のモジュールファイル `Invoke-MultipleCommands.psm1` を 「`c:\program files\powershell\7\Modules\Invoke-MultipleCommands`」配下に格納する。
 
-1. PowerShell Core のCLI（`pwsh`）より独自コマンドレットが実行できることを確認
+1. PowerShell Core のCLI（`pwsh`）より自作コマンドレットが実行できることを確認
 
     ```powershell:作成したFunction「Invoke-MultipleCommands」が実行できること
     PS C:\Users\"ユーザー名"> Invoke-MultipleCommands -commands @("Get-Date", "Get-Item .\", "Get-PSDrive C")
