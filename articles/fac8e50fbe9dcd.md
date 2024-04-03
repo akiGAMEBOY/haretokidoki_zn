@@ -93,10 +93,10 @@ Function VerificationEnv {
 - 環境を確認できる自動変数一覧
     |自動変数名|説明|
     |---|---|
-    |`$IsCoreCLR`|PowerShellがCore環境（Core CLR）で実行されているか判定<br>$ture:Core環境である、$Flase:ではない|
-    |`$IsLinux`|システムがLinuxベースであるか判定<br>$ture:Linuxベースの環境である、$Flase:ではない|
-    |`$IsMacOS`|システムがmacOSであるか判定<br>$ture:macOS環境である、$Flase:ではない|
-    |`$IsWindows`|システムがWindowsベースであるか判定<br>$ture:Windows環境である、$Flase:ではない|
+    |`$IsCoreCLR`|PowerShellがCore環境（Core CLR）で実行されているか判定<br>`$ture`:Core環境である、`$Flase`:ではない|
+    |`$IsLinux`|システムがLinuxベースであるか判定<br>`$ture`:Linuxベースの環境である、`$Flase`:ではない|
+    |`$IsMacOS`|システムがmacOSであるか判定<br>`$ture`:macOS環境である、`$Flase`:ではない|
+    |`$IsWindows`|システムがWindowsベースであるか判定<br>`$ture`:Windows環境である、`$Flase`:ではない|
 
 [こちらの記事](https://zenn.dev/haretokidoki/articles/b742b44e45559b)で他の自動変数も紹介。
 
