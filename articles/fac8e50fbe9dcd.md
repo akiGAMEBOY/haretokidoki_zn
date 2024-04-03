@@ -3,7 +3,7 @@ title: "PowerShell 6.0以降（Core）で環境を確認できる自動変数"
 emoji: "🏞"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["windows", "powershell"]
-published: false
+published: true
 ---
 ## 概要
 
