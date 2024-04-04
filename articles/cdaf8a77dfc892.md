@@ -13,7 +13,7 @@ Function RelaceReturncode {
     Param (
         [Parameter(Mandatory=$true)][ValidateSet("`r", "`r`n", "`n")][System.String]$before_code,
         [Parameter(Mandatory=$true)][ValidateSet("`r", "`r`n", "`n")][System.String]$after_code,
-        [Parameter(Mandatory=$true)][System.String]$targetfile
+        [Parameter(Mandatory=$true)][System.String]$targetfile,
         [System.String]$after_targetfile=''
     )
 
