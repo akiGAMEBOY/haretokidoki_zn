@@ -114,7 +114,7 @@ PS C:\Users\"ユーザー名">
 ```powershell:Function「Invoke-MultipleCommands」を作成し実行
 # 関数として定義
 function Invoke-MultipleCommands {
-    param (
+    Param (
         # 必須項目：実行するコマンドレットがある文字列配列用のパラメーター
         [Parameter(Mandatory=$true)]
         [System.String[]]$commands
@@ -142,7 +142,7 @@ Invoke-MultipleCommands -commands @('Get-Date', 'Get-Item .\', 'Get-PSDrive C')
     ```powershell:モジュールファイル「Invoke-MultipleCommands.psm1」
     # 実行したファイル
     function Invoke-MultipleCommands {
-        param (
+        Param (
             # 配列に実行するコマンドレットを格納するパラメーター
             [Parameter(Mandatory=$true)]
             [System.String[]]$commands
@@ -362,7 +362,7 @@ Invoke-MultipleCommands -commands @(
 > 
 > # モジュール化するために関数に定義
 > function Invoke-Commands {
->     param (
+>     Param (
 >         # 配列に実行するコマンドレットを格納するパラメータ
 >         [Parameter(Mandatory=$true)]
 >         [string[]]$commands
