@@ -9,7 +9,7 @@ published: false
 変換可能な一覧と、"CRLF"や"LF"など作業者が認識しやすい文字列の引数により変換が可能とする。
 
 ```powershell:
-Function RelaceReturncode {
+Function ReplaceReturncode {
     Param (
         [Parameter(Mandatory=$true)][ValidateSet("`r", "`r`n", "`n")][System.String]$before_code,
         [Parameter(Mandatory=$true)][ValidateSet("`r", "`r`n", "`n")][System.String]$after_code,
