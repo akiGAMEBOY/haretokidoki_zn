@@ -5,6 +5,11 @@ type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
 published: false
 ---
+## 概要
+
+## この記事のターゲット
+
+## 自作したFunctionのソース
 
 変換可能な一覧と、"CRLF"や"LF"など作業者が認識しやすい文字列の引数により変換が可能とする。
 
