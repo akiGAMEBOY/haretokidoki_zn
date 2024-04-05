@@ -1,5 +1,5 @@
 ---
-title: "PowerShellで各種改行コードを変換する自作Function"
+title: "PowerShellでファイル内の改行コードを一括変換するFunction"
 emoji: "😸"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
@@ -11,8 +11,14 @@ published: false
 ```powershell:
 Function VisualizeReturncode {
     Param (
-        [Parameter(Mandatory=$true)][System.String]$target_data
+        [Parameter(Mandatory=$true)][System.String]$TargetFile
     )
+
+    [System.Collections.Hashtable]$ReturnCode_Mark = @{
+        'CR'   = '<CR>';
+        'LF'   = '<LF>';
+        'CRLF' = '<CRLF>';
+    }
 
     [System.Collections.Hashtable]$ReturnCode_Visualize = @{
         'CR'   = "<CR>`r";
@@ -20,9 +26,16 @@ Function VisualizeReturncode {
         'CRLF' = "<CRLF>`r`n";
     }
 
-    $target_data = $target_data -Replace "`r`n", $ReturnCode_Visualize['CRLF']
-    $target_data = $target_data -Replace "`r", $ReturnCode_Visualize['CR']
-    $target_data = $target_data -Replace "`n", $ReturnCode_Visualize['LF']
+    # 改行コードをマークに変換
+    [System.String]$target_data = (Get-Content -Path $TargetFile -Raw)
+    $target_data = $target_data -Replace "`r`n", $ReturnCode_Mark['CRLF']
+    $target_data = $target_data -Replace "`n", $ReturnCode_Mark['LF']
+    $target_data = $target_data -Replace "`r", $ReturnCode_Mark['CR']
+
+    # マーク＋改行コードに変換
+    $target_data = $target_data -Replace $ReturnCode_Mark['CRLF'], $ReturnCode_Visualize['CRLF']
+    $target_data = $target_data -Replace $ReturnCode_Mark['LF'], $ReturnCode_Visualize['LF']
+    $target_data = $target_data -Replace $ReturnCode_Mark['CR'], $ReturnCode_Visualize['CR']
 
     Write-Host $target_data
 }
@@ -94,7 +107,7 @@ Function ReplaceReturncode {
 
     # 表示
     if ($Show) {
-        VisualizeReturncode($after_data)
+        VisualizeReturncode($SavePath)
     }
 }
 ```
