@@ -111,3 +111,5 @@ Function ReplaceReturncode {
     }
 }
 ```
+
+## まとめ
