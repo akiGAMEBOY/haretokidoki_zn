@@ -108,6 +108,8 @@ sequenceDiagram
 
 ### A\. powershellコマンドで実行
 
+#### 5.1でしか動作しないGet-EventLogコマンドレットを実行
+
 1. PowerShell Core ウィンドウを起動
     :::message
     **管理者としてPowerShell Core ウィンドウを起動したい場合**
@@ -190,6 +192,8 @@ PS C:\Users\"ユーザー名">
 前述しているとおり、実行元のPowerShell Core ウィンドウ（6.0以降の環境）のコンソールを管理者として実行した場合、
 実行先の5.1環境でも管理者権限がある状態で実行されます。
 
+#### 5.1でしか動作しないNew-EventLogコマンドレットを実行
+
 下記は管理者権限が必要なコマンドレット`New-EventLog`を一般権限と管理者権限で実行してみました。
 
 ```powershell:一般権限で実行するとエラー
@@ -250,6 +254,9 @@ PS C:\Users\"ユーザー名">
 :::
 
 ### B\. 一般権限の状態でコマンド実行時に管理者として実行
+
+Start-Processコマンドレット で 5.1の実行ファイル `powershell.exe` を呼び出す方法を実行します。
+なお、コマンド実行時に管理者権限として実行する方法は、Start-Processコマンドレットのオプション `Verb RunAs` を指定する事により実現。
 
 1. PowerShell Core ウィンドウを一般権限で起動
     「 `⊞ Windowsキー ＋ R` 」で“ファイル名を指定して実行”を起動し「 `pwsh` 」と入力しEnter。
@@ -326,7 +333,7 @@ PowerShell Core ウィンドウを起動するまでは、「[A. powershellコ�
 その後、下記を実行することで\.NET Frameworkのコードを実行できます。
 
 なお、管理者権限が必要なコマンドレットを実行したい場合、「[A. powershellコマンドで実行](#a.-powershellコマンドで実行)」と同様、
-管理者権限（“管理者として実行”）でPowerShell Core ウィンドウの起動が必要となります。
+PowerShell Core ウィンドウを起動する際に“管理者として実行”で立ち上げることで実現可能。
 
 ```powershell:.NET Frameworkで実行
 $ps_setdata = New-Object System.Diagnostics.ProcessStartInfo
