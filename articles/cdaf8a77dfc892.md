@@ -14,6 +14,7 @@ published: false
 変換可能な一覧と、"CRLF"や"LF"など作業者が認識しやすい文字列の引数により変換が可能とする。
 
 ```powershell:
+# テキストファイルの改行コードを可視化して表示
 Function VisualizeReturncode {
     Param (
         [Parameter(Mandatory=$true)][System.String]$TargetFile
@@ -44,9 +45,10 @@ Function VisualizeReturncode {
 
     Write-Host $target_data
 }
+# 改行コードの変換
 Function ReplaceReturncode {
     Param (
-        [Parameter(Mandatory=$true)][ValidateSet('CR', 'LF', 'CRLF', 'NONE')][System.String]$BeforeCode,
+        [Parameter(Mandatory=$true)][ValidateSet('CR', 'LF', 'CRLF')][System.String]$BeforeCode,
         [Parameter(Mandatory=$true)][ValidateSet('CR', 'LF', 'CRLF', 'NONE')][System.String]$AfterCode,
         [Parameter(Mandatory=$true)][System.String]$TargetFile,
         [System.String]$SavePath='',
