@@ -1,6 +1,6 @@
 ---
 title: "PowerShellでファイル内の改行コードを一括変換するFunction"
-emoji: "😸"
+emoji: "⤵"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
 published: false
@@ -11,19 +11,16 @@ Windows Server で取り扱われる既定の改行コードは、CRLF（`\r\n`�
 このようなシステム間でテキストファイルを連携する際、改行コードの変換が必要となります。
 
 改行コードの変換はテキストエディターでもできますが、GUI操作が必要となり効率的ではありません。
-今回、自作したFunctionを使用すると比較的、簡単に変換できます。
+今回、自作したFunctionを使用すると比較的、簡単に変換が可能です。
 
 ## この記事のターゲット
 
 - PowerShellユーザーの方
 - テキストファイルの改行コードを変換したい方
 
-
-
 ## 自作したFunctionのソースコード
 
-テキストファイル内にある改行コードを任意のコードに変換可能です。
-
+テキストファイル内にある改行コードを任意のコードに変換可能。
 このFunctionをPowerShellスクリプトに組み込むことで効率良い変換が可能となるでしょう。
 
 最初にコーディングしているFunction「`VisualizeReturncode`」はテキストファイル内の改行コードを
@@ -32,9 +29,9 @@ Windows Server で取り扱われる既定の改行コードは、CRLF（`\r\n`�
 次に記載しているFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換可能。
 
 なお、このFunctionのオプション「-Show」で `$True` を設定すると、
-変換し保存したファイルを対象に、改行コードを可視化可能なFunction `VisualizeReturncode` が実行されます。
+改行コードを可視化可能なFunction `VisualizeReturncode` が自動的に実行されます。
 
-```powershell:改行コードを可視化「VisualizeReturncode」、改行コードを変換「ReplaceReturncode」
+```powershell:改行コードを可視化「VisualizeReturncode」、改行コードの変換「ReplaceReturncode」
 # テキストファイルの改行コードを可視化して表示
 Function VisualizeReturncode {
     Param (
@@ -180,6 +177,9 @@ Function ReplaceReturncode {
 
 :::details 実際に実行した結果
 
+今回は、`D:\Downloads\utf16.txt` を対象に改行コードを CRLF から LF に変換します。
+オプション「-Show」を `$True` で実行している為、変換と保存後に改行コードを可視化するFunction `VisualizeReturncode` が自動で実行されます。
+
 ```powershell:実際に実行した結果
 PS D:\Downloads> ReplaceReturncode CRLF LF .\utf16.txt -Show $True
 
@@ -203,7 +203,17 @@ PS D:\Downloads>
 ## まとめ
 
 - [Replaceメソッド](https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_comparison_operators#replacement-operator)を使用する事で改行コードの変換ができた！
-- 改行コードの違うシステム間でファイルを連携する場合、「処理速度」「リソース」「できる事の多さ」「簡単にバッチのスケジュールが可能」などの観点からもUNIX系サーバー側でシェルスクリプト
+
+> 改行コードの違うシステム間でファイルを連携する場合、主に下記のメリットからUNIX系サーバー側でシェルスクリプトを作成するケースが多いと思われる。
+> 
+> - 処理速度が速い
+> - メモリなどのリソースをムダに使用しない
+> - できるが多い（拡張性が高い）
+> - ノウハウもたくさんある
+> - スケジューラーに組み込むのが簡単
+> - メンテナンスしやすい
+> 
+> ただ今回、組織のニーズに応じ対応できる範囲を増やせたことはよかったと感じた。
 
 ## 関連記事
 
