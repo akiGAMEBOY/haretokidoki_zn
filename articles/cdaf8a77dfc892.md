@@ -7,13 +7,34 @@ published: false
 ---
 ## 概要
 
+Windows Server で取り扱われる既定の改行コードは、CRLF（`\r\n`）です。また、UNIX系サーバー の規定では、LF（`\n`）だったりします。
+このようなシステム間でテキストファイルを連携する際、改行コードの変換が必要となります。
+
+改行コードの変換はテキストエディターでもできますが、GUI操作が必要となり効率的ではありません。
+今回、自作したFunctionを使用すると比較的、簡単に変換できます。
+
 ## この記事のターゲット
 
-## 自作したFunctionのソース
+- PowerShellユーザーの方
+- テキストファイルの改行コードを変換したい方
 
-変換可能な一覧と、"CRLF"や"LF"など作業者が認識しやすい文字列の引数により変換が可能とする。
 
-```powershell:
+
+## 自作したFunctionのソースコード
+
+テキストファイル内にある改行コードを任意のコードに変換可能です。
+
+このFunctionをPowerShellスクリプトに組み込むことで効率良い変換が可能となるでしょう。
+
+最初にコーディングしているFunction「`VisualizeReturncode`」はテキストファイル内の改行コードを
+可視化してコンソール上に表示します。
+
+次に記載しているFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換可能。
+
+なお、このFunctionのオプション「-Show」で `$True` を設定すると、
+変換し保存したファイルを対象に、改行コードを可視化可能なFunction `VisualizeReturncode` が実行されます。
+
+```powershell:改行コードを可視化「VisualizeReturncode」、改行コードを変換「ReplaceReturncode」
 # テキストファイルの改行コードを可視化して表示
 Function VisualizeReturncode {
     Param (
@@ -145,8 +166,8 @@ Function ReplaceReturncode {
     }
     # 保存
     Set-Content -Path $SavePath -Value $after_data -NoNewline
-    [System.String]$SavePath_Full = Convert-Path $SavePath
-    Write-Host "　保存先: [$SavePath_Full]"
+    [System.String]$savepath_full = Convert-Path $SavePath
+    Write-Host "　保存先: [$savepath_full]"
     Write-Host ''
     Write-Host ''
 
@@ -157,4 +178,34 @@ Function ReplaceReturncode {
 }
 ```
 
+:::details 実際に実行した結果
+
+```powershell:実際に実行した結果
+PS D:\Downloads> ReplaceReturncode CRLF LF .\utf16.txt -Show $True
+
+上書き保存します。
+　保存先: [D:\Downloads\utf16.txt]
+
+
+
+ *-- Result: VisualizeReturncode ---------------------------------------------*
+test<LF>
+<LF>
+
+ *----------------------------------------------------------------------------*
+
+
+PS D:\Downloads>
+```
+
+:::
+
 ## まとめ
+
+- [Replaceメソッド](https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_comparison_operators#replacement-operator)を使用する事で改行コードの変換ができた！
+- 改行コードの違うシステム間でファイルを連携する場合、「処理速度」「リソース」「できる事の多さ」「簡単にバッチのスケジュールが可能」などの観点からもUNIX系サーバー側でシェルスクリプト
+
+## 関連記事
+
+https://haretokidoki-blog.com/pasocon_powershell-startup/
+https://zenn.dev/haretokidoki/articles/7e6924ff0cc960
