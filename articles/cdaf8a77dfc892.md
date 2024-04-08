@@ -161,7 +161,14 @@ Function ReplaceReturncode {
         Write-Host '名前を付けて保存します。'
     }
     # 保存
-    Set-Content -Path $SavePath -Value $after_data -NoNewline
+    Try {
+        Set-Content -Path $SavePath -Value $after_data -NoNewline
+    }
+    catch {
+        Write-Error 'ReplaceReturncodeの保存処理でエラーが発生しました。処理を中断します。'
+        return
+    }
+    
     [System.String]$savepath_full = Convert-Path $SavePath
     Write-Host "　保存先: [$savepath_full]"
     Write-Host ''
