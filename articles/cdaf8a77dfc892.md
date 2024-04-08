@@ -10,7 +10,7 @@ published: false
 Windows Server で取り扱われる既定の改行コードは、CRLF（`\r\n`）です。また、UNIX系サーバー の規定では、LF（`\n`）だったりします。
 このようなシステム間でテキストファイルを連携する際、改行コードの変換が必要となります。
 
-改行コードの変換はテキストエディターでもできますが、GUI操作が必要となり効率的ではありません。
+Windowsシステムで改行コードを変換したい場合、テキストエディターでもできますが、GUI操作が必要となり効率的な手順とは言えません。
 今回、自作したFunctionを使用すると比較的、簡単に変換が可能です。
 
 ## この記事のターゲット
@@ -20,8 +20,7 @@ Windows Server で取り扱われる既定の改行コードは、CRLF（`\r\n`�
 
 ## 自作したFunctionのソースコード
 
-テキストファイル内にある改行コードを任意のコードに変換可能。
-このFunctionをPowerShellスクリプトに組み込むことで効率良い変換が可能となるでしょう。
+テキストファイル内にある改行コードを任意のコードに変換可能。このFunctionをPowerShellスクリプトに組み込むことで効率良く変換が可能となるでしょう。
 
 最初にコーディングしているFunction「`VisualizeReturncode`」はテキストファイル内の改行コードを
 可視化してコンソール上に表示します。
@@ -29,7 +28,7 @@ Windows Server で取り扱われる既定の改行コードは、CRLF（`\r\n`�
 次に記載しているFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換可能。
 
 なお、このFunctionのオプション「-Show」で `$True` を設定すると、
-改行コードを可視化可能なFunction `VisualizeReturncode` が自動的に実行されます。
+改行コードを可視化可能なFunction `VisualizeReturncode` が自動的に実行されて変換後のファイルを確認できます。
 
 ```powershell:改行コードを可視化「VisualizeReturncode」、改行コードの変換「ReplaceReturncode」
 # テキストファイルの改行コードを可視化して表示
@@ -177,7 +176,7 @@ Function ReplaceReturncode {
 
 :::details 実際に実行した結果
 
-今回は、`D:\Downloads\utf16.txt` を対象に改行コードを CRLF から LF に変換します。
+`D:\Downloads\utf16.txt` を対象に改行コードを CRLF から LF に変換します。
 オプション「-Show」を `$True` で実行している為、変換と保存後に改行コードを可視化するFunction `VisualizeReturncode` が自動で実行されます。
 
 ```powershell:実際に実行した結果
