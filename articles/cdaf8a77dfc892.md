@@ -168,7 +168,6 @@ Function ReplaceReturncode {
         Write-Error 'ReplaceReturncodeの保存処理でエラーが発生しました。処理を中断します。'
         return
     }
-
     [System.String]$savepath_full = Convert-Path $SavePath
     Write-Host "　保存先: [$savepath_full]"
     Write-Host ''
@@ -209,9 +208,8 @@ PS D:\Downloads>
 ## まとめ
 
 - [Replaceメソッド](https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_comparison_operators#replacement-operator)を使用する事で改行コードの変換ができた！
-- 今回、組織のニーズに応じ対応できる範囲を増やせたのでよかった！
 
-> ただ、改行コードの違うシステム間でファイルを連携する場合、主に下記のメリットからUNIX系サーバー側でシェルスクリプトを作成するケースが多いと思われる。
+> 改行コードの違うシステム間でファイルを連携する場合、主に下記のメリットからUNIX系サーバー側でシェルスクリプトを作成するケースが多いと思われる。
 > 
 > - 処理速度が速い
 > - メモリなどのリソースをムダに使用しない
@@ -219,8 +217,8 @@ PS D:\Downloads>
 > - ノウハウもたくさんある
 > - スケジューラーに組み込むのが簡単
 > - メンテナンスしやすい
-
-どのように対応するかは各々の要件やニーズに合わせて対応してください。
+> 
+> ただ今回、組織のニーズに応じ対応できる範囲を増やせたことはよかったと感じた。
 
 ## 関連記事
 
