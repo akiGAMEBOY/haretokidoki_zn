@@ -102,7 +102,7 @@ Function ReplaceReturncode {
         [Parameter(Mandatory=$true)][System.String]$Path,
         [Parameter(Mandatory=$true)][ValidateSet('CR', 'LF', 'CRLF')][System.String]$BeforeCode,
         [Parameter(Mandatory=$true)][ValidateSet('CR', 'LF', 'CRLF', 'NONE')][System.String]$AfterCode,
-        [System.String]$SavePath='',
+        [System.String]$Destination='',
         [System.Boolean]$Show=$false
     )
 
@@ -158,21 +158,21 @@ Function ReplaceReturncode {
         return
     }
     # 保存先を指定していない場合は上書き保存
-    if ($SavePath -eq '') {
-        $SavePath = $Path
+    if ($Destination -eq '') {
+        $Destination = $Path
         Write-Host ''
         Write-Host '上書き保存します。'
     }
     # 指定された場合は指定場所に保存
     else {
-        if (Test-Path $SavePath -PathType Leaf) {
+        if (Test-Path $Destination -PathType Leaf) {
             Write-Host ''
             Write-Host '指定の保存場所には、すでにファイルが存在します。処理を中断します。' -ForegroundColor Red
             Write-Host ''
             Write-Host ''
             return
         }
-        if (-Not(Test-Path "$SavePath\.." -PathType Container)) {
+        if (-Not(Test-Path "$Destination\.." -PathType Container)) {
             Write-Host ''
             Write-Host '保存場所のフォルダーが存在しません。処理を中断します。' -ForegroundColor Red
             Write-Host ''
@@ -184,20 +184,20 @@ Function ReplaceReturncode {
     }
     # 保存
     Try {
-        Set-Content -Path $SavePath -Value $after_data -NoNewline
+        Set-Content -Path $Destination -Value $after_data -NoNewline
     }
     catch {
         Write-Error 'ReplaceReturncodeの保存処理でエラーが発生しました。処理を中断します。'
         return
     }
-    [System.String]$savepath_full = Convert-Path $SavePath
+    [System.String]$savepath_full = Convert-Path $Destination
     Write-Host "　保存先: [$savepath_full]"
     Write-Host ''
     Write-Host ''
     
     # 表示
     if ($Show) {
-        VisualizeReturncode($SavePath)
+        VisualizeReturncode($Destination)
     }
 }
 ```
@@ -230,6 +230,7 @@ PS D:\Downloads>
 ## まとめ
 
 - [Replaceメソッド](https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_comparison_operators#replacement-operator)を使用する事で改行コードの変換ができた！
+- より実用的にする場合は改行コードの混在を変換前にチェックし実行するかの最終確認をした方がよさそう。
 
 > 改行コードの違うシステム間でファイルを連携する場合、主に下記のメリットからUNIX系サーバー側でシェルスクリプトを作成するケースが多いと思われる。
 > 
