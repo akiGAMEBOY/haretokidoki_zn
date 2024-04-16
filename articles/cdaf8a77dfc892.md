@@ -60,14 +60,9 @@ Function VisualizeReturncode {
     )
 
     [System.Collections.Hashtable]$ReturnCode_Regex = @{
-        'CRLF' = "`r`n";
-        'LF'   = "`n"
-    }
-
-    [System.Collections.Hashtable]$ReturnCode_Mark = @{
-        'CR'   = '<CR>';
-        'LF'   = '<LF>';
-        'CRLF' = '<CRLF>';
+        'CR'   = "`r";
+        'LF'   = "`n";
+        'CRLF' = "`r`n"
     }
 
     [System.Collections.Hashtable]$ReturnCode_Visualize = @{
@@ -76,16 +71,11 @@ Function VisualizeReturncode {
         'CRLF' = "<CRLF>$($ReturnCode_Regex[$Returncode])";
     }
 
-    # 改行コードをマークに変換
+    # マーク＋改行コード
     [System.String]$target_data = (Get-Content -Path $TargetFile -Raw)
-    $target_data = $target_data -Replace "`r`n", $ReturnCode_Mark['CRLF']
-    $target_data = $target_data -Replace "`n", $ReturnCode_Mark['LF']
-    $target_data = $target_data -Replace "`r", $ReturnCode_Mark['CR']
-
-    # マーク＋改行コードに変換
-    $target_data = $target_data -Replace $ReturnCode_Mark['CRLF'], $ReturnCode_Visualize['CRLF']
-    $target_data = $target_data -Replace $ReturnCode_Mark['LF'], $ReturnCode_Visualize['LF']
-    $target_data = $target_data -Replace $ReturnCode_Mark['CR'], $ReturnCode_Visualize['CR']
+    $target_data = $target_data -Replace $ReturnCode_Regex['CRLF'], $ReturnCode_Visualize['CRLF']
+    $target_data = $target_data -Replace $ReturnCode_Regex['LF'], $ReturnCode_Visualize['LF']
+    $target_data = $target_data -Replace $ReturnCode_Regex['CR'], $ReturnCode_Visualize['CR']
 
     Write-Host ''
     Write-Host ' *-- Result: VisualizeReturncode ---------------------------------------------* '
@@ -137,7 +127,7 @@ Function ReplaceReturncode {
     [System.Collections.Hashtable]$ReturnCode_Regex = @{
         'CR'   = "`r";
         'LF'   = "`n";
-        'CRLF' = "`r`n"
+        'CRLF' = "`r`n";
         'NONE' = ''
     }
 
@@ -193,7 +183,7 @@ Function ReplaceReturncode {
     Write-Host "　保存先: [$savepath_full]"
     Write-Host ''
     Write-Host ''
-
+    
     # 表示
     if ($Show) {
         VisualizeReturncode($SavePath)
