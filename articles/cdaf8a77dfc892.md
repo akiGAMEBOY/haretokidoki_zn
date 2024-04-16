@@ -55,7 +55,7 @@ PS C:\Users\"ユーザー名">
 # テキストファイルの改行コードを可視化して表示
 Function VisualizeReturncode {
     Param (
-        [Parameter(Mandatory=$true)][System.String]$TargetFile,
+        [Parameter(Mandatory=$true)][System.String]$Path,
         [ValidateSet('CRLF', 'LF')][System.String]$ReturnCode = 'CRLF'
     )
 
@@ -65,17 +65,28 @@ Function VisualizeReturncode {
         'CRLF' = "`r`n"
     }
 
+    [System.Collections.Hashtable]$ReturnCode_Mark = @{
+        'CR'   = '<CR>';
+        'LF'   = '<LF>';
+        'CRLF' = '<CRLF>'
+    }
+
     [System.Collections.Hashtable]$ReturnCode_Visualize = @{
         'CR'   = "<CR>$($ReturnCode_Regex[$Returncode])";
         'LF'   = "<LF>$($ReturnCode_Regex[$Returncode])";
         'CRLF' = "<CRLF>$($ReturnCode_Regex[$Returncode])";
     }
 
+    # マーク
+    [System.String]$target_data = (Get-Content -Path $Path -Raw)
+    $target_data = $target_data -Replace $ReturnCode_Regex['CRLF'], $ReturnCode_Mark['CRLF']
+    $target_data = $target_data -Replace $ReturnCode_Regex['LF'], $ReturnCode_Mark['LF']
+    $target_data = $target_data -Replace $ReturnCode_Regex['CR'], $ReturnCode_Mark['CR']
+
     # マーク＋改行コード
-    [System.String]$target_data = (Get-Content -Path $TargetFile -Raw)
-    $target_data = $target_data -Replace $ReturnCode_Regex['CRLF'], $ReturnCode_Visualize['CRLF']
-    $target_data = $target_data -Replace $ReturnCode_Regex['LF'], $ReturnCode_Visualize['LF']
-    $target_data = $target_data -Replace $ReturnCode_Regex['CR'], $ReturnCode_Visualize['CR']
+    $target_data = $target_data -Replace $ReturnCode_Mark['CRLF'], $ReturnCode_Visualize['CRLF']
+    $target_data = $target_data -Replace $ReturnCode_Mark['LF'], $ReturnCode_Visualize['LF']
+    $target_data = $target_data -Replace $ReturnCode_Mark['CR'], $ReturnCode_Visualize['CR']
 
     Write-Host ''
     Write-Host ' *-- Result: VisualizeReturncode ---------------------------------------------* '
@@ -88,9 +99,9 @@ Function VisualizeReturncode {
 # 改行コードの変換
 Function ReplaceReturncode {
     Param (
+        [Parameter(Mandatory=$true)][System.String]$Path,
         [Parameter(Mandatory=$true)][ValidateSet('CR', 'LF', 'CRLF')][System.String]$BeforeCode,
         [Parameter(Mandatory=$true)][ValidateSet('CR', 'LF', 'CRLF', 'NONE')][System.String]$AfterCode,
-        [Parameter(Mandatory=$true)][System.String]$TargetFile,
         [System.String]$SavePath='',
         [System.Boolean]$Show=$false
     )
@@ -105,7 +116,7 @@ Function ReplaceReturncode {
     }
 
     # ファイルが存在しない場合
-    if (-Not(Test-Path $TargetFile)) {
+    if (-Not(Test-Path $Path)) {
         Write-Host ''
         Write-Host '変換対象のファイルが存在しません。処理を中断します。'
         Write-Host ''
@@ -114,7 +125,7 @@ Function ReplaceReturncode {
     }
 
     # ファイルの中身がない場合
-    [System.String]$before_data = (Get-Content -Path $TargetFile -Raw)
+    [System.String]$before_data = (Get-Content -Path $Path -Raw)
     if ($null -eq $before_data) {
         Write-Host ''
         Write-Host '変換対象のファイル内容が空です。処理を中断します。'
@@ -148,7 +159,7 @@ Function ReplaceReturncode {
     }
     # 保存先を指定していない場合は上書き保存
     if ($SavePath -eq '') {
-        $SavePath = $TargetFile
+        $SavePath = $Path
         Write-Host ''
         Write-Host '上書き保存します。'
     }
@@ -197,7 +208,7 @@ Function ReplaceReturncode {
 オプション「-Show」を `$True` で実行している為、変換と保存後に改行コードを可視化するFunction `VisualizeReturncode` が自動で実行されます。
 
 ```powershell:実際に実行した結果
-PS D:\Downloads> ReplaceReturncode CRLF LF .\utf16.txt -Show $True
+PS D:\Downloads> ReplaceReturncode .\utf16.txt CRLF LF -Show $True
 
 上書き保存します。
 　保存先: [D:\Downloads\utf16.txt]
