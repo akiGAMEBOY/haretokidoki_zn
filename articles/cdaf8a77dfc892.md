@@ -7,16 +7,37 @@ published: false
 ---
 ## 概要
 
-Windows Server で取り扱われる既定の改行コードは、CRLF（`\r\n`）です。また、UNIX系サーバー の規定では、LF（`\n`）だったりします。
+Windows Server を代表とする Windows OS で取り扱われる既定の改行コードは、CRLF（`\r\n`）です。また、RedHat などの UNIX系サーバー の規定では、LF（`\n`）だったりします。
 このようなシステム間でテキストファイルを連携する際、改行コードの変換が必要となります。
 
-Windowsシステムで改行コードを変換したい場合、テキストエディターでもできますが、GUI操作が必要となり効率的な手順とは言えません。
-今回、自作したFunctionを使用すると比較的、簡単に変換が可能です。
+Windowsシステムで改行コードを変換したい場合、一度切りであればテキストエディターでも対応可能ですが、定期的に実施するのであればGUI操作が必要となるため、効率的ではありません。
+今回、自作したPowerShellのFunctionを使用すると比較的、簡単に改行コードの変換が実現できます。
 
 ## この記事のターゲット
 
 - PowerShellユーザーの方
 - テキストファイルの改行コードを変換したい方
+
+## 環境
+
+```powershell:PowerShellのバージョン
+PS C:\Users\"ユーザー名">
+PS C:\Users\"ユーザー名"> $PSVersionTable
+
+Name                           Value
+----                           -----
+PSVersion                      5.1.19041.4170
+PSEdition                      Desktop
+PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0...}
+BuildVersion                   10.0.19041.4170
+CLRVersion                     4.0.30319.42000
+WSManStackVersion              3.0
+PSRemotingProtocolVersion      2.3
+SerializationVersion           1.1.0.1
+
+
+PS C:\Users\"ユーザー名">
+```
 
 ## 自作したFunctionのソースコード
 
@@ -25,10 +46,10 @@ Windowsシステムで改行コードを変換したい場合、テキストエ�
 最初にコーディングしているFunction「`VisualizeReturncode`」はテキストファイル内の改行コードを
 可視化してコンソール上に表示します。
 
-次に記載しているFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換可能。
+次に記載しているFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換。
 
 なお、このFunctionのオプション「-Show」で `$True` を設定すると、
-改行コードを可視化可能なFunction `VisualizeReturncode` が自動的に実行されて変換後のファイルを確認できます。
+改行コードを可視化可能なFunction `VisualizeReturncode` が自動的に実行され変換後のファイルを確認できます。
 
 ```powershell:改行コードを可視化「VisualizeReturncode」、改行コードの変換「ReplaceReturncode」
 # テキストファイルの改行コードを可視化して表示
