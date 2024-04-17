@@ -1,5 +1,5 @@
 ---
-title: "PowerShell 6.0以降（Core）で環境を確認できる自動変数"
+title: "PowerShell 6.0以降（Core）でOS環境を確認できる自動変数"
 emoji: "🏞"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["windows", "powershell"]
@@ -7,12 +7,12 @@ published: true
 ---
 ## 概要
 
-6.0以降のCore エディションで使用可能な環境を確認できる自動変数の使用方法を紹介。
+6.0以降のCore エディションで使用可能なOSの環境を確認できる自動変数の使用方法を紹介。
 
 ## この記事のターゲット
 
 - PowerShellユーザーの方
-- 環境を確認できる自動変数を知りたい方
+- OS環境を確認できる自動変数を知りたい方
 
 ## 環境
 
