@@ -8,15 +8,15 @@ published: false
 ## 概要
 
 Windows Server を代表とする Windows OS で取り扱われる既定の改行コードは、CRLF（`\r\n`）です。また、RedHat などの UNIX系サーバー の規定では、LF（`\n`）だったりします。
-このようなシステム間でテキストファイルを連携する際、改行コードの変換が必要となります。
+このようなシステム間でテキストファイルを連携する際、改行コードの変換が必要です。
 
-Windowsシステムで改行コードを変換したい場合、一度切りであればテキストエディターでも対応可能ですが、定期的に実施するのであればGUI操作が必要となるため、効率的ではありません。
+Windowsシステム側で改行コードを変換したい場合、一度切りであればテキストエディターでも対応可能ですが、定期的に実施するのであれば現実的な対応方法ではありません。
 今回、自作したPowerShellのFunctionを使用すると比較的、簡単に改行コードの変換が実現できます。
 
 ## この記事のターゲット
 
 - PowerShellユーザーの方
-- テキストファイルの改行コードを変換したい方
+- テキストファイルの改行コードをWindows OSで変換したい方
 
 ## 環境
 
@@ -44,12 +44,12 @@ PS C:\Users\"ユーザー名">
 テキストファイル内にある改行コードを任意のコードに変換可能。このFunctionをPowerShellスクリプトに組み込むことで効率良く変換が可能となるでしょう。
 
 最初にコーディングしているFunction「`VisualizeReturncode`」はテキストファイル内の改行コードを
-可視化してコンソール上に表示します。
+可視化しコンソール上に表示します。
 
-次に記載しているFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換。
+次のFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換。
 
-なお、このFunctionのオプション「-Show」で `$True` を設定すると、
-改行コードを可視化可能なFunction `VisualizeReturncode` が自動的に実行され変換後のファイルを確認できます。
+なお、この改行コードを変換するFunctionのオプション「-Show」で `$True` を設定すると、
+改行コードを可視化可能なFunction `VisualizeReturncode` を呼び出します。
 
 ```powershell:改行コードを可視化「VisualizeReturncode」、改行コードの変換「ReplaceReturncode」
 # テキストファイルの改行コードを可視化して表示
@@ -60,21 +60,22 @@ Function VisualizeReturncode {
     )
 
     [System.Collections.Hashtable]$ReturnCode_Regex = @{
-        'CR'   = "`r";
-        'LF'   = "`n";
+        'CR'   = "`r"
+        'LF'   = "`n"
         'CRLF' = "`r`n"
     }
 
     [System.Collections.Hashtable]$ReturnCode_Mark = @{
-        'CR'   = '<CR>';
-        'LF'   = '<LF>';
+        'CR'   = '<CR>'
+        'LF'   = '<LF>'
         'CRLF' = '<CRLF>'
     }
 
+    # 
     [System.Collections.Hashtable]$ReturnCode_Visualize = @{
-        'CR'   = "<CR>$($ReturnCode_Regex[$Returncode])";
-        'LF'   = "<LF>$($ReturnCode_Regex[$Returncode])";
-        'CRLF' = "<CRLF>$($ReturnCode_Regex[$Returncode])";
+        'CR'   = "<CR>$($ReturnCode_Regex[$Returncode])"
+        'LF'   = "<LF>$($ReturnCode_Regex[$Returncode])"
+        'CRLF' = "<CRLF>$($ReturnCode_Regex[$Returncode])"
     }
 
     # マーク
@@ -136,9 +137,9 @@ Function ReplaceReturncode {
 
     # 改行コードのハッシュテーブル作成
     [System.Collections.Hashtable]$ReturnCode_Regex = @{
-        'CR'   = "`r";
-        'LF'   = "`n";
-        'CRLF' = "`r`n";
+        'CR'   = "`r"
+        'LF'   = "`n"
+        'CRLF' = "`r`n"
         'NONE' = ''
     }
 
