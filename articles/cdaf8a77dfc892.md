@@ -52,7 +52,7 @@ PS C:\Users\"ユーザー名">
 改行コードを可視化可能なFunction `VisualizeReturncode` を呼び出します。
 
 ```powershell:改行コードを可視化「VisualizeReturncode」、改行コードの変換「ReplaceReturncode」
-# テキストファイルの改行コードを可視化して表示
+# 改行コードを可視化
 Function VisualizeReturncode {
     Param (
         [Parameter(Mandatory=$true)][System.String]$Path,
@@ -71,20 +71,20 @@ Function VisualizeReturncode {
         'CRLF' = '<CRLF>'
     }
 
-    # 
+    # コンソールに表示する際の改行コードを追加。改行コードは引数で指定した CRLF か LF が入る。
     [System.Collections.Hashtable]$ReturnCode_Visualize = @{
         'CR'   = "<CR>$($ReturnCode_Regex[$Returncode])"
         'LF'   = "<LF>$($ReturnCode_Regex[$Returncode])"
         'CRLF' = "<CRLF>$($ReturnCode_Regex[$Returncode])"
     }
 
-    # マーク
+    # 改行コードをマークに変換
     [System.String]$target_data = (Get-Content -Path $Path -Raw)
     $target_data = $target_data -Replace $ReturnCode_Regex['CRLF'], $ReturnCode_Mark['CRLF']
     $target_data = $target_data -Replace $ReturnCode_Regex['LF'], $ReturnCode_Mark['LF']
     $target_data = $target_data -Replace $ReturnCode_Regex['CR'], $ReturnCode_Mark['CR']
 
-    # マーク＋改行コード
+    # マークからマーク＋改行コード（コンソール表示用）に変換
     $target_data = $target_data -Replace $ReturnCode_Mark['CRLF'], $ReturnCode_Visualize['CRLF']
     $target_data = $target_data -Replace $ReturnCode_Mark['LF'], $ReturnCode_Visualize['LF']
     $target_data = $target_data -Replace $ReturnCode_Mark['CR'], $ReturnCode_Visualize['CR']
@@ -100,17 +100,21 @@ Function VisualizeReturncode {
 # 改行コードの変換
 Function ReplaceReturncode {
     Param (
+        # 必須：変換対象のファイルを指定
         [Parameter(Mandatory=$true)][System.String]$Path,
+        # 必須：変換する前後の改行コードを指定
         [Parameter(Mandatory=$true)][ValidateSet('CR', 'LF', 'CRLF')][System.String]$BeforeCode,
         [Parameter(Mandatory=$true)][ValidateSet('CR', 'LF', 'CRLF', 'NONE')][System.String]$AfterCode,
+        # 任意：変換後のファイルを別ファイルで保存したい場合に保存先を指定
         [System.String]$Destination='',
+        # 任意：変換後のファイルを可視化しコンソール表示したい場合に指定
         [System.Boolean]$Show=$false
     )
 
     # Before・Afterが異なる改行コードを指定しているかチェック
     if ($BeforeCode -eq $AfterCode) {
         Write-Host ''
-        Write-Host '引数で指定された 変換前 と 変換後 の改行コードが同一です。実行方法を見直してください。'
+        Write-Host '引数で指定された 変換前 と 変換後 の改行コードが同一です。引数を見直してください。'
         Write-Host ''
         Write-Host ''
         return
@@ -143,14 +147,14 @@ Function ReplaceReturncode {
         'NONE' = ''
     }
 
-    # 指定の改行コードを正規表現の表記に変更
+    # 指定した変換前後の改行コードを正規表現の表記に変更
     [System.String]$BeforeCode_regex = $ReturnCode_Regex[$BeforeCode]
     [System.String]$AfterCode_regex = $ReturnCode_Regex[$AfterCode]
 
     # 変換処理
     [System.String]$after_data = ($before_data -Replace $BeforeCode_regex, $AfterCode_regex)
 
-    # 保存
+    # 変換されなかった場合
     if ($null -eq (Compare-Object $before_data $after_data -SyncWindow 0)) {
         Write-Host ''
         Write-Host '処理を実行しましたが、対象の改行コードがなく変換されませんでした。処理を終了します。'
@@ -158,13 +162,13 @@ Function ReplaceReturncode {
         Write-Host ''
         return
     }
-    # 保存先を指定していない場合は上書き保存
+    # 保存先の指定がない場合、上書き保存
     if ($Destination -eq '') {
         $Destination = $Path
         Write-Host ''
         Write-Host '上書き保存します。'
     }
-    # 指定された場合は指定場所に保存
+    # 保存先が指定されている場合、別ファイルで保存（名前を付けて保存）
     else {
         if (Test-Path $Destination -PathType Leaf) {
             Write-Host ''
