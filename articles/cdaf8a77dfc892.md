@@ -2,16 +2,18 @@
 title: "PowerShellでファイル内の改行コードを一括変換するFunction"
 emoji: "⤵"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["powershell"]
+topics: ["windows", "powershell"]
 published: false
 ---
 ## 概要
 
 Windows Server を代表とする Windows OS で取り扱われる既定の改行コードは、CRLF（`\r\n`）です。また、RedHat などの UNIX系サーバー の規定では、LF（`\n`）だったりします。
-このようなシステム間でテキストファイルを連携する際、改行コードの変換が必要です。
+このようなシステム間でテキスト形式のファイルを連携する際、改行コードの変換が必要です。
 
-Windowsシステム側で改行コードを変換したい場合、一度切りであればテキストエディターでも対応可能ですが、定期的に実施するのであれば現実的な対応方法ではありません。
-今回、自作したPowerShellのFunctionを使用すると比較的、簡単に改行コードの変換が実現できます。
+Windowsシステム側で改行コードを変換したい場合、一度切りであればテキストエディターの正規表現を使うことで対応可能ですが、
+定期的に実施するのであれば現実的な運用方法ではありません。
+
+今回、自作したPowerShellのFunctionを使用すると比較的、簡単に改行コードの変換が実現できると思います。
 
 ## この記事のターゲット
 
@@ -41,15 +43,16 @@ PS C:\Users\"ユーザー名">
 
 ## 自作したFunctionのソースコード
 
-テキストファイル内にある改行コードを任意のコードに変換可能。このFunctionをPowerShellスクリプトに組み込むことで効率良く変換が可能となるでしょう。
+テキストファイル内にある改行コードを任意のコードに変換可能。このFunctionをPowerShellスクリプトに組み込むことで効率的に変換できると思います。
 
 最初にコーディングしているFunction「`VisualizeReturncode`」はテキストファイル内の改行コードを
 可視化しコンソール上に表示します。
+（PowerShellの仕様上、仕方がなく先頭にコーディング。）
 
-次のFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換。
+次にあるFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換が可能。
 
-なお、この改行コードを変換するFunctionのオプション「-Show」で `$True` を設定すると、
-改行コードを可視化できるFunction `VisualizeReturncode` を呼び出します。
+なお、この改行コードを変換するFunctionのオプション「-Show」で `$True` を設定し実行すると、
+改行コードを可視化できるFunction `VisualizeReturncode` を呼び出す仕組みとなります。
 
 ```powershell:改行コードを可視化「VisualizeReturncode」、改行コードの変換「ReplaceReturncode」
 # 改行コードを可視化するFunction
@@ -211,7 +214,7 @@ Function ReplaceReturncode {
 
 `D:\Downloads\utf16.txt` を対象に改行コードを CRLF から LF に変換します。
 オプション「-Show」を `$True` でコマンド実行している為、自動的にFunction `VisualizeReturncode`が呼び出されて、
-変換したファイルの改行コードを可視化しコンソールに表示されます。
+変換したファイルの改行コードを可視化しコンソールに表示します。
 
 ```powershell:実際に実行した結果
 PS D:\Downloads> ReplaceReturncode .\utf16.txt CRLF LF -Show $True
