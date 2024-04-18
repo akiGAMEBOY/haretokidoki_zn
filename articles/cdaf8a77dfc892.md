@@ -49,10 +49,10 @@ PS C:\Users\"ユーザー名">
 次のFunction「`ReplaceReturncode`」を使用すると任意の改行コードに変換。
 
 なお、この改行コードを変換するFunctionのオプション「-Show」で `$True` を設定すると、
-改行コードを可視化可能なFunction `VisualizeReturncode` を呼び出します。
+改行コードを可視化できるFunction `VisualizeReturncode` を呼び出します。
 
 ```powershell:改行コードを可視化「VisualizeReturncode」、改行コードの変換「ReplaceReturncode」
-# 改行コードを可視化
+# 改行コードを可視化するFunction
 Function VisualizeReturncode {
     Param (
         [Parameter(Mandatory=$true)][System.String]$Path,
@@ -97,7 +97,7 @@ Function VisualizeReturncode {
     Write-Host ''
 }
 
-# 改行コードの変換
+# 改行コードを変換するFunction
 Function ReplaceReturncode {
     Param (
         # 必須：変換対象のファイルを指定
@@ -210,7 +210,8 @@ Function ReplaceReturncode {
 :::details 実際に実行した結果
 
 `D:\Downloads\utf16.txt` を対象に改行コードを CRLF から LF に変換します。
-オプション「-Show」を `$True` で実行している為、変換と保存後に改行コードを可視化するFunction `VisualizeReturncode` が自動で実行されます。
+オプション「-Show」を `$True` でコマンド実行している為、自動的にFunction `VisualizeReturncode`が呼び出されて、
+変換したファイルの改行コードを可視化しコンソールに表示されます。
 
 ```powershell:実際に実行した結果
 PS D:\Downloads> ReplaceReturncode .\utf16.txt CRLF LF -Show $True
@@ -235,18 +236,18 @@ PS D:\Downloads>
 ## まとめ
 
 - [Replaceメソッド](https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_comparison_operators#replacement-operator)を使用する事で改行コードの変換ができた！
-- より実用的にする場合は改行コードの混在を変換前にチェックし実行するかの最終確認をした方がよさそう。
+- より実用的にする場合は変換前に改行コードの混在しているかチェックした方が良いかも
 
-> 改行コードの違うシステム間でファイルを連携する場合、主に下記のメリットからUNIX系サーバー側でシェルスクリプトを作成するケースが多いと思われる。
-> 
-> - 処理速度が速い
-> - メモリなどのリソースをムダに使用しない
-> - できるが多い（拡張性が高い）
-> - ノウハウもたくさんある
-> - スケジューラーに組み込むのが簡単
-> - メンテナンスしやすい
-> 
-> ただ今回、組織のニーズに応じ対応できる範囲を増やせたことはよかったと感じた。
+改行コードの違うシステム間でファイルを連携する場合、主に下記のメリットからUNIX系サーバー側でシェルスクリプトを作成するケースが多いと思われる。 
+
+- 処理速度が速い
+- メモリなどのリソースをムダに使用しない
+- できるが多い（拡張性が高い）
+- ノウハウもたくさんある
+- スケジューラーに組み込むのが簡単
+- メンテナンスしやすい
+
+ただ今回、組織のニーズに応じて対応できる範囲を増やせたことはよかったと感じた。
 
 ## 関連記事
 
