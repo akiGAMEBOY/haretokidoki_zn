@@ -80,7 +80,7 @@ Function VisualizeReturncode {
         'LF'   = "<LF>$($ReturnCode_Regex[$Returncode])"
         'CRLF' = "<CRLF>$($ReturnCode_Regex[$Returncode])"
     }
-    
+
     # 改行コードをマークに変換
     [System.String]$target_data = (Get-Content -Path $Path -Raw)
     $target_data = $target_data -Replace $ReturnCode_Regex['CRLF'], $ReturnCode_Mark['CRLF']
@@ -156,7 +156,7 @@ Function ReplaceReturncode {
 
     # 変換処理
     [System.String]$after_data = ($before_data -Replace $BeforeCode_regex, $AfterCode_regex)
-
+    
     # 変換されなかった場合
     if ($null -eq (Compare-Object $before_data $after_data -SyncWindow 0)) {
         Write-Host ''
