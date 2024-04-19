@@ -3,7 +3,7 @@ title: "PowerShellでファイル内の改行コードを一括変換するFunct
 emoji: "⤵"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["windows", "powershell"]
-published: false
+published: true
 ---
 ## 概要
 
