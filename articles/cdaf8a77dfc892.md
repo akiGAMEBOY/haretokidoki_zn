@@ -239,7 +239,7 @@ PS D:\Downloads>
 ## まとめ
 
 - [Replaceメソッド](https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_comparison_operators#replacement-operator)を使用する事で改行コードの変換ができた！
-- より実用的にする場合は変換前に改行コードの混在しているかチェックした方が良いかも
+- より実用的にする場合は、変換前に改行コードの混在チェックを行った方が良いかも
 
 改行コードの違うシステム間でファイルを連携する場合、主に下記のメリットからUNIX系サーバー側でシェルスクリプトを作成した方が良いと思われます。
 
