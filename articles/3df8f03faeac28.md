@@ -23,18 +23,18 @@ Function ExtractByteSubstring {
         [System.Int32]$length
     )
 
-    $encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
+    [System.Text.DBCSCodePageEncoding]$encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
 
     # 文字列をバイト配列に変換
-    $bytes = $encoding.GetBytes($target_str)
+    [System.Byte[]]$all_bytes = $encoding.GetBytes($target_str)
 
     # 抽出するバイト配列を初期化
-    $extractedBytes = New-Object Byte[] $length
+    $extracted_bytes = New-Object Byte[] $length
 
     # 指定されたバイト位置からバイト配列を抽出
-    [System.Array]::Copy($bytes, $start, $extractedBytes, 0, $length)
+    [System.Array]::Copy($all_bytes, $start, $extracted_bytes, 0, $length)
 
     # バイト配列から文字列に変換して返す
-    return $encoding.GetString($extractedBytes)
+    return $encoding.GetString($extracted_bytes)
 }
 ```
