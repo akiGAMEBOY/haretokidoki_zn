@@ -22,8 +22,8 @@ Function ExtractByteSubstring {
         [System.Int32]$start,
         [System.Int32]$length
     )
-
-    [System.Text.DBCSCodePageEncoding]$encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
+    
+    $encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
 
     # 文字列をバイト配列に変換
     [System.Byte[]]$all_bytes = $encoding.GetBytes($target_str)
