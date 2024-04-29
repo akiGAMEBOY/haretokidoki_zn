@@ -7,6 +7,11 @@ published: false
 ---
 ## 概要
 
+Excel関数でいうところのLENBをPowerShellで実現したい場合、
+
+https://support.microsoft.com/ja-jp/office/len-%E9%96%A2%E6%95%B0-lenb-%E9%96%A2%E6%95%B0-29236f94-cedc-429d-affd-b5e33d2c67cb
+
+
 > 依頼内容
 > 
 > PowerShellで「文字列の特定の位置から指定した長さの部分文字列を取得」する方法をすべて提示してください。
