@@ -8,7 +8,7 @@ published: false
 ## 概要
 
 Excel関数、またはVBAでいうところの **LENB関数** のようにPowerShellでも文字列のバイト数を取得したいシチュエーションがあり、
-Functionを自作しました。
+取得方法や実用的なFunctionを自作してみました。
 
 ## 環境
 
@@ -58,7 +58,8 @@ PS C:\Users\"ユーザー名"> $target_str.Length
 PS C:\Users\"ユーザー名">
 ```
 
-このマルチバイトを含む文字列を固定長データとして制御する場合、「 **文字列をバイト数として取得** 」する事がが必要となりました。
+このマルチバイトを含む文字列を固定長データとして制御する場合、「 **文字列をバイト数として取得** 」する事が必要となりました。
+調査し取得方法がわかりました。
 
 :::details 文字列のバイト数が必要な具体的な例
 
@@ -116,7 +117,7 @@ PS C:\Users\"ユーザー名">
 
 というように、項目名や値それぞれでズレが発生してしまいます。
 
-10桁ごとに置き換えると下記のように。
+文字数、10桁ごとに置き換えると下記のとおり。
 
 | `項目0001  項目` | `0002  項目00` | `03  `<br>※ 4桁のみ |
 | --- | --- | --- |
@@ -127,8 +128,118 @@ PS C:\Users\"ユーザー名">
 
 :::
 
-## 自作Funciton「文字列を対象に指定バイト位置から指定バイト数を抽出するFunction」
+## 文字列のバイト数を取得する方法"
 
+```powershell:コピー用
+[System.String]$target_str = 'あ12345678'
+$target_str.Length
+$encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
+$encoding.GetByteCount($target_str)
+```
+
+```powershell:実際にコマンドを実行した結果
+# 対象の文字列を指定
+PS C:\Users\"ユーザー名"> [System.String]$target_str = 'あ12345678'
+PS C:\Users\"ユーザー名">
+# 文字の長さ（文字数）だと9桁
+PS C:\Users\"ユーザー名"> $target_str.Length
+9
+PS C:\Users\"ユーザー名">
+# 文字コードをSJISで設定
+PS C:\Users\"ユーザー名"> $encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
+PS C:\Users\"ユーザー名">
+# SJISのバイト数（System.Int32）を取得
+PS C:\Users\"ユーザー名"> $encoding.GetByteCount($target_str)
+10
+PS C:\Users\"ユーザー名">
+```
+
+## 文字列のバイト数を取得する方法をFunctionに
+
+コマンドで確認した内容をFunctionにすると下記のとおり。
+
+```powershell:文字列のバイト数を取得するFunction
+#################################################################################
+# 処理名　 | GetSjisCount
+# 機能　　 | 文字列全体のバイト数をShift JISで取得
+#--------------------------------------------------------------------------------
+# 戻り値　 | Int32（文字列のバイト数）
+# 引数　　 | target_str: 対象文字列
+#################################################################################
+Function GetSjisCount {
+    Param (
+        [System.String]$target_str
+    )
+
+    # 文字コードをSJISで設定
+    $encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
+
+    # 文字列のバイト数を返す
+    return $encoding.GetByteCount($target_str)
+}
+```
+
+```powershell:実際に実行した結果
+PS C:\Users\"ユーザー名"> GetSjisCount '項目0001  '
+10
+PS C:\Users\"ユーザー名">
+```
+
+## より実用的なFunction「文字列を対象に指定バイト位置から指定バイト数を抽出」
+
+指定の文字数で抽出可能な[Substringメソッド](https://learn.microsoft.com/ja-jp/dotnet/api/system.string.substring)のバイト数版としてFunctionを自作。
+
+引数により、`$target_str` が抽出対象の文字列、`$start` が先頭位置からバイト数で数えた位置を抽出開始位置、
+`$length` が抽出開始位置（`$start`）から数えたバイト数分までと指定することで、文字列をバイト数で抽出する。
+
+```powershell:バイト数で文字列抽出するFunction
+#################################################################################
+# 処理名　 | ExtractByteSubstring
+# 機能　　 | バイト数で文字列を抽出
+#--------------------------------------------------------------------------------
+# 戻り値　 | String（抽出した文字列）
+# 引数　　 | target_str: 対象文字列
+# 　　　　 | start     : 抽出開始するバイト位置
+# 　　　　 | length    : 指定バイト数
+#################################################################################
+Function ExtractByteSubstring {
+    Param (
+        [System.String]$target_str,
+        [System.Int32]$start,
+        [System.Int32]$length
+    )
+
+    $encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
+
+    # 文字列をバイト配列に変換
+    [System.Byte[]]$all_bytes = $encoding.GetBytes($target_str)
+
+    # 抽出するバイト配列を初期化
+    $extracted_bytes = New-Object Byte[] $length
+
+    # 指定されたバイト位置からバイト配列を抽出
+    [System.Array]::Copy($all_bytes, $start, $extracted_bytes, 0, $length)
+
+    # 抽出したバイトデータを文字列として返す
+    return $encoding.GetString($extracted_bytes)
+}
+```
+
+```powershell:実際に実行した結果
+# 4バイトの目
+PS C:\Users\"ユーザー名"> ExtractByteSubstring '1234あか' 4 4
+あか
+PS C:\Users\"ユーザー名">
+```
+
+Substringメソッドと同様、0から数えた位置を開始位置として抽出。
+バイト数の開始位置を表にすると下記のとおりとなる。
+
+| 開始Byte数→ | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 文字列全体: `1234あか` | ` 1234あか`<br>`^        ` | `1 234あか`<br>` ^       ` | `12 34あか`<br>`  ^      ` | `123 4あか`<br>`   ^     ` | `1234 あか`<br>`    ^    ` | `あ`の途中のため、不可 | `1234あ か`<br>`      ^  ` | `か`の途中のため、不可 | `1234あか `<br>`        ^` |
+
+[Array.Copy メソッド - Microsoft Learn](https://learn.microsoft.com/ja-jp/dotnet/api/system.array.copy#system-array-copy(system-array-system-int32-system-array-system-int32-system-int32))
 
 ## 参考情報
 
