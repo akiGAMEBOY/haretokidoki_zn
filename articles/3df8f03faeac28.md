@@ -232,12 +232,7 @@ PS C:\Users\"ユーザー名"> ExtractByteSubstring '1234あか' 4 4
 PS C:\Users\"ユーザー名">
 ```
 
-Substringメソッドと同様、0から数えた位置を開始位置として抽出。
-バイト数の開始位置を表にすると下記のとおりとなる。
-
-| 開始Byte数→ | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| 文字列全体: `1234あか` | ` 1234あか`<br>`^        ` | `1 234あか`<br>` ^       ` | `12 34あか`<br>`  ^      ` | `123 4あか`<br>`   ^     ` | `1234 あか`<br>`    ^    ` | `あ`の途中のため、不可 | `1234あ か`<br>`      ^  ` | `か`の途中のため、不可 | `1234あか `<br>`        ^` |
+上記のとおり、Substringメソッドと同様、先頭を0から数えた位置を開始位置として抽出。
 
 [Array.Copy メソッド - Microsoft Learn](https://learn.microsoft.com/ja-jp/dotnet/api/system.array.copy#system-array-copy(system-array-system-int32-system-array-system-int32-system-int32))
 
