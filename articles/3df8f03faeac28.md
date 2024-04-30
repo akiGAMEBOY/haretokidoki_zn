@@ -1,62 +1,140 @@
 ---
-title: "文字列を対象に指定バイト位置から指定バイト数を抽出するFunction"
+title: "[PowerShell]文字列のバイト数を取得する方法"
 emoji: "🚪"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["powershell"]
+topics: ["powershell", "bytes"]
 published: false
 ---
 ## 概要
 
-Excel関数でいうところのLENBをPowerShellで実現したい場合、
+Excel関数、またはVBAでいうところの **LENB関数** のようにPowerShellでも文字列のバイト数を取得したいシチュエーションがあり、
+Functionを自作しました。
 
-https://support.microsoft.com/ja-jp/office/len-%E9%96%A2%E6%95%B0-lenb-%E9%96%A2%E6%95%B0-29236f94-cedc-429d-affd-b5e33d2c67cb
+## 環境
+
+```powershell:PowerShellのバージョン
+PS C:\Users\"ユーザー名"> $PSVersionTable
+
+Name                           Value
+----                           -----
+PSVersion                      5.1.19041.4291
+PSEdition                      Desktop
+PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0...}
+BuildVersion                   10.0.19041.4291
+CLRVersion                     4.0.30319.42000
+WSManStackVersion              3.0
+PSRemotingProtocolVersion      2.3
+SerializationVersion           1.1.0.1
 
 
-> 依頼内容
-> 
-> PowerShellで「文字列の特定の位置から指定した長さの部分文字列を取得」する方法をすべて提示してください。
+PS C:\Users\"ユーザー名">
+```
 
-> 回答
-> 
-> [1]: https://extan.jp/?p=10317 ""
-> [2]: https://www.delftstack.com/ja/howto/powershell/powershell-substring-after-character/ ""
-> [3]: https://forkful.ai/ja/powershell/strings/extracting-substrings/ ""
-> [4]: https://step-learn.com/article/powershell/021-string-substring.html ""
-> [5]: https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.utility/select-object?view=powershell-7.3 ""
-> 
-> PowerShellで文字列の特定の位置から指定した長さの部分文字列を取得する方法は、主に`Substring`メソッドを使用します。以下にその使用方法を示します。
-> 
-> 1. **基本的なSubstringメソッド**:
->    文字列の特定の位置から指定した長さの部分文字列を取得します。
->    ```powershell
->    $string = "こんにちは、PowerShell！"
->    $substring = $string.Substring(0, 5) # 最初の5文字を取得
->    ```
-> 
-> 2. **IndexOfメソッドと組み合わせたSubstringメソッド**:
->    特定の文字や文字列が最初に現れる位置を見つけ、そこから部分文字列を取得します。
->    ```powershell
->    $string = "こんにちは、PowerShell！"
->    $start = $string.IndexOf("PowerShell")
->    $substring = $string.Substring($start, 10) # "PowerShell"の部分を取得
->    ```
-> 
-> 3. **LastIndexOfメソッドと組み合わせたSubstringメソッド**:
->    特定の文字や文字列が最後に現れる位置を見つけ、そこから部分文字列を取得します。
->    ```powershell
->    $string = "こんにちは、PowerShell！こんにちは、世界！"
->    $start = $string.LastIndexOf("こんにちは")
->    $substring = $string.Substring($start) # 最後の"こんにちは"から最後までの部分を取得
->    ```
-> 
-> これらの方法を使って、さまざまなシナリオで文字列の部分を抽出することができます。詳細な情報や他の方法については、PowerShellのドキュメントや技術記事を参照してください¹[1]²[2]³[3]⁴[4]。
-> 
-> ソース: Bing との会話 2024/4/26
-> (1) PowerShellで文字列を切り出す方法3選！特定の文字以降/以前も .... https://extan.jp/?p=10317.
-> (2) 文字列から PowerShell 部分文字列を抽出する | Delft スタック. https://www.delftstack.com/ja/howto/powershell/powershell-substring-after-character/.
-> (3) PowerShell: 部分文字列の抽出. https://forkful.ai/ja/powershell/strings/extracting-substrings/.
-> (4) PowerShell: 文字列の切り出し Substring. https://step-learn.com/article/powershell/021-string-substring.html.
-> (5) undefined. https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.utility/select-object?view=powershell-7.3.
+## なぜ文字列のバイト数を取得したいのか（= 実現したいこと）
+
+コマンド結果のデータ型がオブジェクト型（`System.Object`）ではない場合は、項目名を指定した加工などは不可能です。
+
+そのような、ただの文字列で返ってくるコマンド結果を加工する場合は、固定長データとして加工する必要があります。
+
+固定長データを扱う際、コマンド結果がすべて英数字のみであれば、下記のようなLengthメソッドを使う事で、
+簡単に桁数をカウントし制御が可能です。
+
+```powershell:英数字だけの文字列の結果
+PS C:\Users\"ユーザー名"> [System.String]$target_str = 'abcdefg'
+PS C:\Users\"ユーザー名">
+PS C:\Users\"ユーザー名"> $target_str.Length
+7
+PS C:\Users\"ユーザー名">
+```
+
+ただ、問題になってくるのが日本語などマルチバイトを含むデータがあった場合です。
+単純にLengthメソッドを使用してしまうと、ズレが発生します。
+
+```powershell:日本語（マルチバイト）を含む文字列の結果
+PS C:\Users\"ユーザー名"> [System.String]$target_str = 'あいうabcd'
+PS C:\Users\"ユーザー名">
+PS C:\Users\"ユーザー名"> $target_str.Length
+7
+PS C:\Users\"ユーザー名">
+```
+
+このマルチバイトを含む文字列を固定長データとして制御する場合、「 **文字列をバイト数として取得** 」する事がが必要となりました。
+
+:::details 文字列のバイト数が必要な具体的な例
+
+より理解を深めたい方向けに具体的な例をあげて説明します。
+
+まず、最初に英数字だけのコマンド結果を桁数（文字数）で配列に置き換えたい場合、
+
+```:英数字だけのコマンド結果の例
+PS C:\Users\"ユーザー名"> Get-Alphanumeric（架空のコマンドレット）
+column01  column02  column03  
+------------------------------
+123456789012345678901234567890
+
+PS C:\Users\"ユーザー名">
+```
+
+というコマンド結果を文字数でカウントすると下記のようになります。
+
+| 桁数→ | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 英数字のみ - 項目名 | `c` | `o` | `l` | `u` | `m` | `n` | `0` | `1` | ` ` | ` ` | `c` |
+| 英数字のみ - 値 | `1` | `2` | `3` | `4` | `5` | `6` | `7` | `8` | `9` | `0` | `1` |
+
+この結果からも1桁目 ～ 10桁目までが 項目名`column01`のデータ、11桁目 ～ 20桁目までが 項目名`column02`のデータというように、
+固定長データとして加工が可能。
+
+表で置き換えると下記のようになります。
+
+| `column01` | `column02` | `column03` |
+| --- | --- | --- |
+| `1234567890` | `1234567890` | `1234567890` |
+
+ここまでのように英数字だけのコマンド結果であれば、Lengthメソッドだけで制御可能です。
+
+-----
+
+しかし、マルチバイト（日本語）を含むコマンド結果を文字数だけでは制御できません。
+具体的な例をあげると、
+
+```:日本語を含むコマンド結果の例
+PS C:\Users\"ユーザー名"> Get-Multibyte（架空のコマンドレット）
+項目0001  項目0002  項目0003  
+------------------------------
+あ12345678あ12345678あ12345678
+
+PS C:\Users\"ユーザー名"> 
+```
+
+上記のようにマルチバイトを含んだコマンド結果の場合、文字数だけでカウントしてしまうと、
+
+| 桁数→ | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 日本語含む - 項目名 | `項` | `目` | `0` | `0` | `0` | `1` | ` ` | ` ` | `項` | `目` | `0` |
+| 日本語含む - 値 | `あ` | `1` | `2` | `3` | `4` | `5` | `6` | `7` | `8` | `あ` | `1` |
+
+というように、項目名や値それぞれでズレが発生してしまいます。
+
+10桁ごとに置き換えると下記のように。
+
+| `項目0001  項目` | `0002  項目00` | `03  `<br>※ 4桁のみ |
+| --- | --- | --- |
+| `あ12345678あ` | `12345678あ1` | `2345678`<br>※ 7桁のみ |
+
+以上、英数字のみのコマンド結果 と マルチバイトを含むコマンド結果 を例にあげた結果からも、
+マルチバイトを含むコマンド結果 の場合は、Lengthメソッドのように文字数だけでは、固定長データとして制御できないことが理解できたと思います。
+
+:::
+
+## 自作Funciton「文字列を対象に指定バイト位置から指定バイト数を抽出するFunction」
+
+
+## 参考情報
+
+[Excel - LEN と LENB について](https://support.microsoft.com/ja-jp/office/len-関数-lenb-関数-29236f94-cedc-429d-affd-b5e33d2c67cb)
+
+[VBA - Len と LenB について](https://learn.microsoft.com/ja-jp/office/vba/language/reference/user-interface-help/len-function)
 
 ```powershell:バイト数で文字列抽出するFunction
 #################################################################################
