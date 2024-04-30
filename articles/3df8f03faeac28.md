@@ -226,7 +226,7 @@ Function ExtractByteSubstring {
 ```
 
 ```powershell:実際に実行した結果
-# 4バイト目と5バイト目の間を開始位置として4バイト分の文字列を抽出
+# 4バイト目と5バイト目の間（$start = 4）を開始位置として4バイト分（$length = 4）の文字列を抽出
 PS C:\Users\"ユーザー名"> ExtractByteSubstring '1234あか' 4 4
 あか
 PS C:\Users\"ユーザー名">
