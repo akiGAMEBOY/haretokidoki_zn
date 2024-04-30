@@ -37,7 +37,7 @@ published: false
     }
 
     if ($exitcode -eq 0) {
-        Write-Host $date
+        Write-Host "`$date: [$date]"
     }
 
     exit $exitcode
