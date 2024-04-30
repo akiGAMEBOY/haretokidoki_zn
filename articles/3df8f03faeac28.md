@@ -238,39 +238,15 @@ PS C:\Users\"ユーザー名">
 
 ## 参考情報
 
-[Excel - LEN と LENB について](https://support.microsoft.com/ja-jp/office/len-関数-lenb-関数-29236f94-cedc-429d-affd-b5e33d2c67cb)
+https://support.microsoft.com/ja-jp/office/len-関数-lenb-関数-29236f94-cedc-429d-affd-b5e33d2c67cb
 
-[VBA - Len と LenB について](https://learn.microsoft.com/ja-jp/office/vba/language/reference/user-interface-help/len-function)
+https://learn.microsoft.com/ja-jp/office/vba/language/reference/user-interface-help/len-function
 
-```powershell:バイト数で文字列抽出するFunction
-#################################################################################
-# 処理名　 | ExtractByteSubstring
-# 機能　　 | バイト数で文字列を抽出
-#--------------------------------------------------------------------------------
-# 戻り値　 | String（抽出した文字列）
-# 引数　　 | target_str   : 対象文字列
-# 　　　　 | start : 抽出開始するバイト位置
-# 　　　　 | length: 指定バイト数
-#################################################################################
-Function ExtractByteSubstring {
-    Param (
-        [System.String]$target_str,
-        [System.Int32]$start,
-        [System.Int32]$length
-    )
+https://learn.microsoft.com/ja-jp/dotnet/api/system.string.substring
 
-    $encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
+https://learn.microsoft.com/ja-jp/dotnet/api/system.array.copy#system-array-copy(system-array-system-int32-system-array-system-int32-system-int32)
 
-    # 文字列をバイト配列に変換
-    [System.Byte[]]$all_bytes = $encoding.GetBytes($target_str)
+## まとめ
 
-    # 抽出するバイト配列を初期化
-    $extracted_bytes = New-Object Byte[] $length
-
-    # 指定されたバイト位置からバイト配列を抽出
-    [System.Array]::Copy($all_bytes, $start, $extracted_bytes, 0, $length)
-
-    # バイト配列から文字列に変換して返す
-    return $encoding.GetString($extracted_bytes)
-}
-```
+- `System.Text.Encoding`クラスで文字コードをSJIS（Shift JIS）で設定し`GetByteCount`メソッドでバイト数の取得が可能
+- バイト数で指定した文字列抽出は、
