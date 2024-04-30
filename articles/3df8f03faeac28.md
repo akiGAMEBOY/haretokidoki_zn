@@ -8,7 +8,7 @@ published: false
 ## 概要
 
 Excel関数、またはVBAでいうところの **LENB関数** のようにPowerShellでも文字列のバイト数を取得したいシチュエーションがあり、
-取得方法や実用的なFunctionを自作してみました。
+取得方法やPowerShellスクリプトなどに組み込める実用的なFunctionも自作しました。
 
 ## 環境
 
