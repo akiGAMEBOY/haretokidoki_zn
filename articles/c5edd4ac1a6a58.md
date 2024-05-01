@@ -7,8 +7,8 @@ published: false
 ---
 ## 概要
 
-共通化しているFunction群がコーディングされているPowerShellスクリプトファイル（*.ps1ファイル、または*.psm1）を読み込むことにより、
-スクリプトを作成する度、同じようなコードを書かなくて済ませる方法を紹介。
+共通化したFunction群がコーディングされているPowerShellスクリプトファイル（`*.ps1ファイル`、または`*.psm1`）を読み込むことで、
+スクリプトを作成する度、同じようなコードを書かずに済む方法を紹介。
 
 ## 対応方法
 
@@ -26,17 +26,14 @@ published: false
     Function Get-CurrentDate {
         return Get-Date
     }
-
-    Function Get-FileList($path) {
-        return Get-ChildItem $path
-    }
     ```
 
-1. 共通化コードを読み込み元となるメインのPowerShellスクリプトファイルを作成
+1. 共通化コードを読み込む参照元となるメインのPowerShellスクリプトファイルを作成
 
     ```powershell:Main.ps1
-    # 
+    # 構文エラーのチェックを厳格に行う
     Set-StrictMode -Version Latest
+    # エラーが発生した場合、処理を中断する
     $ErrorActionPreference = 'Stop'
 
     ### DEBUG ###
@@ -76,7 +73,7 @@ published: false
     SET RETURNCODE=0
 
     @REM メインスクリプト場所を設定
-    SET PSFILEPATH="%~dp0\source\powershell\Main.ps1"
+    SET PSFILEPATH="%~dp0source\powershell\Main.ps1"
     @REM メインスクリプトを実行
     powershell -NoProfile -ExecutionPolicy Unrestricted -File %PSFILEPATH%
     @REM 実行結果を戻り値に設定
@@ -92,7 +89,138 @@ published: false
     EXIT %RETURNCODE%
     ```
 
+1. フォルダー構成を下記の通りにする。
+
+    ```batch:TREEコマンドの結果
+    PS D:\Downloads\VerificationCommonCode> TREE /F
+    フォルダー パスの一覧:  ボリューム ボリューム
+    ボリューム シリアル番号は XXXX-XXXX です
+    D:.
+    │  ExecuteMain.bat
+    │
+    └─source
+        └─powershell
+                CommonFunctions.ps1
+                Main.ps1
+
+    PS D:\Downloads\VerificationCommonCode>
+    ```
+
+1. バッチファイルをダブルクリックで実行
+
+    ```batch:実際に実行した結果
+    $date: [05/01/2024 10:34:20]
+
+    処理が終了しました。
+    いずれかのキーを押すとウィンドウが閉じます。
+    ```
+
+    ![PowerShellスクリプトを実行するバッチファイルを実行した結果](https://storage.googleapis.com/zenn-user-upload/19c12dd61052-20240501.png)
+    *画像：PowerShellスクリプトを実行するバッチファイルを実行した結果*
+
+    共通化コードのPowerShellスクリプトファイル「`CommonFunctions.ps1`」内の`Get-CurrentDate`が正常に実行できたことを確認。
+
 ### スクリプト モジュールを使った読み込み方法
+
+1. 共通化コードのPowerShellスクリプトファイルを作成
+
+    ```powershell:CommonModule.psm1
+    Function Get-FileList($path) {
+        return Get-ChildItem $path
+    }
+    ```
+
+1. 共通化コードを読み込む参照元となるメインのPowerShellスクリプトファイルを作成
+
+    ```powershell:Main.ps1
+    # 構文エラーのチェックを厳格に行う
+    Set-StrictMode -Version Latest
+    # エラーが発生した場合、処理を中断する
+    $ErrorActionPreference = 'Stop'
+
+    ### DEBUG ###
+    Set-Variable -Name "DEBUG_ON" -Value $false -Option Constant
+
+    # フォルダー構成を取得
+    [System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent
+    Set-Location $current_dir'\..\..'
+    [System.String]$root_dir = (Convert-Path .)
+
+    # 共通化コードの読み込み
+    Import-Module "$($current_dir)\CommonModule.psm1"
+
+    # 共通化したFunctionを実行
+    $exitcode = 0
+    try {
+        $lists = (Get-FileList "$HOME\Documents")
+
+    }
+    catch {
+        $exitcode = -1
+    }
+
+    if ($exitcode -eq 0) {
+        Write-Host "`$lists: [$($lists -join ', ')]"
+    }
+
+    exit $exitcode
+    ```
+
+1. メインのPowerShellスクリプトを実行するバッチファイルを作成
+
+    ```batch:ExecuteMain.bat
+    @ECHO OFF
+
+    @REM 戻り値の初期化
+    SET RETURNCODE=0
+
+    @REM メインスクリプト場所を設定
+    SET PSFILEPATH="%~dp0source\powershell\Main.ps1"
+    @REM メインスクリプトを実行
+    powershell -NoProfile -ExecutionPolicy Unrestricted -File %PSFILEPATH%
+    @REM 実行結果を戻り値に設定
+    SET RETURNCODE=%ERRORLEVEL%
+
+    @REM 自動で終了するバッチを一時停止
+    ECHO.
+    ECHO 処理が終了しました。
+    ECHO いずれかのキーを押すとウィンドウが閉じます。
+    PAUSE > NUL
+
+    @REM 終了
+    EXIT %RETURNCODE%
+    ```
+
+1. フォルダー構成を下記の通りにする。
+
+    ```batch:TREEコマンドの結果
+    PS D:\Downloads\VerificationCommonCode> TREE /F
+    フォルダー パスの一覧:  ボリューム ボリューム
+    ボリューム シリアル番号は XXXX-XXXX です
+    D:.
+    │  ExecuteMain.bat
+    │
+    └─source
+        └─powershell
+                CommonModule.psm1
+                Main.ps1
+
+    PS D:\Downloads\VerificationCommonCode>
+    ```
+
+1. バッチファイルをダブルクリックで実行
+
+    ```batch:実際に実行した結果
+    $lists: [IISExpress, My Web Sites, SQL Server Management Studio, Visual Studio 2012]
+
+    処理が終了しました。
+    いずれかのキーを押すとウィンドウが閉じます。
+    ```
+
+    ![PowerShellスクリプトを実行するバッチファイルを実行した結果](https://storage.googleapis.com/zenn-user-upload/f869b88d8d0f-20240501.png)
+    *画像：PowerShellスクリプトを実行するバッチファイルを実行した結果*
+
+    共通化コードのPowerShellスクリプトファイル「`CommonModule.psm1`」内の`Get-CurrentDate`が正常に実行できたことを確認。
 
 ## それぞれの方法の使用用途（メリット・デメリットを含む）
 
