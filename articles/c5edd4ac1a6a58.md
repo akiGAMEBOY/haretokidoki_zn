@@ -21,6 +21,7 @@ published: false
 ### ドット ソース関数を使った読み込み方法
 
 1. 共通化コードのPowerShellスクリプトファイルを作成
+    文字コードは「UTF-8 BOM付き」として保存。
 
     ```powershell:CommonFunctions.ps1
     Function Get-CurrentDate {
@@ -29,13 +30,14 @@ published: false
     ```
 
 1. 共通化コードを読み込む参照元となるメインのPowerShellスクリプトファイルを作成
+    文字コードは「UTF-8 BOM付き」として保存。
 
     ```powershell:Main.ps1
     # 構文エラーのチェックを厳格に行う
     Set-StrictMode -Version Latest
     # エラーが発生した場合、処理を中断する
     $ErrorActionPreference = 'Stop'
-    
+
     ### DEBUG ###
     Set-Variable -Name "DEBUG_ON" -Value $false -Option Constant
 
@@ -65,6 +67,7 @@ published: false
     ```
 
 1. メインのPowerShellスクリプトを実行するバッチファイルを作成
+    文字コードは「SJIS（Shift JIS）」として保存。
 
     ```batch:ExecuteMain.bat
     @ECHO OFF
@@ -123,7 +126,8 @@ published: false
 ### スクリプト モジュールを使った読み込み方法
 
 1. 共通化コードのPowerShellスクリプトファイルを作成
-
+    文字コードは「UTF-8 BOM付き」として保存。
+    
     ```powershell:CommonModule.psm1
     Function Get-FileList($path) {
         return Get-ChildItem $path
@@ -131,6 +135,7 @@ published: false
     ```
 
 1. 共通化コードを読み込む参照元となるメインのPowerShellスクリプトファイルを作成
+    文字コードは「UTF-8 BOM付き」として保存。
 
     ```powershell:Main.ps1
     # 構文エラーのチェックを厳格に行う
@@ -167,6 +172,7 @@ published: false
     ```
 
 1. メインのPowerShellスクリプトを実行するバッチファイルを作成
+    文字コードは「SJIS（Shift JIS）」として保存。
 
     ```batch:ExecuteMain.bat
     @ECHO OFF
