@@ -35,7 +35,7 @@ published: false
     Set-StrictMode -Version Latest
     # エラーが発生した場合、処理を中断する
     $ErrorActionPreference = 'Stop'
-
+    
     ### DEBUG ###
     Set-Variable -Name "DEBUG_ON" -Value $false -Option Constant
 
