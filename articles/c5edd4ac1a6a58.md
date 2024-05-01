@@ -35,8 +35,20 @@ published: false
 1. 共通化コードを読み込み元となるメインのPowerShellスクリプトファイルを作成
 
     ```powershell:Main.ps1
+    # 
+    Set-StrictMode -Version Latest
+    $ErrorActionPreference = 'Stop'
+
+    ### DEBUG ###
+    Set-Variable -Name "DEBUG_ON" -Value $false -Option Constant
+
+    # フォルダー構成を取得
+    [System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent
+    Set-Location $current_dir'\..\..'
+    [System.String]$root_dir = (Convert-Path .)
+
     # 共通化コードの読み込み
-    . .\CommonFunctions.ps1
+    . "$($current_dir)\CommonFunctions.ps1"
 
     # 共通化したFunctionを実行
     $exitcode = 0
@@ -58,13 +70,15 @@ published: false
 1. メインのPowerShellスクリプトを実行するバッチファイルを作成
 
     ```batch:ExecuteMain.bat
+    @ECHO OFF
+
     @REM 戻り値の初期化
     SET RETURNCODE=0
 
     @REM メインスクリプト場所を設定
     SET PSFILEPATH="%~dp0\source\powershell\Main.ps1"
     @REM メインスクリプトを実行
-    powershell -NoProfile -ExecutionPolicy Unrestricted -File "%~dp0\source\powershell\Main.ps1"
+    powershell -NoProfile -ExecutionPolicy Unrestricted -File %PSFILEPATH%
     @REM 実行結果を戻り値に設定
     SET RETURNCODE=%ERRORLEVEL%
 
