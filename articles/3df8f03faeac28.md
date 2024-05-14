@@ -7,7 +7,7 @@ published: false
 ---
 ## 概要
 
-Excel関数、またはVBAでいうところの **LENB関数** のようにPowerShellでも文字列のバイト数を取得したいシチュエーションがあり、
+[Ruby bytesize](https://docs.ruby-lang.org/ja/latest/method/String/i/bytesize.html) や [VBA LenB](https://learn.microsoft.com/ja-jp/office/vba/language/reference/user-interface-help/len-function) 、[Excel LENB関数](https://support.microsoft.com/ja-jp/office/len-関数-lenb-関数-29236f94-cedc-429d-affd-b5e33d2c67cb) のようにPowerShellでも文字列のバイト数を取得したいシチュエーションがあり、
 取得方法やPowerShellスクリプトなどに組み込める実用的なFunctionも自作しました。
 
 ## 環境
