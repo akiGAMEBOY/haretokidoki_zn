@@ -113,7 +113,7 @@ PS C:\Users\"ユーザー名">
 
 ```powershell:Function「Invoke-MultipleCommands」を作成し実行
 # 関数として定義
-function Invoke-MultipleCommands {
+Function Invoke-MultipleCommands {
     Param (
         # 必須項目：実行するコマンドレットがある文字列配列用のパラメーター
         [Parameter(Mandatory=$true)]
@@ -141,7 +141,7 @@ Invoke-MultipleCommands -commands @('Get-Date', 'Get-Item .\', 'Get-PSDrive C')
 
     ```powershell:モジュールファイル「Invoke-MultipleCommands.psm1」
     # 実行したファイル
-    function Invoke-MultipleCommands {
+    Function Invoke-MultipleCommands {
         Param (
             # 配列に実行するコマンドレットを格納するパラメーター
             [Parameter(Mandatory=$true)]
@@ -156,7 +156,7 @@ Invoke-MultipleCommands -commands @('Get-Date', 'Get-Item .\', 'Get-PSDrive C')
         }
     }
     # Export-ModuleMemberで指定しない関数は呼び出すことができない
-    function Not-ExportFunction
+    Function Not-ExportFunction
     {
         # ここはExport-ModuleMemberで指定しないと到達しない！
         Write-Host 'Not-ExportFunction Execute!'
