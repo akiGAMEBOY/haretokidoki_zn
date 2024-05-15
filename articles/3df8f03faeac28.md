@@ -278,8 +278,9 @@ PS C:\Users\"ユーザー名">
 
 ## 参考情報
 
-https://support.microsoft.com/ja-jp/office/len-関数-lenb-関数-29236f94-cedc-429d-affd-b5e33d2c67cb
+https://docs.ruby-lang.org/ja/latest/method/String/i/bytesize.html
 https://learn.microsoft.com/ja-jp/office/vba/language/reference/user-interface-help/len-function
+https://support.microsoft.com/ja-jp/office/len-関数-lenb-関数-29236f94-cedc-429d-affd-b5e33d2c67cb
 https://learn.microsoft.com/ja-jp/dotnet/api/system.string.substring
 https://learn.microsoft.com/ja-jp/dotnet/api/system.array.copy#system-array-copy(system-array-system-int32-system-array-system-int32-system-int32)
 
