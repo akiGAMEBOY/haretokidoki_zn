@@ -134,18 +134,22 @@ PS C:\Users\"ユーザー名">
 
 ## 対応方法
 
-文字列のバイト数を取得する2つの方法を紹介。
+文字列のバイト数を取得する方法として下記の3つを紹介。
 
-本記事の対応方法はすべて文字コード「`Shift JIS`」でバイト数をカウントしており、
-マルチバイトは「2バイト」として処理されます。
+- [コマンドで文字列のバイト数を確認する方法](#コマンドで文字列のバイト数を確認する方法)
+- [自作したFunctionで文字列のバイト数を確認する方法](#自作したFunctionで文字列のバイト数を確認する方法)
+- [バイト数を指定し文字列を抽出する自作Function](#バイト数を指定し文字列を抽出する自作Function)
 
-必要に応じて、`UTF-8` など他の文字コードを指定してください。
-なお、マルチバイトのバイト数は、文字コードにより変化。`UTF-8` であれば「3バイト」となる。
+本記事の対応方法はすべて文字コード「`Shift JIS`」でバイト数をカウントしており、マルチバイトは「2バイト」として処理されています。
 
-### コマンドで確認する方法
+必要な場合は、`UTF-8` など他の文字コードに置き換えてご対応ください。
+なお、マルチバイトのバイト数は、文字コードにより変化します。
+（`UTF-8` であれば「3バイト」。）
+
+### コマンドで文字列のバイト数を確認する方法
 
 ```powershell:コピー用
-[System.String]$target_str = 'あ12345678'
+[System.String]$target_str = "対象の文字列"
 $target_str.Length
 $encoding = [System.Text.Encoding]::GetEncoding("Shift_JIS")
 $encoding.GetByteCount($target_str)
@@ -168,7 +172,7 @@ PS C:\Users\"ユーザー名"> $encoding.GetByteCount($target_str)
 PS C:\Users\"ユーザー名">
 ```
 
-### 自作したFunctionで確認する方法
+### 自作したFunctionで文字列のバイト数を確認する方法
 
 コマンドで確認した内容をFunctionにすると下記のとおり。
 
@@ -199,12 +203,15 @@ PS C:\Users\"ユーザー名"> GetSjisCount '項目0001  '
 PS C:\Users\"ユーザー名">
 ```
 
-### より実用的なFunction「文字列を対象に指定バイト位置から指定バイト数を抽出」
+### バイト数を指定し文字列を抽出する自作Function
 
-指定の文字数で抽出可能な[Substringメソッド](https://learn.microsoft.com/ja-jp/dotnet/api/system.string.substring)のバイト数版としてFunctionを自作。
+指定の文字数で抽出可能な[Substringメソッド](https://learn.microsoft.com/ja-jp/dotnet/api/system.string.substring)のバイト数版としてFunctionを自作してみました。
 
-引数により、`$target_str` が抽出対象の文字列、`$start` が先頭位置からバイト数で数えた位置を抽出開始位置、
-`$length` が抽出開始位置（`$start`）から数えたバイト数分までとして指定することにより、バイト数で抽出可能に。
+引数は、下記3つの指定で抽出可能に。
+
+- `$target_str` が抽出対象の文字列
+- `$start` が先頭位置からバイト数で数えた位置を抽出開始位置
+- `$length` が抽出開始位置（`$start`）から数え抽出するバイト数
 
 ```powershell:バイト数で文字列抽出するFunction
 #################################################################################
@@ -253,14 +260,17 @@ PS C:\Users\"ユーザー名">
 ## 参考情報
 
 https://support.microsoft.com/ja-jp/office/len-関数-lenb-関数-29236f94-cedc-429d-affd-b5e33d2c67cb
-
 https://learn.microsoft.com/ja-jp/office/vba/language/reference/user-interface-help/len-function
-
 https://learn.microsoft.com/ja-jp/dotnet/api/system.string.substring
-
 https://learn.microsoft.com/ja-jp/dotnet/api/system.array.copy#system-array-copy(system-array-system-int32-system-array-system-int32-system-int32)
 
 ## まとめ
 
+- マルチバイト文字を含む文字列を固定長データとして制御する場合にバイト数の取得が必要に
+- Shift JIS でマルチバイト文字は「2バイト」でカウント
 - `System.Text.Encoding`クラスで文字コードをSJIS（Shift JIS）で設定し`GetByteCount`メソッドでバイト数の取得が可能
-- バイト数で指定した文字列抽出は、
+
+## 関連記事
+
+https://haretokidoki-blog.com/pasocon_powershell-startup/
+https://zenn.dev/haretokidoki/articles/7e6924ff0cc960
