@@ -12,6 +12,24 @@ published: false
 
 ## 環境
 
+### Windows OS
+
+Windows 10 Pro環境
+
+```powershell:Get-WmiObjectコマンド
+PS C:\Users\"ユーザー名"> Get-CimInstance CIM_OperatingSystem
+
+SystemDirectory     Organization BuildNumber RegisteredUser SerialNumber            Version
+---------------     ------------ ----------- -------------- ------------            -------
+C:\WINDOWS\system32              19045       XXXXX          00000-00000-00000-AAAAA 10.0.19045
+                                             ^^^^^          ^^^^^ ^^^^^ ^^^^^ ^^^^^
+                                             ↑マスク       ↑マスク
+
+PS C:\Users\"ユーザー名">
+```
+
+### PowerShell
+
 ```powershell:PowerShellのバージョン
 PS C:\Users\"ユーザー名"> $PSVersionTable
 
