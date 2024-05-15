@@ -2,7 +2,7 @@
 title: "PowerShellで文字列のバイト数を取得する方法（文字列抽出するFunctionも紹介）"
 emoji: "🚪"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["powershell", "bytes"]
+topics: ["powershell"]
 published: false
 ---
 ## 概要
