@@ -113,3 +113,4 @@ Function VerificationEnv {
 https://zenn.dev/haretokidoki/articles/b742b44e45559b
 https://haretokidoki-blog.com/pasocon_powershell-startup/
 https://zenn.dev/haretokidoki/articles/7e6924ff0cc960
+https://zenn.dev/haretokidoki/articles/fb6830f9155de5

@@ -294,3 +294,4 @@ https://learn.microsoft.com/ja-jp/dotnet/api/system.array.copy#system-array-copy
 
 https://haretokidoki-blog.com/pasocon_powershell-startup/
 https://zenn.dev/haretokidoki/articles/7e6924ff0cc960
+https://zenn.dev/haretokidoki/articles/fb6830f9155de5
