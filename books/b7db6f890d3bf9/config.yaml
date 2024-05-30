@@ -6,17 +6,33 @@ summary: |-
   　📌PowerShellで実現できること
   　📌PowerShellの導入方法 と 開発環境の構築手順
   　📌コマンド・自作Function・スクリプトの活用方法
+
+  チャプター「応用技術の実践」以降を有料として販売しています。
+  この有料チャプターは、私がZennで執筆した個別の記事をただ紹介しているだけで、無料で閲覧したい方はご購入いただく必要はありません。
+  
+  また、GitHubのリポジトリもPublic（公開状態）である為、直接GitHubで内容をご覧いただくことも可能です。（本の初公開時点の情報）
+
+  https://zenn.dev/haretokidoki?tab=articles
+  https://github.com/akiGAMEBOY/haretokidoki_zn/tree/master/books/b7db6f890d3bf9
+  
+  この本の一部を有料として販売している意図ととしては、
+  　✔好奇心でZennの本を有料販売してみたかったこと
+  　✔わたし個人としても活動を収益化してみたいこと
+  　✔ワンコインを支払える余裕がありこの本を評価いただいた方に向けた販売体系を実現したこと
+  　✔本の購入手数料がプラットフォームに還元されることで私がZennの活動を応援したいこと
+  という4点がありこのような構成で販売しています。
+
 topics: ["powershell", "windows", "mac", "linux"]
 published: false
-price: 0 # 有料の場合200〜5000
+price: 500 # 有料の場合200〜5000
 # 本に含めるチャプターを順番に並べましょう
-chapters:
-  - introduction
-  - basic-knowledge
-  - installation_construction
-  - basic-practice
-  - applied-practice
-  - community_contact
-  - references
-  - conclusion
+# chapters:
+  # - introduction
+  # - basic-knowledge
+  # - installation_construction
+  # - basic-practice
+  # - community_contact
+  # - references
+  # - applied-practice
+  # - conclusion
 toc_depth: 3
