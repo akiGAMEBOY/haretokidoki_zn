@@ -1,0 +1,35 @@
+---
+title: "導入手順・構築手順"
+---
+
+## 導入方法・構築手順
+
+### PowerShellの導入方法
+
+#### Windows OSの場合
+
+設定が不要ですぐに開始可能。
+
+:::details 最新のPowerShellを導入したい場合
+PowerShellは、バージョンアップして強化されている。
+最新のPowerShellを使い固い場合は、以下の手順で導入。
+※個別記事で「Windowsで最新PowerShellを導入する方法」を作成し紹介
+:::
+
+#### macOS
+
+調べて記載。
+
+:::details macOSアンインストール方法
+:::
+
+#### Linux
+
+調べて記載。
+:::details Linuxアンインストール方法
+:::
+
+### PowerShellスクリプトの開発環境を構築
+
+ISEに関しては、推奨されていない為、VS Codeを使ったセットアップ方法。
+ここでは、代表してWindows環境で導入する場合のみを紹介。

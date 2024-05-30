@@ -1,15 +1,22 @@
-title: "いまからPowerShellをはじめよう ～ Begin The PowerShell ～ "
-summary: "PowerShellの設定ガイドとスクリプト作成を含む使用方法を紹介する本。"
+title: "いまからPowerShellをはじめましょう ～ Begin The PowerShell ～ "
+summary: |-
+  この本はPowerShellを始める為に必要な “セットアップ手順”と “基本的な実践方法”を解説しています。
+  
+  主に下記の内容が盛り込まれています。
+  　📌PowerShellで実現できること
+  　📌PowerShellの導入方法 と 開発環境の構築手順
+  　📌コマンド・自作Function・スクリプトの活用方法
 topics: ["powershell", "windows", "mac", "linux"]
 published: false
 price: 0 # 有料の場合200〜5000
 # 本に含めるチャプターを順番に並べましょう
 chapters:
-  - はじめに
-  - 事前の予備知識
-  - 設定
-  - 実践（基本）
-  - 実践（応用）
-  - コミュニティ・連絡先
-  - 参考文献
-  - さいごに
+  - introduction
+  - basic-knowledge
+  - installation_construction
+  - basic-practice
+  - applied-practice
+  - community_contact
+  - references
+  - conclusion
+toc_depth: 3
