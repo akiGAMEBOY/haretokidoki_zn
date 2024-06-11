@@ -5,52 +5,44 @@ type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
 published: false
 ---
-PowerShellでジャグ配列（多次元配列の一種）とリテラル配列（単一次元配列）を判定する方法は、配列の各要素を調べて、それが配列かどうかを確認することです。例えば、以下のようなスクリプトを使用できます：
+PowerShellで引数のオブジェクトがジャグ配列かリテラル配列かを判定するFunctionを以下に示します。このFunctionは、引数として渡されたオブジェクトが配列であるかどうかを判定し、配列であればさらにその配列がジャグ配列（配列の配列）であるかリテラル配列（単一次元配列）であるかを判定します。
 
 ```powershell
-# 配列を定義
-$array = @(1, 2, @(3, 4), 5)
-
-# 配列の各要素をチェック
-foreach ($item in $array) {
-    if ($item -is [array]) {
-        Write-Host "ジャグ配列の要素: $item"
-    } else {
-        Write-Host "リテラル配列の要素: $item"
+function Test-Array {
+    param($array)
+    $result = @{
+        IsArray = $false
+        IsJagged = $false
+        IsLiteral = $false
     }
-}
-```
 
-このスクリプトは、配列の各要素がさらに配列であるかどうかをチェックし、その結果をコンソールに出力します。`-is` 演算子は、オブジェクトが特定の型であるかどうかをテストするために使用されます。この場合、`[array]`型であるかどうかをチェックしています。
+    # オブジェクトが配列かどうかを判定
+    if ($array -is [array]) {
+        $result['IsArray'] = $true
 
-また、配列がジャグ配列であるかどうかを判定する別の方法として、配列の要素数と、その要素が配列である場合の要素数を比較する方法もあります。例えば、以下のようにします：
-
-```powershell
-# 配列を定義
-$jaggedArray = @( @(1, 2), @(3, 4) )
-$literalArray = @(1, 2, 3, 4)
-
-# 配列がジャグ配列かどうかをチェック
-function Test-JaggedArray($array) {
-    foreach ($element in $array) {
-        if ($element -isnot [array]) {
-            return $false
+        # 配列がジャグ配列かリテラル配列かを判定
+        $isJagged = $false
+        foreach ($element in $array) {
+            if ($element -is [array]) {
+                $isJagged = $true
+                break
+            }
         }
-    }
-    return $true
-}
 
-# テスト実行
-Write-Host "ジャグ配列: $(Test-JaggedArray $jaggedArray)"
-Write-Host "リテラル配列: $(Test-JaggedArray $literalArray)"
+        $result['IsJagged'] = $isJagged
+        $result['IsLiteral'] = !$isJagged
+    }
+
+    return $result
+}
 ```
 
-この関数`Test-JaggedArray`は、配列のすべての要素が配列であるかどうかをチェックし、その結果に基づいて真偽値を返します。すべての要素が配列であれば`$true`を、そうでなければ`$false`を返します。
+このFunctionは、`$array`が配列である場合には`$result['IsArray']`を`$true`に設定します。その後、配列内の各要素をチェックし、いずれかの要素が配列であればジャグ配列と判定し、`$result['IsJagged']`を`$true`に設定します。もし配列内の要素がすべて配列でなければリテラル配列と判定し、`$result['IsLiteral']`を`$true`に設定します。
 
-これらのスクリプトは、PowerShellで配列の型を判定するための基本的な方法を示しています。実際の使用状況に応じて、これらのスクリプトをカスタマイズして使用することができます。配列に関する詳細な情報は、[Microsoftの公式ドキュメント](^1^)で確認することができます。また、[Stack Overflow](^2^)には、実際の問題解決の例が多数投稿されており、参考になるでしょう。
+このFunctionを使用することで、引数として渡されたオブジェクトがジャグ配列かリテラル配列かを簡単に判定することができます。必要に応じて、このコードをカスタマイズしてご利用ください。🛠️
 
 ソース: Copilot との会話、 2024/6/11
-(1) 配列について知りたかったことのすべて - PowerShell | Microsoft .... https://learn.microsoft.com/ja-jp/powershell/scripting/learn/deep-dives/everything-about-arrays?view=powershell-7.4.
-(2) PowerShell - jagged array filtering with pipeline in pipeline. https://stackoverflow.com/questions/16458739/powershell-jagged-array-filtering-with-pipeline-in-pipeline.
-(3) powershell - Creating a Jagged\Multidimensional array with a .... https://stackoverflow.com/questions/39799562/creating-a-jagged-multidimensional-array-with-a-single-array-inside-of-it.
-(4) Everything you wanted to know about arrays - PowerShell. https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-arrays?view=powershell-7.4.
+(1) “多次元配列（リテラル配列）”と“ジャグ配列”の要素数を .... https://zenn.dev/haretokidoki/articles/f79a5bb769973f.
+(2) powershell - Get-Members for jagged array - Super User. https://superuser.com/questions/1746016/get-members-for-jagged-array.
+(3) How to Check if a Variable is an Array in PowerShell?. https://powershellfaqs.com/check-if-a-variable-is-an-array-in-powershell/.
+(4) PowerTip: Find if Variable Is Array - Scripting Blog [archived]. https://devblogs.microsoft.com/scripting/powertip-find-if-variable-is-array-2/.
