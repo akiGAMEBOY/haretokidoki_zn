@@ -25,10 +25,10 @@ PowerShellでジャグ配列（多段階配列）と多次元配列を判定す�
 - 可読性が高い
     コードを一元化し簡潔にコーディング可能で可読性も高い。
 
-```powershell
+```powershell:
 function Get-ArrayType {
     param(
-        $Array
+        $InputObject
     )
     
     [System.Collections.Hashtable]$arrayTypes = @{
@@ -38,25 +38,38 @@ function Get-ArrayType {
         "MultiDimensional" = 2
     }
 
-    # 多段階配列（ジャグ配列）か判定
-    if ($Array -is [System.Array]) {
-        foreach ($elementArray in $Array) {
-            if ($elementArray -is [System.Array]) {
-                # 配列の中も配列で多段配列
-                return $arrayTypes["MultiLevel"]
-            }
-        }
-    }
-    
-    # 多次元配列か判定
-    if ($Array.Rank -eq 1) {
-        return $arrayTypes["SingleArray"]
-    }
-    elseif ($Array.Rank -gt 1) {
-        return $arrayTypes["MultiDimensional"]
+    # データがない場合
+    if ($null -eq $InputObject) {
+        return $arrayTypes["OtherTypes"]
     }
 
-    return $arrayTypes["OtherTypes"]
+    # 一番外枠が配列ではない場合
+    if ($InputObject -isnot [System.Array]) {
+        return $arrayTypes["OtherTypes"]
+    }
+
+    # ジャグ配列（多段階配列）か判定
+    $isMultiLevel = $false
+    foreach ($element in $InputObject) {
+        if ($element -is [System.Array]) {
+            # 配列の中も配列で多段配列
+            $isMultiLevel = $true
+            break
+        }
+    }
+    if ($isMultiLevel) {
+        return $arrayTypes["MultiLevel"]
+    }    
+    
+    # 多次元配列か判定
+    if ($InputObject.Rank -ge 2) {
+        # 2次元以上の場合
+        return $arrayTypes["MultiDimensional"]
+    }
+    else {
+        # 1次元の場合
+        return $arrayTypes["SingleArray"]
+    }
 }
 ```
 
@@ -84,15 +97,15 @@ $objectArray3x1[2,0] = 10.5
 
 # 以前のテストデータと新しいテストデータをまとめた実行
 $testData = @(
-    @{ "Description" = "単一配列"; "Array" = @(1, 2, 3) },
-    @{ "Description" = "多段階配列"; "Array" = @(@(1, 2), @(3, 4), @(5, 6)) },
-    @{ "Description" = "String型1x2多次元配列"; "Array" = $stringArray1x2 },
-    @{ "Description" = "Int32型3x2多次元配列"; "Array" = $intArray3x2 }
-    @{ "Description" = "Object型3x1多次元配列"; "Array" = $objectArray3x1 }
+    @{ "Description" = "単一配列"; "InputObject" = @(1, 2, 3) },
+    @{ "Description" = "多段階配列"; "InputObject" = @(@(1, 2), @(3, 4), @(5, 6)) },
+    @{ "Description" = "String型1x2多次元配列"; "InputObject" = $stringArray1x2 },
+    @{ "Description" = "Int32型3x2多次元配列"; "InputObject" = $intArray3x2 }
+    @{ "Description" = "Object型3x1多次元配列"; "InputObject" = $objectArray3x1 }
 )
 
 foreach ($data in $testData) {
-    $result = Get-ArrayType -Array $data["Array"]
+    $result = Get-ArrayType -InputObject $data["InputObject"]
     Write-Host "$($data["Description"])の結果: $result"
 }
 ```
