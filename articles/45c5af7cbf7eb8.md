@@ -8,37 +8,35 @@ published: false
 PowerShellでジャグ配列（多段階配列）と多次元配列を判定するFunctionを以下に示します。このFunctionは、配列が多段階配列か多次元配列かを判定し、その情報を返します。
 
 ```powershell
-function Test-ArrayDimension {
-    param($array)
-    $result = @{
-        IsMultiLevel = $false
-        IsMultiDimensional = $false
+function Get-ArrayType {
+    param(
+        $Array
+    )
+    
+    [System.Collections.Hashtable]$arrayTypes = @{
+        "OtherTypes" = -1
+        "MultiLevel" = 1
+        "MultiDimensional" = 2
     }
 
-    # 配列が多段階配列（ジャグ配列）かどうかを判定
-    if ($array -is [array]) {
-        foreach ($subArray in $array) {
-            if ($subArray -is [array]) {
-                $result['IsMultiLevel'] = $true
-                break
+    # 多段階配列（ジャグ配列）か判定
+    if ($Array -is [System.Array]) {
+        foreach ($elementArray in $Array) {
+            if ($elementArray -is [System.Array]) {
+                # 配列の中も配列で多段配列
+                return $arrayTypes["MultiLevel"]
             }
         }
     }
-
-    # 配列が多次元配列かどうかを判定
-    if ($array.GetType().Name -eq 'Object[,]') {
-        $result['IsMultiDimensional'] = $true
+    
+    # 多次元配列か判定
+    if (($Array.GetType().Name) -eq 'Object[,]') {
+        return $arrayTypes["MultiDimensional"]
     }
 
-    return $result
+    return $arrayTypes["OtherTypes"]
 }
 ```
-
-このFunctionは、まず引数として渡された`$array`が配列であるかどうかをチェックします。配列であれば、その配列が多段階配列（ジャグ配列）であるかどうかを判定します。次に、`GetType().Name`メソッドを使用して、配列が多次元配列であるかどうかを判定します。
-
-多次元配列は`.NET`の型を使用して作成されるため、`Object[,]`のような型名が返されます。このFunctionを使用することで、配列の種類を簡単に判定することができます。
-
-テストとして、以下のような多段階配列と多次元配列を作成し、Functionを適用してみましょう。
 
 ```powershell
 # 多段階配列（ジャグ配列）のテストデータ
@@ -52,13 +50,45 @@ $multiDimArray[1,0] = 3
 $multiDimArray[1,1] = 4
 
 # Functionのテスト
-Write-Host "多段階配列のテスト結果:"
-$multiLevelResult = Test-ArrayDimension -array $multiLevelArray
-$multiLevelResult.GetEnumerator() | ForEach-Object { Write-Host "$($_.Key): $($_.Value)" }
+Write-Host "--- 多段階配列のテスト結果 ---`n"
+# 文字列型の変数名を宣言
+$variableName = 'multiLevelArray'
+# 文字列型の変数名を使用して変数の値を取得
+$variableValue = (Get-Variable -Name $variableName -ValueOnly)
+switch ((Get-ArrayType -Array $variableValue)) {
+    # 多段配列の場合
+    "1" {
+        Write-Host "`$$($variableName) は 多段配列 です。`n"
+    }
+    # 多次元配列の場合
+    "2" {
+        Write-Host "`$$($variableName) は 多次元配列 です。`n"
+    }
+    # それ以外
+    "-1" {
+        Write-Host "`$$($variableName) は 多段配列・多次元配列以外のデータ型 です。`n"
+    }
+}
 
-Write-Host "`n多次元配列のテスト結果:"
-$multiDimResult = Test-ArrayDimension -array $multiDimArray
-$multiDimResult.GetEnumerator() | ForEach-Object { Write-Host "$($_.Key): $($_.Value)" }
+Write-Host "--- 多次元配列のテスト結果 ---`n"
+# 文字列型の変数名を宣言
+$variableName = 'multiDimArray'
+# 文字列型の変数名を使用して変数の値を取得
+$variableValue = (Get-Variable -Name $variableName -ValueOnly)
+switch ((Get-ArrayType -Array $variableValue)) {
+    # 多段配列の場合
+    "1" {
+        Write-Host "`$$($variableName) は 多段配列 です。`n"
+    }
+    # 多次元配列の場合
+    "2" {
+        Write-Host "`$$($variableName) は 多次元配列 です。`n"
+    }
+    # それ以外
+    "-1" {
+        Write-Host "`$$($variableName) は 多段配列・多次元配列以外のデータ型 です。`n"
+    }
+}
 ```
 
 このスクリプトを実行すると、多段階配列と多次元配列の両方に対して`Test-ArrayDimension` Functionが適用され、それぞれが多段階配列であるか、多次元配列であるかの結果が表示されます。結果は連想配列として返され、そのキーと値を列挙してコンソールに出力しています。
