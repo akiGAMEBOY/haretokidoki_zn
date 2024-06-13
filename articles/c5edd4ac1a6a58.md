@@ -1,6 +1,6 @@
 ---
 title: "別ファイルのPowerShellスクリプトを読み込む2つの方法"
-emoji: "🗂"
+emoji: "🎢"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
 published: false
