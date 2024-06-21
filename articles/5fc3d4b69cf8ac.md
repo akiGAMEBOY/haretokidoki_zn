@@ -15,7 +15,7 @@ Function Disable-NetworkAdapter {
     )
 
     # 現在のインターネットに接続中のネットワークアダプタを取得
-    $connectedAdapters = Get-NetAdapter | Where-Object { $_.Status -eq "Up" } | Get-NetConnectionProfile
+    $connectedAdapters = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
 
     # 複数のアダプタがUp状態か確認
     if ($connectedAdapters.Count -gt 1) {
