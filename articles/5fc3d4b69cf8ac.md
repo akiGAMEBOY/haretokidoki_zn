@@ -6,6 +6,10 @@ topics: ["windows", "network", "powershell"]
 published: false
 ---
 
+## コード
+
+### 有効化
+
 ```powershell:ネットワークアダプターのMACアドレスを指定して有効化するFunction
 #################################################################################
 # 処理名　 | Test-IsAdmin
@@ -39,7 +43,7 @@ function Format-MacAddress {
     return $MacAddress
 }
 
-# 対象のネットワークアダプターを無効にする
+# 対象のネットワークアダプターを有効にする
 function Enable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     Param(
@@ -51,7 +55,7 @@ function Enable-MacAddress {
     # MACアドレスの形式か確認
     $FormatedMacAddress = (Format-MacAddress $TargetMacAddress)
 
-    # 現在のインターネットに接続中のネットワークアダプタを取得
+    # 対象となるネットワークアダプタを取得
     $disconnectedAdapter = Get-NetAdapter | Where-Object {
         ($_.MacAddress -eq $FormatedMacAddress) -and ($_.Status -eq 'Disabled')
     }
@@ -59,8 +63,10 @@ function Enable-MacAddress {
     # 対象のアダプターがない場合は中断
     if (@($disconnectedAdapter).Count -ne 1) {
         Write-Warning '対象となる無効化状態のネットワークアダプターが見つかりませんでした。'
+        Write-Host ''
         Write-Host '▼ 現在のネットワークアダプターを表示'
         (Get-NetAdapter | Format-Table -Property Name, Status, MacAddress, LinkSpeed -Autosize -Wrap)
+        Write-Host ''
         return
     }
 
@@ -87,9 +93,9 @@ PS C:\WINDOWS\system32> Enable-MacAddress 004e01a383ec -Confirm
 PS C:\WINDOWS\system32>
 ```
 
-★ 以降、無効化を対応。
+### 無効化
 
-```powershell:ネットワークアダプターのMACアドレスを指定して有効化するFunction
+```powershell:ネットワークアダプターのMACアドレスを指定して無効化するFunction
 #################################################################################
 # 処理名　 | Test-IsAdmin
 # 機能　　 | PowerShellが管理者として実行しているか確認
@@ -123,7 +129,7 @@ function Format-MacAddress {
 }
 
 # 対象のネットワークアダプターを無効にする
-function Enable-MacAddress {
+function Disable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     Param(
         [Parameter(Mandatory=$true)]
@@ -131,29 +137,39 @@ function Enable-MacAddress {
         [System.String]$TargetMacAddress
     )
 
-    if (-not (Test-IsAdmin)) {
-        Write-Warning 'ネットワークアダプターの有効化は管理者権限が必要です。処理を中断します。'
-        return
-    }
-
     # MACアドレスの形式か確認
     $FormatedMacAddress = (Format-MacAddress $TargetMacAddress)
 
-    # 現在のインターネットに接続中のネットワークアダプタを取得
-    $disconnectedAdapter = Get-NetAdapter | Where-Object {
-        ($_.MacAddress -eq $FormatedMacAddress) -and ($_.Status -eq 'Disabled')
+    # 対象となるネットワークアダプタを取得
+    $connectedAdapter = Get-NetAdapter | Where-Object {
+        ($_.MacAddress -eq $FormatedMacAddress) -and ($_.Status -eq 'Up')
     }
 
     # 対象のアダプターがない場合は中断
-    if (@($disconnectedAdapter).Count -ne 1) {
-        Write-Warning '対象となる無効化状態のネットワークアダプターが見つかりませんでした。'
+    if (@($connectedAdapter).Count -ne 1) {
+        Write-Warning '対象となる有効化状態のネットワークアダプターが見つかりませんでした。'
+        Write-Host ''
         Write-Host '▼ 現在のネットワークアダプターを表示'
         (Get-NetAdapter | Format-Table -Property Name, Status, MacAddress, LinkSpeed -Autosize -Wrap)
+        Write-Host ''
         return
     }
 
-    if ($PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "無効にしますか？")) {
-        Enable-NetAdapter -Name $disconnectedAdapter.Name -Confirm:$false
+    if ($PSCmdlet.ShouldProcess($connectedAdapter.Name, "無効にしますか？")) {
+        if (Test-IsAdmin) {
+            # 管理者権限がある場合
+            Disable-NetAdapter -Name $connectedAdapter.Name -Confirm:$false
+        }
+        else {
+            # 管理者権限がない場合の処理
+            Start-Process 'powershell.exe' -ArgumentList "Disable-NetAdapter -Name '$($connectedAdapter.Name)'" -Verb RunAs
+        }
     }
 }
+```
+
+一般ユーザーで実行すると、UACが起動し「はい」を選択。新しいウィンドウが管理者権限で開いた後にメッセージ（``）が起動する。
+可能であれば動画で掲載した方がわかりやすい。
+
+```powershell:
 ```
