@@ -48,11 +48,6 @@ function Enable-MacAddress {
         [System.String]$TargetMacAddress
     )
 
-    if (-not (Test-IsAdmin)) {
-        Write-Warning 'ネットワークアダプターの有効化は管理者権限が必要です。処理を中断します。'
-        return
-    }
-
     # MACアドレスの形式か確認
     $FormatedMacAddress = (Format-MacAddress $TargetMacAddress)
 
@@ -70,12 +65,27 @@ function Enable-MacAddress {
     }
 
     if ($PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "有効にしますか？")) {
-        Enable-NetAdapter -Name $disconnectedAdapter.Name -Confirm:$false
+        if (Test-IsAdmin) {
+            # 管理者権限がある場合
+            Enable-NetAdapter -Name $disconnectedAdapter.Name -Confirm:$false
+        }
+        else {
+            # 管理者権限がない場合の処理
+            Start-Process 'powershell.exe' -ArgumentList "Enable-NetAdapter -Name '$($disconnectedAdapter.Name)'" -Verb RunAs
+        }
     }
 }
 ```
 
-上記のコードでは、Enable-NetAdapterが管理者権限が必要な為、「$PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "有効にしますか？")」の処理を追加している意味がないかも。
+```powershell:Confirmに対応したFunction
+PS C:\WINDOWS\system32> Enable-MacAddress 004e01a383ec -Confirm
+
+確認
+この操作を実行しますか?
+対象 "イーサネット" に対して操作 "有効にしますか？" を実行しています。
+[Y] はい(Y)  [A] すべて続行(A)  [N] いいえ(N)  [L] すべて無視(L)  [S] 中断(S)  [?] ヘルプ (既定値は "Y"): n
+PS C:\WINDOWS\system32>
+```
 
 ★ 以降、無効化を対応。
 
