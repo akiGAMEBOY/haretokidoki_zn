@@ -69,11 +69,13 @@ function Enable-MacAddress {
         return
     }
 
-    if ($PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "無効にしますか？")) {
+    if ($PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "有効にしますか？")) {
         Enable-NetAdapter -Name $disconnectedAdapter.Name -Confirm:$false
     }
 }
 ```
+
+上記のコードでは、Enable-NetAdapterが管理者権限が必要な為、「$PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "有効にしますか？")」の処理を追加している意味がないかも。
 
 ★ 以降、無効化を対応。
 
