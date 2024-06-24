@@ -131,7 +131,7 @@ function Format-MacAddress {
 # 対象のネットワークアダプターを無効にする
 function Disable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-    Param(
+    param(
         [Parameter(Mandatory=$true)]
         [ValidateScript({ $_.Trim() -ne '' })]
         [System.String]$TargetMacAddress
