@@ -7,6 +7,7 @@ published: false
 ---
 
 ```powershell:要素数が一緒か
+articles\45c5af7cbf7eb8.md
 # 配列の種類を判定
 function Get-ArrayType {
     param(
