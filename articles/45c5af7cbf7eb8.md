@@ -79,8 +79,16 @@ function Get-ArrayType {
 ## 実際に実行した結果
 
 ```powershell:テストデータの準備
-# 単一の配列
-$singleArray = @('あ', 'い', 'う')
+# 単一の配列1
+$singleArray1 = @('あ', 'い', 'う')
+
+# 単一の配列2
+$singleArray2 = New-Object 'System.String[]' 5
+$singleArray2[0] = 'A'
+$singleArray2[1] = 'B'
+$singleArray2[2] = 'C'
+$singleArray2[3] = 'D'
+$singleArray2[4] = 'E'
 
 # 多段階配列
 $multiLevel = @(@(1, 2, 3), @(4, 5), @(6, 7, 8, 9))
@@ -107,7 +115,8 @@ $objectMultiDim3x1[2,0] = 10.5
 
 # テストデータを集約
 $testData = @(
-    @{ "Description" = "単一配列"; "InputObject" = $singleArray },
+    @{ "Description" = "単一配列1"; "InputObject" = $singleArray1 },
+    @{ "Description" = "単一配列2"; "InputObject" = $singleArray2 },
     @{ "Description" = "多段階配列"; "InputObject" = $multiLevel },
     @{ "Description" = "String型1x2多次元配列"; "InputObject" = $stringMultiDim1x2 },
     @{ "Description" = "Int32型3x2多次元配列"; "InputObject" = $intMultiDim3x2 }
@@ -131,7 +140,8 @@ PS D:\Downloads> # 実行
 >>     $result = Get-ArrayType -InputObject $data["InputObject"]
 >>     Write-Host "$($data["Description"])の結果: $result"
 >> }
-単一配列の結果: 0
+単一配列1の結果: 0
+単一配列2の結果: 0
 多段階配列の結果: 1
 String型1x2多次元配列の結果: 2
 Int32型3x2多次元配列の結果: 2
