@@ -314,3 +314,13 @@ $fileList = Get-FileList -path "C:\"
 ## 参考情報
 
 https://learn.microsoft.com/ja-jp/powershell/scripting/learn/ps101/10-script-modules#dot-sourcing-functions
+
+## まとめ
+
+- 
+
+## 関連記事
+
+https://haretokidoki-blog.com/pasocon_powershell-startup/
+https://zenn.dev/haretokidoki/articles/7e6924ff0cc960
+https://zenn.dev/haretokidoki/articles/fb6830f9155de5
