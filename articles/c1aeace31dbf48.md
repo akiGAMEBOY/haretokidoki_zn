@@ -6,7 +6,84 @@ topics: ["powershell"]
 published: false
 ---
 
-```powershell:
+```powershell:要素数が一緒か
+# 配列の種類を判定
+function Get-ArrayType {
+    param(
+        $InputObject
+    )
+    
+    [System.Collections.Hashtable]$arrayTypes = @{
+        "OtherTypes" = -1
+        "SingleArray" = 0
+        "MultiLevel" = 1
+        "MultiDimensional" = 2
+    }
+
+    # データがない場合
+    if ($null -eq $InputObject) {
+        return $arrayTypes["OtherTypes"]
+    }
+
+    # 一番外枠が配列ではない場合
+    if ($InputObject -isnot [System.Array]) {
+        return $arrayTypes["OtherTypes"]
+    }
+
+    # ジャグ配列（多段階配列）か判定
+    $isMultiLevel = $false
+    foreach ($element in $InputObject) {
+        if ($element -is [System.Array]) {
+            # 配列の中も配列で多段配列
+            $isMultiLevel = $true
+            break
+        }
+    }
+    if ($isMultiLevel) {
+        return $arrayTypes["MultiLevel"]
+    }    
+    
+    # 多次元配列か判定
+    if ($InputObject.Rank -ge 2) {
+        # 2次元以上の場合
+        return $arrayTypes["MultiDimensional"]
+    }
+    else {
+        # 1次元の場合
+        # 前提：冒頭の「-isnot [System.Array]」により配列であることは確認済みとなる。
+        return $arrayTypes["SingleArray"]
+    }
+}
+# 多次元配列の要素数を比較
+Function Test-MultiDimensionalEquality {
+    param (
+        [Parameter(Mandatory=$true)]$Array1,
+        [Parameter(Mandatory=$true)]$Array2
+    )
+
+    
+
+    # 配列の次元数を比較
+    $dimensionArray1 = $Array1.Rank
+    $dimensionArray2 = $Array2.Rank
+
+    if ($dimensionArray1 -ne $dimensionArray2) {
+        return $false
+    }
+
+    # 各次元毎の要素数をチェック
+    for ($i = 0; $i -lt $dimensionArray1; $i++) {
+        if ($Array1.GetLength($i) -ne $Array2.GetLength($i)) {
+            return $false
+        }
+    }
+
+    # 要素数が一致
+    return $true
+}
+```
+
+```powershell:要素数と値すべて一緒か
 Function Test-ArrayEquality {
     param (
         [Parameter(Mandatory=$true)][System.Array]$Array1,
