@@ -204,6 +204,16 @@ Function Test-MultiLevelArrayEquality {
 }
 ```
 
+```powershell:PSCustomObjectを比較するコード
+# PSCustomObjectのデータかチェック
+
+# 
+
+```
+
+```powershell:HashTableを比較するコード
+```
+
 ```powershell:要素数と値すべて一緒か
 Function Test-ArrayEquality {
     param (
