@@ -93,4 +93,3 @@ function Get-EmptyFolders {
 # Example usage
 # Get-EmptyFolders -Path "C:\Your\Target\Path"
 ```
-
