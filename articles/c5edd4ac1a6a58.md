@@ -1,5 +1,5 @@
 ---
-title: "別ファイルのPowerShellスクリプトを読み込む2つの方法"
+title: "別ファイルに共通化したコードを読み込む2つの方法（ドットソース演算子・スクリプトモジュール）"
 emoji: "🎢"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
@@ -7,24 +7,28 @@ published: false
 ---
 ## 概要
 
-共通化したFunction群がコーディングされているPowerShellスクリプトファイル（`*.ps1ファイル`、または`*.psm1`）を読み込むことで、
-スクリプトを作成する度、同じようなコードを書かずに済む方法を紹介。
+共通化したFunction群がコーディングされているPowerShellスクリプトファイル（`*.ps1ファイル`）、またはスクリプトモジュール（`*.psm1`）を読み込むことにより、
+毎回、同じコードを書かずに済みます。
+
+メインのスクリプトファイルで別ファイル、サブのスクリプトファイル（サブには共通化したFunction群）を読み込ませる方法が2つあるので、それぞれを紹介します。
 
 ## 対応方法
 
-下記2つの方法を紹介。
-どちらも別ファイルで共通化したコードを書いておくことで、再利用が可能となります。
+まず、2つの方法を実装する方法を紹介し、その後にそれぞれの使用用途などをくわしい説明を記載します。
 
-- [ドット ソース関数を使った読み込み方法](#ドット-ソース関数を使った読み込み方法)
+どちらも別ファイルで共通化したコードを準備しておくことで再利用が可能です。
+
+- [ドット ソース演算子を使った読み込み方法](#ドット-ソース演算子を使った読み込み方法)
 - [スクリプト モジュールを使った読み込み方法](#スクリプト-モジュールを使った読み込み方法)
 
-### ドット ソース関数を使った読み込み方法
+### ドット ソース演算子を使った読み込み方法
 
-1. 共通化コードのPowerShellスクリプトファイルを作成
-    文字コードは「UTF-8 BOM付き」として保存。
+1. サブのPowerShellスクリプトファイルを作成
+    共通化したFunctionコードを記載。文字コードは「UTF-8 BOM付き」として保存。
 
     ```powershell:CommonFunctions.ps1
-    Function Get-CurrentDate {
+    function Get-CurrentDate {
+        # 現在日付・時刻を返すのみ
         return Get-Date
     }
     ```
@@ -38,32 +42,28 @@ published: false
     # エラーが発生した場合、処理を中断する
     $ErrorActionPreference = 'Stop'
 
-    ### DEBUG ###
-    Set-Variable -Name "DEBUG_ON" -Value $false -Option Constant
-
     # フォルダー構成を取得
-    [System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent
-    Set-Location $current_dir'\..\..'
-    [System.String]$root_dir = (Convert-Path .)
+    [System.String]$currentPath=Split-Path ( & { $myInvocation.ScriptName } ) -parent
 
     # 共通化コードの読み込み
-    . "$($current_dir)\CommonFunctions.ps1"
+    . "$($currentPath)\CommonFunctions.ps1"
 
     # 共通化したFunctionを実行
-    $exitcode = 0
+    $exitCode = 0
     try {
-        $date = Get-CurrentDate
+        $currentDate = Get-CurrentDate
 
     }
     catch {
-        $exitcode = -1
+        $exitCode = -1
     }
 
-    if ($exitcode -eq 0) {
-        Write-Host "`$date: [$date]"
+    # Function正常終了時
+    if ($exitCode -eq 0) {
+        Write-Host "`$date: [$currentDate]"
     }
 
-    exit $exitcode
+    exit $exitCode
     ```
 
 1. メインのPowerShellスクリプトを実行するバッチファイルを作成
@@ -95,18 +95,18 @@ published: false
 1. フォルダー構成を下記の通りにする。
 
     ```batch:TREEコマンドの結果
-    PS D:\Downloads\VerificationCommonCode> TREE /F
+    PS D:\VerificationCommonCode_DotSourceFunc> TREE /F
     フォルダー パスの一覧:  ボリューム ボリューム
     ボリューム シリアル番号は XXXX-XXXX です
     D:.
-    │  ExecuteMain.bat
+    │  ExecuteMain.bat                 # メインのPowerShellスクリプトを実行するバッチ
     │
     └─source
         └─powershell
-                CommonFunctions.ps1
-                Main.ps1
+                CommonFunctions.ps1     # サブのPowerShellスクリプトファイル
+                Main.ps1                # メインのPowerShellスクリプトファイル
 
-    PS D:\Downloads\VerificationCommonCode>
+    PS D:\VerificationCommonCode_DotSourceFunc>
     ```
 
 1. バッチファイルをダブルクリックで実行
@@ -119,19 +119,22 @@ published: false
     ```
 
     ![PowerShellスクリプトを実行するバッチファイルを実行した結果](https://storage.googleapis.com/zenn-user-upload/19c12dd61052-20240501.png)
-    *画像：PowerShellスクリプトを実行するバッチファイルを実行した結果*
+    *画像：バッチファイルを実行した結果*
 
     共通化コードのPowerShellスクリプトファイル「`CommonFunctions.ps1`」内の`Get-CurrentDate`が正常に実行できたことを確認。
 
 ### スクリプト モジュールを使った読み込み方法
 
-1. 共通化コードのPowerShellスクリプトファイルを作成
-    文字コードは「UTF-8 BOM付き」として保存。
+1. サブのスクリプトモジュールファイルを作成
+    共通化したFunctionコードを記載。文字コードは「UTF-8 BOM付き」として保存。
 
     ```powershell:CommonModule.psm1
-    Function Get-FileList($path) {
-        return Get-ChildItem $path
+    function Get-FileList($Path) {
+        return Get-ChildItem $Path
     }
+
+    # 全スコープで使用できるようにする
+    Export-ModuleMember -Function Get-FileList
     ```
 
 1. 共通化コードを読み込む参照元となるメインのPowerShellスクリプトファイルを作成
@@ -143,32 +146,27 @@ published: false
     # エラーが発生した場合、処理を中断する
     $ErrorActionPreference = 'Stop'
 
-    ### DEBUG ###
-    Set-Variable -Name "DEBUG_ON" -Value $false -Option Constant
-
     # フォルダー構成を取得
-    [System.String]$current_dir=Split-Path ( & { $myInvocation.ScriptName } ) -parent
-    Set-Location $current_dir'\..\..'
-    [System.String]$root_dir = (Convert-Path .)
+    [System.String]$currentPath=Split-Path ( & { $myInvocation.ScriptName } ) -parent
 
     # 共通化コードの読み込み
-    Import-Module "$($current_dir)\CommonModule.psm1"
+    Import-Module "$($currentPath)\CommonModule.psm1"
 
     # 共通化したFunctionを実行
-    $exitcode = 0
+    $exitCode = 0
     try {
-        $lists = (Get-FileList "$HOME\Documents")
+        $fileLists = (Get-FileList "$HOME\Documents")
 
     }
     catch {
-        $exitcode = -1
+        $exitCode = -1
     }
 
-    if ($exitcode -eq 0) {
-        Write-Host "`$lists: [$($lists -join ', ')]"
+    if ($exitCode -eq 0) {
+        Write-Host "`$fileLists: [$($fileLists -join ', ')]"
     }
 
-    exit $exitcode
+    exit $exitCode
     ```
 
 1. メインのPowerShellスクリプトを実行するバッチファイルを作成
@@ -200,18 +198,18 @@ published: false
 1. フォルダー構成を下記の通りにする。
 
     ```batch:TREEコマンドの結果
-    PS D:\Downloads\VerificationCommonCode> TREE /F
+    PS D:\VerificationCommonCode_ScriptModule> TREE /F
     フォルダー パスの一覧:  ボリューム ボリューム
     ボリューム シリアル番号は XXXX-XXXX です
     D:.
-    │  ExecuteMain.bat
+    │  ExecuteMain.bat             # メインのPowerShellスクリプトを実行するバッチ
     │
     └─source
         └─powershell
-                CommonModule.psm1
-                Main.ps1
+                CommonModule.psm1   # サブのスクリプトモジュールファイル
+                Main.ps1            # メインのPowerShellスクリプトファイル
 
-    PS D:\Downloads\VerificationCommonCode>
+    PS D:\VerificationCommonCode_ScriptModule>
     ```
 
 1. バッチファイルをダブルクリックで実行
@@ -224,100 +222,57 @@ published: false
     ```
 
     ![PowerShellスクリプトを実行するバッチファイルを実行した結果](https://storage.googleapis.com/zenn-user-upload/f869b88d8d0f-20240501.png)
-    *画像：PowerShellスクリプトを実行するバッチファイルを実行した結果*
+    *画像：バッチファイルを実行した結果*
 
-    共通化コードのPowerShellスクリプトファイル「`CommonModule.psm1`」内の`Get-CurrentDate`が正常に実行できたことを確認。
+    共通化コードのスクリプトモジュールスクリプトファイル「`CommonModule.psm1`」内の`Get-FileList`が正常に実行できたことを確認。
 
-## 使用用途
+## 2つの対応方法に関する説明
 
-- ドット ソース関数
+### 使用用途
+
+- ドット ソース演算子
     小規模なスクリプトを作成する際や一時的な作業（CLI作業で読み込むなど）を行うケースで適している。
 - スクリプト モジュール
     大規模なスクリプトを作成する際や再利用性を高めるケースで適している。
 
-## メリット・デメリット
+### メリット・デメリット
 
-### ドット ソース関数のメリット
+#### ドット ソース演算子
 
-- 手軽に関数や変数を読み込み可能
-- 単純にPowerShellスクリプトを読み込んでいるだけのため、学習コストが低い
+- メリット
+    - 手軽に関数や変数を読み込み可能
+    - 単純にPowerShellスクリプトを読み込んでいるだけのため、学習コストが低い
 
-### ドット ソース関数のデメリット
+- デメリット
+    - スクリプトがひととおり終了すると読み込んだ関数・変数が失われるため比較的、再利用性が低い
+    - 関数や変数がスクリプト間で衝突しやすい
 
-- スクリプトがひととおり終了すると読み込んだ関数・変数が失われるため、再利用性が低い
+#### スクリプト モジュール
 
-### スクリプト モジュールのメリット
+- メリット:
+    - 関数や変数がスクリプト間で衝突することなく、より安全に管理可能
 
-### スクリプト モジュールのデメリット
-
------
-
-はい、ご認識の通り、先ほどの説明はドットソースを使用した共通化コードの読み込み例でした。ドットソース以外の方法として、**モジュール**を使用する方法があります。以下にその方法と、ドットソースとモジュールのメリット・デメリットを説明します。
-
-### モジュールを使用する方法:
-1. **モジュールファイルの作成**:
-   `.psm1` 拡張子を持つファイルを作成し、再利用したい関数や変数を定義します。例えば、`MyModule.psm1` という名前で以下のように記述します。
-
-```powershell
-function Get-CurrentDate {
-    return Get-Date
-}
-
-function Get-FileList($path) {
-    return Get-ChildItem $path
-}
-
-Export-ModuleMember -Function Get-CurrentDate, Get-FileList
-```
-
-2. **モジュールのインポート**:
-   スクリプトファイルでモジュールをインポートするには、`Import-Module` コマンドレットを使用します。スクリプトファイル（例: `ExecuteScript.ps1`）に以下のように記述します。
-
-```powershell
-Import-Module .\MyModule.psm1
-
-# ここでモジュールの関数を使用
-$date = Get-CurrentDate
-$fileList = Get-FileList -path "C:\"
-```
-
-### メリット・デメリット:
-- **ドットソース**:
-  - メリット:
-    - 簡単にスクリプトに関数や変数を読み込むことができます。
-    - 小規模なスクリプトや一時的な作業に適しています。
-  - デメリット:
-    - スクリプトが終了すると読み込んだ関数や変数は失われます。
-    - 名前空間の衝突が起こりやすくなります。
-
-- **モジュール**:
-  - メリット:
-    - 関数や変数がスクリプト間で衝突することなく、より安全に管理できます。
-    - 大規模なプロジェクトや再利用性を高めたい場合に適しています。
-  - デメリット:
-    - モジュールの作成と管理がドットソースより複雑になる可能性があります。
-    - モジュールのパスを正確に指定する必要があります。
-
-これらの方法を使って、PowerShellでのコードの共通化を効率的に行うことができます。⁵
-
-ソース: Bing との会話 2024/5/1
-(1) PowerShellにおけるモジュールの取扱い方 #PowerShell - Qiita. https://qiita.com/tomomoss/items/5f8c027f3bdc3b189791.
-(2) スクリプト モジュール - PowerShell | Microsoft Learn. https://learn.microsoft.com/ja-jp/powershell/scripting/learn/ps101/10-script-modules?view=powershell-7.4.
-(3) PowerShellで相対パスで指定したスクリプトをドットソース形式で .... https://maywork.net/computer/powershell-dot-source/.
-(4) 【PowerShell】自作コマンドレットの読み込み方 #Windows - Qiita. https://qiita.com/AWtnb/items/8a4a3c36378a621377ae.
-(5) 【PowerShell】関数(function)の使い方を超解説 | だんにこブログ. https://danniko.blog/nongenre/powershell_function/.
-(6) powershell — PowerShellインポートモジュールとドットソース. https://www.web-dev-qa-db-ja.com/ja/powershell/powershell%E3%82%A4%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%88%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB%E3%81%A8%E3%83%89%E3%83%83%E3%83%88%E3%82%BD%E3%83%BC%E3%82%B9/1071043600/.
-(7) PowerShellの関数（ファンクション）の考え方 - 雑記＋備忘録. https://saborin.hatenablog.com/entry/2017/03/11/233626.
-
------
+- デメリット:
+    - モジュールの作成と管理がドットソースより複雑になるケースが多い
 
 ## 参考情報
 
 https://learn.microsoft.com/ja-jp/powershell/scripting/learn/ps101/10-script-modules#dot-sourcing-functions
+https://zenn.dev/karamem0/articles/2019_12_18_120000
 
 ## まとめ
 
-- 
+- 別ファイルのPowerShellコードを読み込む方法は下記の2つ
+    - ドット ソース演算子でPowerShellスクリプトファイル（`*.ps1`）内のモジュールを読み込む方法
+    - スクリプト モジュール（`*.psm1`）でモジュールを読み込む方法
+
+- 小規模のプログラムを開発する場合は、ドット ソース演算子で読み込むと手軽に作れる
+- 大規模のプログラムを開発する場合は、スクリプトモジュールで読み込むと管理しやすい
+
+今回、スクリプトモジュール内に全スコープで使用できるように「`Export-ModuleMember`」を使っていますが、
+ざっくり調べた感じ、その設定内容によってFunctionまわりがどのような挙動をするのか検証している記事が見当たりませんでした。
+
+今後、本格的にスクリプトモジュールによる方法が必要になった場合に調べて別途、記事にするかもしれません。
 
 ## 関連記事
 
