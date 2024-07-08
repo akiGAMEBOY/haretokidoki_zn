@@ -240,7 +240,7 @@ Function Test-ArrayEquality {
     $diffResult = (Compare-Object -ReferenceObject $Array1 -DifferenceObject $Array2 -SyncWindow 0)
 
     # 比較結果を評価
-    return ($null -eq $diffResult) -or ($diffResult.Count -eq 0)
+    return (($null -eq $diffResult) -or ($diffResult.Count -eq 0))
 }
 ```
 
