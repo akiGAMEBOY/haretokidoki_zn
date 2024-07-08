@@ -1,5 +1,5 @@
 ---
-title: "PowerShellで2つの配列の要素数が同じかチェックするFunction"
+title: "PowerShellで2つの配列同士の要素数が同じかチェックするFunction"
 emoji: "👌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
@@ -7,21 +7,22 @@ published: false
 ---
 ## 概要
 
-PowerShellで2つの配列を取り扱う際に同じ要素数がチェックするシチュエーションがありました。
+PowerShellでは2種類の配列、多次元配列 と ジャグ配列（多段配列） を宣言できます。
+それら同じ種類の配列を2つPowerShellスクリプトのコードで取り扱う前に、配列同士の要素数が同一かチェックするシチュエーションがあり、それぞれのFunctionを作成しました。
 
-それら方法を紹介。
+実際のコードを含めて対応方法を紹介します。
 
 ## この記事のターゲット
 
 - PowerShellユーザーの方
-- 多次元配列同士が同じ要素数かチェックしたい方
-- ジャグ配列（多段配列）同士が同じ要素数かチェックしたい方
+- 2つの多次元配列が同じ要素数かチェックしたい方
+- 2つのジャグ配列（多段配列）が同じ要素数かチェックしたい方
 
 ## 対応方法
 
-### 多次元配列の要素数をチェックするコード
+### 2つの多次元配列の要素数をチェックするコード
 
-```powershell:多次元配列同士を比較するFunction
+```powershell:2つの多次元配列の要素数をチェックするFunction
 #################################################################################
 # 処理名　 | Get-ArrayType
 # 機能　　 | 配列の種類を判定
@@ -116,9 +117,9 @@ Function Test-MultiDimensionalArrayEquality {
 }
 ```
 
-### ジャグ配列（多段配列）
+### 2つのジャグ配列（多段配列）が同じ要素数かチェックするコード
 
-```powershell:ジャグ配列（多段配列）同士を比較するFunction
+```powershell:2つのジャグ配列（多段配列）が同じ要素数かチェックするFunction
 #################################################################################
 # 処理名　 | Get-ArrayType
 # 機能　　 | 配列の種類を判定
@@ -174,7 +175,8 @@ function Get-ArrayType {
         return $arrayTypes["SingleArray"]
     }
 }
-# ジャグ配列の要素数を比較
+
+# ジャグ配列の要素数をチェック
 Function Test-MultiLevelArrayEquality {
     param (
         [Parameter(Mandatory=$true)]$Array1,
@@ -221,7 +223,13 @@ Function Test-MultiLevelArrayEquality {
 }
 ```
 
-```powershell:要素数と値すべて一緒か
+### すべて比較するFunction
+
+おまけ。
+
+今回は要素数にテーマを置いたシチュエーションですが、値も含めて配列をまるまる比較したい場合のコードも紹介。
+
+```powershell:要素数だけでなく値を含めすべて比較するFunction
 Function Test-ArrayEquality {
     param (
         [Parameter(Mandatory=$true)][System.Array]$Array1,
@@ -232,14 +240,17 @@ Function Test-ArrayEquality {
     $diffResult = (Compare-Object -ReferenceObject $Array1 -DifferenceObject $Array2 -SyncWindow 0)
 
     # 比較結果を評価
-    if (($null -eq $diffResult) -or ($diffResult.Count -eq 0)) {
-        return $true
-    }
-    else {
-        return $false
-    }
+    return ($null -eq $diffResult) -or ($diffResult.Count -eq 0)
 }
 ```
+
+## まとめ
+
+下記3つのFuncitonを紹介しました。
+
+- 2つの多次元配列の要素数をチェックし論理型（`System.Boolean`）で返すFuncitonを作成
+- 2つのジャグ配列（多次元配列）の要素数をチェックし論理型（`System.Boolean`）で返すFuncitonを作成
+- 要素数だけでなく値もひっくるめて配列を比較するFunctionを作成
 
 ## 関連記事
 
