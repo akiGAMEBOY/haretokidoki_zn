@@ -1,10 +1,25 @@
 ---
-title: "PowerShellで2つの配列を比較し同じ要素かチェックするFunction"
+title: "PowerShellで2つの配列の要素数が同じかチェックするFunction"
 emoji: "👌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
 published: false
 ---
+## 概要
+
+PowerShellで2つの配列を取り扱う際に同じ要素数がチェックするシチュエーションがありました。
+
+それら方法を紹介。
+
+## この記事のターゲット
+
+- PowerShellユーザーの方
+- 多次元配列同士が同じ要素数かチェックしたい方
+- ジャグ配列（多段配列）同士が同じ要素数かチェックしたい方
+
+## 対応方法
+
+### 多次元配列の要素数をチェックするコード
 
 ```powershell:多次元配列同士を比較するFunction
 #################################################################################
@@ -62,7 +77,7 @@ function Get-ArrayType {
         return $arrayTypes["SingleArray"]
     }
 }
-# 多次元配列の要素数を比較
+# 多次元配列の要素数をチェック
 Function Test-MultiDimensionalArrayEquality {
     param (
         [Parameter(Mandatory=$true)]$Array1,
@@ -100,6 +115,8 @@ Function Test-MultiDimensionalArrayEquality {
     return $true
 }
 ```
+
+### ジャグ配列（多段配列）
 
 ```powershell:ジャグ配列（多段配列）同士を比較するFunction
 #################################################################################
