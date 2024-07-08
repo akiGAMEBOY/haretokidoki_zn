@@ -1,5 +1,5 @@
 ---
-title: "別ファイルに共通化したコードを読み込む2つの方法（ドットソース演算子・スクリプトモジュール）"
+title: "別ファイルにあるPowerShellのFunctionを読み込み実行する2つの方法（ドットソース演算子・スクリプトモジュール）"
 emoji: "🎢"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
