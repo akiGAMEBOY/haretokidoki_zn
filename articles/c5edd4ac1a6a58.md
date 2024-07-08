@@ -257,22 +257,23 @@ published: false
 
 ## 参考情報
 
+https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_scripts#script-scope-and-dot-sourcing
 https://learn.microsoft.com/ja-jp/powershell/scripting/learn/ps101/10-script-modules#dot-sourcing-functions
 https://zenn.dev/karamem0/articles/2019_12_18_120000
 
 ## まとめ
 
 - 別ファイルのPowerShellコードを読み込む方法は下記の2つ
-    - ドット ソース演算子でPowerShellスクリプトファイル（`*.ps1`）内のモジュールを読み込む方法
-    - スクリプト モジュール（`*.psm1`）でモジュールを読み込む方法
+    1. ドット ソース演算子でPowerShellスクリプトファイル（`*.ps1`）内のモジュールを読み込む方法
+    1. スクリプト モジュール（`*.psm1`）でモジュールを読み込む方法
 
-- 小規模のプログラムを開発する場合は、ドット ソース演算子で読み込むと手軽に作れる
-- 大規模のプログラムを開発する場合は、スクリプトモジュールで読み込むと管理しやすい
+- 小規模のプログラムを開発する場合は、**ドット ソース演算子**で読み込むと手軽に作れる
+- 大規模のプログラムを開発する場合は、**スクリプトモジュール**で読み込むと管理しやすい
 
 今回、スクリプトモジュール内に全スコープで使用できるように「`Export-ModuleMember`」を使っていますが、
 ざっくり調べた感じ、その設定内容によってFunctionまわりがどのような挙動をするのか検証している記事が見当たりませんでした。
 
-今後、本格的にスクリプトモジュールによる方法が必要になった場合に調べて別途、記事にするかもしれません。
+今後、本格的にスクリプトモジュールによる方法が必要になった場合にしっかり調べて記事にするかも。
 
 ## 関連記事
 
