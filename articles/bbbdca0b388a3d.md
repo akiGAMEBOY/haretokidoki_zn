@@ -89,9 +89,51 @@ function Get-EmptyFolders {
     # Output the results
     $results | Select-Object FullName, LastWriteTime
 }
+```
 
-# Example usage
-# Get-EmptyFolders -Path "C:\Your\Target\Path"
+```powershell:
+PS C:\Users\"ユーザー名"> Get-EmptyFolders "D:\Program Files\"
+
+FullName                                                                                   LastWriteTime
+--------                                                                                   -------------
+D:\Program Files\Android                                                                   2024/06/04 10:22:37
+D:\Program Files\Java                                                                      2022/06/14 14:10:38
+D:\Program Files\DBeaver\p2\org.eclipse.equinox.p2.repository\pgp                          2024/05/07 11:37:39
+D:\Program Files\GIMP 2\share\gimp\2.0\fonts                                               2022/07/04 11:27:56
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\asyncio\__pycache__               2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\concurrent\__pycache__            2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\concurrent\futures\__pycache__    2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\ctypes\macholib\__pycache__       2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\curses\__pycache__                2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\dbm\__pycache__                   2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\distutils\__pycache__             2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\distutils\command\__pycache__     2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\email\__pycache__                 2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\email\mime\__pycache__            2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\ensurepip\__pycache__             2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\html\__pycache__                  2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\http\__pycache__                  2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\idlelib\__pycache__               2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\lib2to3\__pycache__               2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\lib2to3\fixes\__pycache__         2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\lib2to3\pgen2\__pycache__         2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\logging\__pycache__               2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\msilib\__pycache__                2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\multiprocessing\dummy\__pycache__ 2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\pydoc_data\__pycache__            2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\tkinter\__pycache__               2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\urllib\__pycache__                2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\venv\__pycache__                  2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\wsgiref\__pycache__               2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\xml\__pycache__                   2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\xml\dom\__pycache__               2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\xml\etree\__pycache__             2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\xml\parsers\__pycache__           2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\xml\sax\__pycache__               2022/04/04 15:07:57
+D:\Program Files\MySQL\MySQL Workbench 8.0 CE\python\lib\xmlrpc\__pycache__                2022/04/04 15:07:57
+
+
+PS C:\Users\"ユーザー名">
 ```
 
 ## 関連記事
