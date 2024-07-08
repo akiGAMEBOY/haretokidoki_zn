@@ -89,12 +89,12 @@ Function Test-MultiDimensionalArrayEquality {
     $resultArrayType = (Get-ArrayType $Array1)
     if ($resultArrayType -ne 2) {
         Write-Warning "引数の「Array1」が多次元配列ではありません。[配列の判定結果: $($resultArrayType)]"
-        return
+        return $false
     }
     $resultArrayType = (Get-ArrayType $Array2)
     if ($resultArrayType -ne 2) {
         Write-Warning "引数の「Array2」が多次元配列ではありません。[配列の判定結果: $($resultArrayType)]"
-        return
+        return $false
     }
 
     # 配列の次元数を比較
@@ -187,12 +187,12 @@ Function Test-MultiLevelArrayEquality {
     $resultArrayType = (Get-ArrayType $Array1)
     if ($resultArrayType -ne 1) {
         Write-Warning "引数の「Array1」がジャグ配列（多次元配列）ではありません。[配列の判定結果: $($resultArrayType)]"
-        return
+        return $false
     }
     $resultArrayType = (Get-ArrayType $Array2)
     if ($resultArrayType -ne 1) {
         Write-Warning "引数の「Array2」がジャグ配列（多次元配列）ではありません。[配列の判定結果: $($resultArrayType)]"
-        return
+        return $false
     }
 
     # 配列の次元数を比較
