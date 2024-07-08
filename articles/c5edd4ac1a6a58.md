@@ -3,7 +3,7 @@ title: "別ファイルにあるPowerShellのFunctionを読み込み実行する
 emoji: "🎢"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
-published: false
+published: true
 ---
 ## 概要
 
