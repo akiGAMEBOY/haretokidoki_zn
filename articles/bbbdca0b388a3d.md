@@ -9,7 +9,6 @@ published: false
 
 以前に[teratail](https://teratail.com/)の質問でみたような気がするコードを作成。
 
-
 また、一覧は引数によりCSV出力を可能とし、必要に応じてそのCSVファイルを加工。
 
 別の要件となるが、その加工したCSVファイルを入力データとして一括削除するFunctionを作成し、
