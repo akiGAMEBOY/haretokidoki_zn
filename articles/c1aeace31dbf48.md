@@ -3,7 +3,7 @@ title: "PowerShellで2つの配列同士の要素数が同じかチェックす�
 emoji: "👌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell"]
-published: false
+published: true
 ---
 ## 概要
 
