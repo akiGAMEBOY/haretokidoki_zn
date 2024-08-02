@@ -1,5 +1,5 @@
 ---
-title: "PowerShellでExcelマクロ有効ブック（*.xlsm）のVBAコードを取得する方法"
+title: "PowerShellでExcelマクロ有効ブック（*.xlsm）のVBAコードをエクスポートする方法"
 emoji: "👋"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["powershell", "excel"]
