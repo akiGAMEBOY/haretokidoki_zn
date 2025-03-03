@@ -29,7 +29,7 @@ published: true
     共通化したFunctionコードを記載。文字コードは「UTF-8 BOM付き」として保存。
 
     ```powershell:CommonFunctions.ps1
-    function Get-CurrentDate {
+    Function Get-CurrentDate {
         # 現在日付・時刻を返すのみ
         return Get-Date
     }
@@ -132,7 +132,7 @@ published: true
     共通化したFunctionコードを記載。文字コードは「UTF-8 BOM付き」として保存。
 
     ```powershell:CommonModule.psm1
-    function Get-FileList($Path) {
+    Function Get-FileList($Path) {
         return Get-ChildItem $Path
     }
 

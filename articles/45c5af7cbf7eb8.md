@@ -28,7 +28,7 @@ Functionを実行した際に戻ってくる数値は下記のとおり。
 | 上記以外 | -1 |
 
 ```powershell:引数の配列を判定するFunction
-function Get-ArrayType {
+Function Get-ArrayType {
     param(
         $InputObject
     )

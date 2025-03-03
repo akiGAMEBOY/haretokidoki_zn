@@ -361,7 +361,7 @@ Invoke-MultipleCommands -commands @(
 > }
 > 
 > # モジュール化するために関数に定義
-> function Invoke-Commands {
+> Function Invoke-Commands {
 >     Param (
 >         # 配列に実行するコマンドレットを格納するパラメータ
 >         [Parameter(Mandatory=$true)]

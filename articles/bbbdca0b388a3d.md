@@ -62,7 +62,7 @@ Get-ChildItem : パス 'C:\Windows\System32\LogFiles\WMI\RtBackup' へのアク�
 ★ CSVで出力する仕様にしていない為、引数に追加し、引数があればExport-CSVする処理を追加。
 
 ```powershell:
-function Get-EmptyFolders {
+Function Get-EmptyFolders {
     param (
         [string]$Path
     )

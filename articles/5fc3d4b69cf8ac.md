@@ -27,7 +27,7 @@ Function Test-IsAdmin {
 }
 
 # MACアドレスの表記に変換
-function Format-MacAddress {
+Function Format-MacAddress {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true)]
@@ -44,7 +44,7 @@ function Format-MacAddress {
 }
 
 # 対象のネットワークアダプターを有効にする
-function Enable-MacAddress {
+Function Enable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     Param(
         [Parameter(Mandatory=$true)]
@@ -112,7 +112,7 @@ Function Test-IsAdmin {
 }
 
 # MACアドレスの表記に変換
-function Format-MacAddress {
+Function Format-MacAddress {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true)]
@@ -129,7 +129,7 @@ function Format-MacAddress {
 }
 
 # 対象のネットワークアダプターを無効にする
-function Disable-MacAddress {
+Function Disable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param(
         [Parameter(Mandatory=$true)]
