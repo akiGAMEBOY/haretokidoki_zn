@@ -1,15 +1,15 @@
-title: "いまからPowerShellをはじめてみよう ～Begin The PowerShell～"
+title: "いま、PowerShellをはじめてみよう ～Begin The PowerShell～"
 summary: |-
   そろそろバッチファイル（*.bat）ではなくPowerShellで自動化してみませんか。
-
+  
   この本はPowerShellを始める為に必要な “セットアップ手順”と “基本的な実践方法”を解説しています。
   
   主に下記の内容が盛り込まれています。
   
   　📌 PowerShellで実現できること
   　📌 PowerShellの導入方法 と 開発環境の構築手順
-  　📌 コマンド・自作Function・スクリプト、3つの活用方法
-
+  　📌 コマンドレット・自作Function・PowerShellスクリプト、3つの活用方法
+  
   チャプター7「応用技術の実践」以降を有料として販売しています。
   
   この有料チャプターの内容は、私がZennの個別記事で無料公開している内容を紹介しているのみで、
@@ -19,13 +19,13 @@ summary: |-
   リポジトリを直接のぞいていただければ閲覧可能です。
   
   なお、この公開状態としているGitHubのリポジトリですが、今後の運用方針によって変更する可能性があります。その点、ご了解いただければと思います。
-
+  
   🔖 無料公開している個別記事
   https://zenn.dev/haretokidoki?tab=articles
-
+  
   🔖 この本のGitHubリポジトリの参照先
   https://github.com/akiGAMEBOY/haretokidoki_zn/tree/master/books/b7db6f890d3bf9
-
+  
   それでは、「Chapter 01: はじめに」もしくは「気になるチャプター」のリンクをクリックして本書を読んでいきましょう。
 
 topics: ["powershell", "windows", "mac", "linux"]
