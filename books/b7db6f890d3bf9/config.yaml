@@ -38,8 +38,8 @@ price: 500 # 有料の場合200〜5000
 # chapters:
   # - introduction
   # - basic-knowledge
-  # - installation_construction
   # - basic-practice
+  # - installation_construction
   # - community_contact
   # - references
   # - applied-practice
