@@ -391,9 +391,10 @@ PS C:\WINDOWS\system32>
 
 ## 応用：画面でネットワークアダプター一覧を表示し操作
 
-★正常に動かない。
+コンソールで貼り付けて実行すると、`Format-MacAddress`が正常動作しない。
+PowerShellスクリプトファイルとして保存し、実行すると正常動作する。
 
-```powershell
+```powershell:xxx.ps1
 #Requires -RunAsAdministrator
 #Requires -Version 5.1
 
