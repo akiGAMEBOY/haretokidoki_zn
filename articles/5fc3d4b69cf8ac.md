@@ -14,7 +14,9 @@ Get-NetAdapter | Select-Object Name, Status, MacAddress, @{Name="IPv4Address";Ex
 
 ## コード
 
-### 共通関数
+### 共通して使用する関数
+
+
 
 ```powershell:現在のセッションが管理者権限で実行されているか判定
 <#
@@ -206,7 +208,7 @@ Function Format-MacAddress {
 Function Enable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateScript({ $_.Trim() -ne '' })]
         [System.String]$TargetMacAddress
     )
@@ -259,43 +261,55 @@ PS C:\WINDOWS\system32>
 ### 無効化
 
 ```powershell:ネットワークアダプターのMACアドレスを指定して無効化するFunction
-#################################################################################
-# 処理名　 | Test-IsAdmin
-# 機能　　 | PowerShellが管理者として実行しているか確認
-#          | 参考情報：https://zenn.dev/haretokidoki/articles/67788ca9b47b27
-#--------------------------------------------------------------------------------
-# 戻り値　 | Boolean（True: 管理者権限あり, False: 管理者権限なし）
-# 引数　　 | -
-#################################################################################
-Function Test-IsAdmin {
-    $win_id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-    $win_principal = new-object System.Security.Principal.WindowsPrincipal($win_id)
-    $admin_permission = [System.Security.Principal.WindowsBuiltInRole]::Administrator
-    return $win_principal.IsInRole($admin_permission)
-}
+<#
+.SYNOPSIS
+  指定されたMACアドレスに一致するネットワークアダプターを無効にします。
 
-# MACアドレスの表記に変換
-Function Format-MacAddress {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory=$true)]
-        [ValidatePattern('(^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}$)|(^([0-9A-Fa-f]){12}$)')]
-        [System.String]$MacAddress
-    )
+.DESCRIPTION
+  この関数は、引数で指定されたMACアドレスを持つ、現在「有効(Up)」状態のネットワークアダプターを検索し、無効化します。
+  対象のアダプターが1つだけ見つかった場合のみ処理を実行します。
+  実行には管理者権限が必要であり、権限がない場合は権限昇格を試みます。
 
-    # 引数が英数字のみ12桁の場合、ハイフンを挿入
-    if ($MacAddress -match '^([0-9A-Fa-f]){12}$') {
-        $MacAddress = $MacAddress -replace '(.{2})', '$1-' -replace '-$'
-    }
+.PARAMETER TargetMacAddress
+  無効にしたいネットワークアダプターのMACアドレスを指定します。
+  ハイフン区切り、コロン区切り、または区切り文字なしの形式が使用可能です。(例: "00-15-5D-01-02-03")
+  このパラメーターは必須です。
 
-    return $MacAddress
-}
+.EXAMPLE
+  PS C:\> Disable-MacAddress -TargetMacAddress "00-15-5D-F1-AA-01"
 
+  MACアドレス "00-15-5D-F1-AA-01" を持つネットワークアダプターを検索し、見つかれば無効化の確認プロンプトを表示します。
+  "Y" を入力するとアダプターが無効になります。
+
+.EXAMPLE
+  PS C:\> Disable-MacAddress "00155DF1AA01" -Verbose
+
+  区切り文字なしのMACアドレスを指定する例です。
+  -Verbose スイッチを付けると、処理の詳細が表示されます。
+
+.EXAMPLE
+  PS C:\> "00-15-5D-F1-AA-01" | Disable-MacAddress
+
+  パイプライン経由でMACアドレスを渡す例です。
+
+.INPUTS
+  System.String
+  パイプライン経由でMACアドレスの文字列を受け取ることができます。
+
+.OUTPUTS
+  なし
+  この関数は、出力を返しません。
+
+.NOTES
+  - この関数は内部で `Format-MacAddress` 関数を呼び出し、入力されたMACアドレスを正規化しています。
+  - 管理者権限の有無を確認するために `Test-IsAdmin` 関数を使用しています。
+  - -WhatIf スイッチをサポートしており、コマンドが実行された場合に何が起こるかを確認できます。
+#>
 # 対象のネットワークアダプターを無効にする
 Function Disable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateScript({ $_.Trim() -ne '' })]
         [System.String]$TargetMacAddress
     )
