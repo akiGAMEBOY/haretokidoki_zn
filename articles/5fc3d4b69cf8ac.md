@@ -6,9 +6,9 @@ topics: ["windows", "network", "powershell"]
 published: false
 ---
 
-WPFで画面を作ってみる？
+ネットワークアダプターの状態を一覧表示するコマンド。
 
-```powershell:
+```powershell:ネットワークアダプターの状態を一覧表示するコマンド
 Get-NetAdapter | Select-Object Name, Status, MacAddress, @{Name="IPv4Address";Expression={($_ | Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue).IPAddress -join ', '}}
 ```
 
@@ -16,7 +16,7 @@ Get-NetAdapter | Select-Object Name, Status, MacAddress, @{Name="IPv4Address";Ex
 
 ### 共通して使用する関数
 
-
+ネットワークアダプターの有効化・無効化の双方で使用する関数。
 
 ```powershell:現在のセッションが管理者権限で実行されているか判定
 <#
@@ -138,7 +138,7 @@ Function Format-MacAddress {
 }
 ```
 
-### 有効化
+### ネットワークアダプターを有効化する関数
 
 ```powershell:ネットワークアダプターのMACアドレスを指定して有効化
 <#
@@ -211,6 +211,7 @@ Function Enable-MacAddress {
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateScript({ $_.Trim() -ne '' })]
         [System.String]$TargetMacAddress
+        [Switch]$Force
     )
 
     # MACアドレスを正規のハイフン区切り形式に整形する
@@ -223,16 +224,14 @@ Function Enable-MacAddress {
 
     # 対象のアダプターが1つだけ見つかったかを確認
     if (@($disconnectedAdapter).Count -ne 1) {
-        Write-Warning '対象となる無効化状態のネットワークアダプターが見つかりませんでした。'
-        Write-Host ''
-        Write-Host '▼ 現在のネットワークアダプターを表示'
-        (Get-NetAdapter | Format-Table -Property Name, Status, MacAddress, LinkSpeed -Autosize -Wrap)
-        Write-Host ''
+        ### 変更点 ###
+        # エラー表示をMessageBoxに統一
+        [System.Windows.MessageBox]::Show('対象となる無効化状態のネットワークアダプターが見つかりませんでした。','エラー','OK','Warning')
         return
     }
 
     # -WhatIf/-Confirm のサポートを実装
-    if ($PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "有効化")) {
+    if ($Force -or $PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "有効化")) {
         # 現在のセッションが管理者権限を持っているか確認
         if (Test-IsAdmin) {
             # 管理者権限がある場合：直接アダプターを有効化する
@@ -258,60 +257,60 @@ PS C:\WINDOWS\system32> Enable-MacAddress 004e01a383ec -Confirm
 PS C:\WINDOWS\system32>
 ```
 
-### 無効化
+### ネットワークアダプターを無効化する関数
 
 ```powershell:ネットワークアダプターのMACアドレスを指定して無効化するFunction
 <#
 .SYNOPSIS
-  指定されたMACアドレスに一致するネットワークアダプターを無効にします。
+    指定されたMACアドレスに一致するネットワークアダプターを無効にします。
 
 .DESCRIPTION
-  この関数は、引数で指定されたMACアドレスを持つ、現在「有効(Up)」状態のネットワークアダプターを検索し、無効化します。
-  対象のアダプターが1つだけ見つかった場合のみ処理を実行します。
-  実行には管理者権限が必要であり、権限がない場合は権限昇格を試みます。
+    この関数は、引数で指定されたMACアドレスを持つ、現在「有効(Up)」状態のネットワークアダプターを検索し、無効化します。
+    対象のアダプターが1つだけ見つかった場合のみ処理を実行します。
+    実行には管理者権限が必要であり、権限がない場合は権限昇格を試みます。
 
 .PARAMETER TargetMacAddress
-  無効にしたいネットワークアダプターのMACアドレスを指定します。
-  ハイフン区切り、コロン区切り、または区切り文字なしの形式が使用可能です。(例: "00-15-5D-01-02-03")
-  このパラメーターは必須です。
+    無効にしたいネットワークアダプターのMACアドレスを指定します。
+    ハイフン区切り、コロン区切り、または区切り文字なしの形式が使用可能です。(例: "00-15-5D-01-02-03")
+    このパラメーターは必須です。
 
 .EXAMPLE
-  PS C:\> Disable-MacAddress -TargetMacAddress "00-15-5D-F1-AA-01"
+    PS C:\> Disable-MacAddress -TargetMacAddress "00-15-5D-F1-AA-01"
 
-  MACアドレス "00-15-5D-F1-AA-01" を持つネットワークアダプターを検索し、見つかれば無効化の確認プロンプトを表示します。
-  "Y" を入力するとアダプターが無効になります。
-
-.EXAMPLE
-  PS C:\> Disable-MacAddress "00155DF1AA01" -Verbose
-
-  区切り文字なしのMACアドレスを指定する例です。
-  -Verbose スイッチを付けると、処理の詳細が表示されます。
+    MACアドレス "00-15-5D-F1-AA-01" を持つネットワークアダプターを検索し、見つかれば無効化の確認プロンプトを表示します。
+    "Y" を入力するとアダプターが無効になります。
 
 .EXAMPLE
-  PS C:\> "00-15-5D-F1-AA-01" | Disable-MacAddress
+    PS C:\> Disable-MacAddress "00155DF1AA01" -Verbose
 
-  パイプライン経由でMACアドレスを渡す例です。
+    区切り文字なしのMACアドレスを指定する例です。
+    -Verbose スイッチを付けると、処理の詳細が表示されます。
+
+.EXAMPLE
+    PS C:\> "00-15-5D-F1-AA-01" | Disable-MacAddress
+
+    パイプライン経由でMACアドレスを渡す例です。
 
 .INPUTS
-  System.String
-  パイプライン経由でMACアドレスの文字列を受け取ることができます。
+    System.String
+    パイプライン経由でMACアドレスの文字列を受け取ることができます。
 
 .OUTPUTS
-  なし
-  この関数は、出力を返しません。
+    なし
+    この関数は、出力を返しません。
 
 .NOTES
-  - この関数は内部で `Format-MacAddress` 関数を呼び出し、入力されたMACアドレスを正規化しています。
-  - 管理者権限の有無を確認するために `Test-IsAdmin` 関数を使用しています。
-  - -WhatIf スイッチをサポートしており、コマンドが実行された場合に何が起こるかを確認できます。
+    - この関数は内部で `Format-MacAddress` 関数を呼び出し、入力されたMACアドレスを正規化しています。
+    - 管理者権限の有無を確認するために `Test-IsAdmin` 関数を使用しています。
+    - -WhatIf スイッチをサポートしており、コマンドが実行された場合に何が起こるかを確認できます。
 #>
-# 対象のネットワークアダプターを無効にする
 Function Disable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateScript({ $_.Trim() -ne '' })]
         [System.String]$TargetMacAddress
+        [Switch]$Force
     )
 
     # MACアドレスの形式か確認
@@ -324,15 +323,13 @@ Function Disable-MacAddress {
 
     # 対象のアダプターがない場合は中断
     if (@($connectedAdapter).Count -ne 1) {
-        Write-Warning '対象となる有効化状態のネットワークアダプターが見つかりませんでした。'
-        Write-Host ''
-        Write-Host '▼ 現在のネットワークアダプターを表示'
-        (Get-NetAdapter | Format-Table -Property Name, Status, MacAddress, LinkSpeed -Autosize -Wrap)
-        Write-Host ''
+        ### 変更点 ###
+        # エラー表示をMessageBoxに統一
+        [System.Windows.MessageBox]::Show('対象となる有効化状態のネットワークアダプターが見つかりませんでした。','エラー','OK','Warning')
         return
     }
 
-    if ($PSCmdlet.ShouldProcess($connectedAdapter.Name, "無効にしますか？")) {
+    if ($Force -or $PSCmdlet.ShouldProcess($connectedAdapter.Name, "無効化")) {
         if (Test-IsAdmin) {
             # 管理者権限がある場合
             Disable-NetAdapter -Name $connectedAdapter.Name -Confirm:$false
@@ -356,6 +353,259 @@ PS C:\WINDOWS\system32> Disable-MacAddress 004e01a383ec -Confirm
 対象 "イーサネット" に対して操作 "有効にしますか？" を実行しています。
 [Y] はい(Y)  [A] すべて続行(A)  [N] いいえ(N)  [L] すべて無視(L)  [S] 中断(S)  [?] ヘルプ (既定値は "Y"): n
 PS C:\WINDOWS\system32>
+```
+
+## 応用：画面でネットワークアダプター一覧を表示し操作
+
+```powershell
+#Requires -RunAsAdministrator
+#Requires -Version 5.1
+
+#region WPFとXAMLの定義
+# --------------------------------------------------
+# WPFアセンブリの読み込み
+# --------------------------------------------------
+Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
+
+# --------------------------------------------------
+# XAML: GUIのレイアウトを定義
+# --------------------------------------------------
+[xml]$xaml = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ネットワークアダプター マネージャー" Height="450" Width="700"
+        WindowStartupLocation="CenterScreen" MinHeight="300" MinWidth="500">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="ネットワークアダプター一覧" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+        
+        <ListView Name="AdapterListView" Grid.Row="1" SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="名前" Width="180" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="状態" Width="80" DisplayMemberBinding="{Binding Status}" />
+                    <GridViewColumn Header="MACアドレス" Width="140" DisplayMemberBinding="{Binding MacAddress}" />
+                    <GridViewColumn Header="IPv4アドレス" Width="150" DisplayMemberBinding="{Binding IPv4Address}" />
+                    <GridViewColumn Header="リンク速度" Width="100" DisplayMemberBinding="{Binding LinkSpeed}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Name="RefreshButton" Content="🔄 更新" Width="100" Margin="0,0,10,0" ToolTip="一覧を最新の情報に更新します"/>
+            <Button Name="EnableButton" Content="✅ 有効化" Width="100" Margin="0,0,10,0" IsEnabled="False" ToolTip="選択したアダプターを有効化します"/>
+            <Button Name="DisableButton" Content="❌ 無効化" Width="100" IsEnabled="False" ToolTip="選択したアダプターを無効化します"/>
+        </StackPanel>
+    </Grid>
+</Window>
+'@
+#endregion
+
+#region 提示された関数群 (バックエンドロジック)
+# --------------------------------------------------
+# 共通して使用する関数
+# --------------------------------------------------
+function Test-IsAdmin {
+    $win_id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $win_principal = New-Object System.Security.Principal.WindowsPrincipal($win_id)
+    $admin_permission = [System.Security.Principal.WindowsBuiltInRole]::Administrator
+    return $win_principal.IsInRole($admin_permission)
+}
+
+function Format-MacAddress {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [ValidatePattern('(^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}$)|(^([0-9A-Fa-f]){12}$)')]
+        [System.String]$MacAddress
+    )
+    if ($MacAddress -match '^([0-9A-Fa-f]){12}$') {
+        $MacAddress = $MacAddress -replace '(.{2})', '$1-' -replace '-$'
+    }
+    return $MacAddress
+}
+
+# --------------------------------------------------
+# ネットワークアダプターを有効化する関数
+# --------------------------------------------------
+Function Enable-MacAddress {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+    Param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [ValidateScript({ $_.Trim() -ne '' })]
+        [System.String]$TargetMacAddress,
+
+        ### 変更点 ###
+        # GUIからの強制実行用スイッチを追加
+        [Switch]$Force
+    )
+    $FormatedMacAddress = (Format-MacAddress $TargetMacAddress)
+    $disconnectedAdapter = Get-NetAdapter | Where-Object { ($_.MacAddress -eq $FormatedMacAddress) -and ($_.Status -eq 'Disabled') }
+
+    if (@($disconnectedAdapter).Count -ne 1) {
+        ### 変更点 ###
+        # エラー表示をMessageBoxに統一
+        [System.Windows.MessageBox]::Show('対象となる無効化状態のネットワークアダプターが見つかりませんでした。','エラー','OK','Warning')
+        return
+    }
+
+    ### 変更点 ###
+    # -Forceスイッチが指定された場合はShouldProcessをスキップする
+    if ($Force -or $PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "有効化")) {
+        if (Test-IsAdmin) {
+            Enable-NetAdapter -Name $disconnectedAdapter.Name -Confirm:$false
+        }
+        else {
+            $argument = "Enable-NetAdapter -Name '$($disconnectedAdapter.Name)'"
+            Start-Process 'powershell.exe' -ArgumentList $argument -Verb RunAs
+        }
+    }
+}
+
+# --------------------------------------------------
+# ネットワークアダプターを無効化する関数
+# --------------------------------------------------
+Function Disable-MacAddress {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+    Param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [ValidateScript({ $_.Trim() -ne '' })]
+        [System.String]$TargetMacAddress,
+        
+        ### 変更点 ###
+        # GUIからの強制実行用スイッチを追加
+        [Switch]$Force
+    )
+    $FormatedMacAddress = (Format-MacAddress $TargetMacAddress)
+    $connectedAdapter = Get-NetAdapter | Where-Object { ($_.MacAddress -eq $FormatedMacAddress) -and ($_.Status -eq 'Up') }
+
+    if (@($connectedAdapter).Count -ne 1) {
+        ### 変更点 ###
+        # エラー表示をMessageBoxに統一
+        [System.Windows.MessageBox]::Show('対象となる有効化状態のネットワークアダプターが見つかりませんでした。','エラー','OK','Warning')
+        return
+    }
+    
+    ### 変更点 ###
+    # -Forceスイッチが指定された場合はShouldProcessをスキップする
+    if ($Force -or $PSCmdlet.ShouldProcess($connectedAdapter.Name, "無効化")) {
+        if (Test-IsAdmin) {
+            Disable-NetAdapter -Name $connectedAdapter.Name -Confirm:$false
+        }
+        else {
+            $argument = "Disable-NetAdapter -Name '$($connectedAdapter.Name)'"
+            Start-Process 'powershell.exe' -ArgumentList $argument -Verb RunAs
+        }
+    }
+}
+#endregion
+
+#region GUIの初期化とイベントハンドラ
+# --------------------------------------------------
+# XAMLからUI要素を読み込む
+# --------------------------------------------------
+$reader = (New-Object System.Xml.XmlNodeReader $xaml)
+try {
+    $Window = [Windows.Markup.XamlReader]::Load($reader)
+}
+catch {
+    Write-Error "XAMLの読み込みに失敗しました: $($_.Exception.Message)"
+    return
+}
+
+# --------------------------------------------------
+# UI要素を変数に格納
+# --------------------------------------------------
+$AdapterListView = $Window.FindName("AdapterListView")
+$RefreshButton = $Window.FindName("RefreshButton")
+$EnableButton = $Window.FindName("EnableButton")
+$DisableButton = $Window.FindName("DisableButton")
+
+# --------------------------------------------------
+# アダプター一覧を更新する関数
+# --------------------------------------------------
+Function Update-AdapterList {
+    # 選択状態を一時保存
+    $selectedIndex = $AdapterListView.SelectedIndex
+    
+    # データソースを更新
+    $AdapterListView.ItemsSource = Get-NetAdapter -IncludeHidden | Select-Object Name, Status, MacAddress, @{Name="IPv4Address";Expression={($_ | Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue).IPAddress -join ', '}}, LinkSpeed
+    
+    # 選択状態を復元
+    if ($selectedIndex -ne -1 -and $selectedIndex -lt $AdapterListView.Items.Count) {
+        $AdapterListView.SelectedIndex = $selectedIndex
+    }
+}
+
+# --------------------------------------------------
+# イベントハンドラを定義
+# --------------------------------------------------
+# ListViewの選択が変更されたときの処理
+$AdapterListView.add_SelectionChanged({
+    $selectedItem = $AdapterListView.SelectedItem
+    if ($null -ne $selectedItem) {
+        $EnableButton.IsEnabled = ($selectedItem.Status -eq 'Disabled')
+        $DisableButton.IsEnabled = ($selectedItem.Status -eq 'Up')
+    }
+    else {
+        $EnableButton.IsEnabled = $false
+        $DisableButton.IsEnabled = $false
+    }
+})
+
+# 更新ボタンがクリックされたときの処理
+$RefreshButton.add_Click({
+    Update-AdapterList
+})
+
+# 有効化ボタンがクリックされたときの処理
+$EnableButton.add_Click({
+    $selectedItem = $AdapterListView.SelectedItem
+    if ($null -ne $selectedItem) {
+        $mac = $selectedItem.MacAddress
+        $result = [System.Windows.MessageBox]::Show("アダプター '$($selectedItem.Name)' を有効化しますか？", "確認", "YesNo", "Question")
+        if ($result -eq 'Yes') {
+            ### 変更点 ###
+            # -Forceスイッチを付けて関数を呼び出す
+            Write-Host "`$mac: $mac"
+            Enable-MacAddress -TargetMacAddress $mac -Force
+            Start-Sleep -Seconds 1
+            Update-AdapterList
+        }
+    }
+})
+
+# 無効化ボタンがクリックされたときの処理
+$DisableButton.add_Click({
+    $selectedItem = $AdapterListView.SelectedItem
+    if ($null -ne $selectedItem) {
+        $mac = $selectedItem.MacAddress
+        $result = [System.Windows.MessageBox]::Show("アダプター '$($selectedItem.Name)' を無効化しますか？", "確認", "YesNo", "Question")
+        if ($result -eq 'Yes') {
+            ### 変更点 ###
+            # -Forceスイッチを付けて関数を呼び出す
+            Write-Host "`$mac: $mac"
+            Disable-MacAddress -TargetMacAddress $mac -Force
+            Start-Sleep -Seconds 1
+            Update-AdapterList
+        }
+    }
+})
+
+# --------------------------------------------------
+# ウィンドウの初期化と表示
+# --------------------------------------------------
+# 起動時にアダプター一覧を読み込む
+Update-AdapterList
+
+# ウィンドウを表示
+$Window.ShowDialog() | Out-Null
+#endregion
 ```
 
 ## 関連記事
