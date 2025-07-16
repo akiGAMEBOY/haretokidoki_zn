@@ -17,7 +17,6 @@ Get-NetAdapter | Select-Object Name, Status, MacAddress, @{Name="IPv4Address";Ex
 ### 共通関数
 
 ```powershell:現在のセッションが管理者権限で実行されているか判定
-function Test-IsAdmin {
 <#
 .SYNOPSIS
     現在のPowerShellセッションが管理者権限で実行されているかを確認します。
@@ -54,6 +53,7 @@ function Test-IsAdmin {
     この関数は引数を取りません。
     内部で .NET の [System.Security.Principal.WindowsPrincipal] クラスを利用しています。
 #>
+function Test-IsAdmin {
     # 現在のWindowsユーザーのIDを取得
     $win_id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
     
@@ -68,8 +68,7 @@ function Test-IsAdmin {
 }
 ```
 
-```powershell:MACアドレスの表記に変換
-Function Format-MacAddress {
+```powershell:MACアドレスの文字列をハイフン区切りの表記に変換（すでにハイフン区切りの場合はそのまま返す）
 <#
 .SYNOPSIS
     MACアドレスの文字列を、標準的なハイフン区切り形式 (XX-XX-XX-XX-XX-XX) に整形します。
@@ -118,6 +117,7 @@ Function Format-MacAddress {
 .NOTES
     正規表現による入力検証 (`ValidatePattern`) を行っているため、不正な文字や長さの文字列が渡されると、コマンド実行前にエラーが発生します。
 #>
+Function Format-MacAddress {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
@@ -138,8 +138,7 @@ Function Format-MacAddress {
 
 ### 有効化
 
-```powershell:ネットワークアダプターのMACアドレスを指定して有効化するFunction
-Function Enable-MacAddress {
+```powershell:ネットワークアダプターのMACアドレスを指定して有効化
 <#
 .SYNOPSIS
     指定されたMACアドレスを持つ、無効化（Disabled）状態のネットワークアダプターを有効化します。
@@ -204,6 +203,7 @@ Function Enable-MacAddress {
     Enable-NetAdapter
     Start-Process
 #>
+Function Enable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     Param(
         [Parameter(Mandatory=$true)]
