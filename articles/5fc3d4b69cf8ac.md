@@ -391,6 +391,8 @@ PS C:\WINDOWS\system32>
 
 ## 応用：画面でネットワークアダプター一覧を表示し操作
 
+★正常に動かない。
+
 ```powershell
 #Requires -RunAsAdministrator
 #Requires -Version 5.1
