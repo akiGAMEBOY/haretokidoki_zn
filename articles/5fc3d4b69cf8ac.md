@@ -3,7 +3,7 @@ title: "Windowsでネットワークアダプタを有効または無効にす�
 emoji: "🙆"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["windows", "network", "powershell"]
-published: false
+published: true
 ---
 
 Windowsでたまーにインターネットとの通信が不安定でネットワークアダプターの無効化と有効化でリフレッシュすることがあります。
