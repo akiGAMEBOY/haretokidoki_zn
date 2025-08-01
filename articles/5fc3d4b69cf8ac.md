@@ -470,6 +470,8 @@ PS>
 PS> pwsh -NoProfile -ExecutionPolicy RemoteSigned -File '.\Manage-NetworkAdapters.ps1' -Language ja
 ```
 
+オプション「`Language`を指定しない、もしくは`en`」にすると表示する画面が英語表記になります。
+
 ### 実行後に表示される画面
 
 コマンド実行で下記の画面が表示されます。
@@ -480,7 +482,7 @@ PS> pwsh -NoProfile -ExecutionPolicy RemoteSigned -File '.\Manage-NetworkAdapter
 
 ### PowerShellスクリプトのコード
 
-:::details PowerShellスクリプトファイル「Manage-NetworkAdapters.ps1」 < クリックで折りたたみが開く >
+:::details PowerShellスクリプトファイル「Manage-NetworkAdapters.ps1」の内容
 
 ```powershell:Manage-NetworkAdapters.ps1
 #Requires -RunAsAdministrator
@@ -753,7 +755,14 @@ $Window.ShowDialog() | Out-Null
 
 ## まとめ
 
-- 
+- 共通して使用する自作関数
+    - 「`Test-IsAdmin`」で現在のセッションが管理者権限で実行されているか判定
+    - 「`Format-MacAddress`」でさまざまな形式のMACアドレス文字列を大文字のハイフン区切り形式に変換
+- ネットワークアダプターを有効化／無効化する自作関数
+    - 「`Enable-MacAddress`」でネットワークアダプターを有効化
+    - 「`Disable-MacAddress`」でネットワークアダプターを無効化
+- GUI画面でネットワークアダプターを管理するPowerShellスクリプト
+    - 「`Manage-NetworkAdapters.ps1`」でネットワークアダプターをGUIで管理
 
 ## 関連記事
 
