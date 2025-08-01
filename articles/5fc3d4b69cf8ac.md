@@ -6,17 +6,47 @@ topics: ["windows", "network", "powershell"]
 published: false
 ---
 
-ネットワークアダプターの状態を一覧表示するコマンド。
+Windowsでたまーにインターネットとの通信が不安定でネットワークアダプターの無効化と有効化でリフレッシュすることがあります。
+それをGUIで実施しようとすると、ネットワークアダプター一覧までの画面推移が多く意外と時間がかかってしまいます。
 
-```powershell:ネットワークアダプターの状態を一覧表示するコマンド
+そんなケースを想定し効率化するため、PowerShellの**自作関数（Function）で直接ネットワークアダプターを操作する方法**や、
+**WPFを使った画面操作でネットワークアダプターを管理する方法**を調べました。
+
+## この記事のターゲット
+
+- PowerShellユーザーの方
+- 自作関数（Function）で直接ネットワークアダプターを操作したい方
+- WPFを使った画面操作でネットワークアダプターを管理したい方
+
+## 対象のネットワークアダプターをコマンドで確認する方法
+
+下記のPowerShellコマンドレットを使用する事で、現在リンクアップしているアダプターを確認できます。
+必要に応じてコマンドをカスタマイズしてください。
+
+```powershell:コピー用：ネットワークアダプターの状態を一覧表示するコマンド
 Get-NetAdapter | Select-Object Name, Status, MacAddress, @{Name="IPv4Address";Expression={($_ | Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue).IPAddress -join ', '}}
 ```
 
-## コード
+```powershell:実際に実行した結果
+PS> Get-NetAdapter | Select-Object Name, Status, MacAddress, @{Name="IPv4Address";Expression={($_ | Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue).IPAddress -join ', '}}
+
+Name                       Status       MacAddress        IPv4Address
+----                       ------       ----------        -----------
+イーサネット 2             Up           XX-XX-XX-XX-XX-XX XXX.XXX.XXX.XXX
+イーサネット               Up           XX-XX-XX-XX-XX-XX XXX.XXX.XXX.XXX
+vEthernet (Default Switch) Up           XX-XX-XX-XX-XX-XX XXX.XXX.XXX.XXX
+Bluetooth ネットワーク接続 Disconnected XX-XX-XX-XX-XX-XX XXX.XXX.XXX.XXX
+
+PS>
+```
+
+## 自作した関数（Function）を紹介
 
 ### 共通して使用する関数
 
 ネットワークアダプターの有効化・無効化の双方で使用する関数。
+
+#### 現在のセッションが管理者権限で実行されているか判定
 
 ```powershell:現在のセッションが管理者権限で実行されているか判定
 <#
@@ -70,7 +100,9 @@ function Test-IsAdmin {
 }
 ```
 
-```powershell:様々な形式のMACアドレス文字列を大文字のハイフン区切り形式に変換
+#### さまざまな形式のMACアドレス文字列を大文字のハイフン区切り形式に変換
+
+```powershell:さまざまな形式のMACアドレス文字列を大文字のハイフン区切り形式に変換
 <#
 .SYNOPSIS
     様々な形式のMACアドレス文字列を、大文字のハイフン区切り形式（例: 00-1A-2B-3C-4D-5E）に統一します。
@@ -137,6 +169,8 @@ Function Format-MacAddress {
 ```
 
 ### ネットワークアダプターを有効化する関数
+
+この記事のメインテーマ、ネットワークアダプターを操作する自作関数その1です。
 
 ```powershell:ネットワークアダプターのMACアドレスを指定して有効化
 <#
@@ -250,7 +284,9 @@ Function Enable-MacAddress {
 }
 ```
 
-```powershell:Confirmに対応したFunction
+任意のオプション「Confirm」を指定すると確認メッセージが表示されます。
+
+```powershell:Confirmに対応
 PS C:\WINDOWS\system32> Enable-MacAddress 004e01a383ec -Confirm
 
 確認
@@ -261,6 +297,14 @@ PS C:\WINDOWS\system32>
 ```
 
 ### ネットワークアダプターを無効化する関数
+
+この記事のメインテーマ、ネットワークアダプターを操作する自作関数その2です。
+
+:::message
+**注意事項**
+
+管理者権限を持っていない一般ユーザーで実行した場合にUACが起動するケースあり。
+:::
 
 ```powershell:ネットワークアダプターのMACアドレスを指定して無効化するFunction
 <#
@@ -369,10 +413,9 @@ Function Disable-MacAddress {
 }
 ```
 
-一般ユーザーで実行すると、UACが起動し「はい」を選択。新しいウィンドウが管理者権限で開いた後にメッセージ（``）が起動する。
-可能であれば動画で掲載した方がわかりやすい。
+任意のオプション「Confirm」を指定すると確認メッセージが表示されます。
 
-```powershell:
+```powershell:Confirmに対応
 PS C:\WINDOWS\system32> Disable-MacAddress 004e01a383ec -Confirm
 
 確認
@@ -427,13 +470,17 @@ PS>
 PS> pwsh -NoProfile -ExecutionPolicy RemoteSigned -File '.\Manage-NetworkAdapters.ps1' -Language ja
 ```
 
+### 実行後に表示される画面
+
 コマンド実行で下記の画面が表示されます。
 
 ![GUI(WPF)画面でネットワークアダプター操作するPowerShellスクリプト](https://storage.googleapis.com/zenn-user-upload/9e8518cefcbb-20250801.png)
 
 右下のボタンにより**更新**や**有効化**、**無効化**を操作可能です。
 
-:::details PowerShellスクリプトのコード
+### PowerShellスクリプトのコード
+
+:::details PowerShellスクリプトファイル「Manage-NetworkAdapters.ps1」 < クリックで折りたたみが開く >
 
 ```powershell:Manage-NetworkAdapters.ps1
 #Requires -RunAsAdministrator
