@@ -1,5 +1,5 @@
 ---
-title: "Windowsでネットワークアダプタを有効または無効にするPowerShellコード"
+title: "Windowsでネットワークアダプタを有効または無効にするPowerShellコード（※スクリプトも）"
 emoji: "🙆"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["windows", "network", "powershell"]
