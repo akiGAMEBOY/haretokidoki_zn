@@ -70,76 +70,69 @@ function Test-IsAdmin {
 }
 ```
 
-```powershell:MACアドレスの文字列をハイフン区切りの表記に変換（すでにハイフン区切りの場合はそのまま返す）
+```powershell:様々な形式のMACアドレス文字列を大文字のハイフン区切り形式に変換
 <#
 .SYNOPSIS
-    MACアドレスの文字列を、標準的なハイフン区切り形式 (XX-XX-XX-XX-XX-XX) に整形します。
+    様々な形式のMACアドレス文字列を、大文字のハイフン区切り形式（例: 00-1A-2B-3C-4D-5E）に統一します。
 
 .DESCRIPTION
-    この関数は、ハイフン区切り、またはハイフンなしの12桁のMACアドレス文字列を受け取ります。
-    入力文字列がすでに正しいハイフン区切り形式の場合、処理を行わずにそのままの値を返します。
-    入力文字列がハイフンなしの12桁の場合、2桁ごとにハイフンを挿入して "XX-XX-XX-XX-XX-XX" の形式に変換します。
+    この関数は、ハイフン区切り、コロン区切り、または区切り文字なしの12桁の16進数文字列といった、一般的なMACアドレスの形式を受け入れます。
 
-    ValidatePattern属性により、入力は正しいMACアドレスの形式であることが保証されます。
+    処理は以下のステップで行われます:
+    1. 入力された文字列から区切り文字（ハイフンまたはコロン）をすべて取り除き、12桁の連続した文字列に正規化する
+       例: "00-1A-7D-0A-C6-E8" -> "001A7D0AC6E8"
+    2. 正規化された文字列を2文字ごとに区切り、間にハイフンを挿入
+       この際、正規表現の置換機能 `(.{2})(?!$)` を使用。これは「文字列の末尾ではない、2文字ごとの塊」を見つけ、その直後にハイフンを追加するものです。
+    3. アルファベットをすべて大文字に変換し、統一された形式のMACアドレス文字列として返す
 
 .PARAMETER MacAddress
-    整形対象のMACアドレス文字列を指定します。
-    ハイフン区切り ("00-1A-7D-0A-C6-E8") またはハイフンなし ("001A7D0AC6E8") の形式を受け付けます。
-    大文字・小文字は区別されません。このパラメーターは必須で、パイプラインからの入力も受け付けます。
+    整形したいMACアドレスの文字列を指定します。
+    このパラメータはパイプライン入力を受け付けます。
+    入力は、ハイフン区切り、コロン区切り、または12桁の16進数文字列のいずれかの形式である必要があります。
 
-.INPUTS
-    System.String
-    パイプライン経由でMACアドレス文字列を受け取ることができます。
+.EXAMPLE
+    PS C:\> Format-MacAddress -MacAddress "00-1a-7d-0a-c6-e8"
+    00-1A-7D-0A-C6-E8
+
+    説明: 小文字とハイフン区切りの入力を、大文字のハイフン区切りに整形します。
+
+.EXAMPLE
+    PS C:\> "00:1A:7D:0A:C6:E8" | Format-MacAddress
+    00-1A-7D-0A-C6-E8
+
+    説明: コロン区切りの入力を、パイプライン経由でハイフン区切りに整形します。
+
+.EXAMPLE
+    PS C:\> Format-MacAddress "001a7d0ac6e8"
+    00-1A-7D-0A-C6-E8
+
+    説明: 区切り文字のない12桁の文字列を、ハイフン区切りに整形します。
 
 .OUTPUTS
     System.String
-    ハイフンで区切られた標準形式のMACアドレス文字列を返します。
-
-.EXAMPLE
-    PS C:\> Format-MacAddress -MacAddress "001A7D0AC6E8"
-
-    00-1A-7D-0A-C6-E8
-
-    説明: ハイフンなしのMACアドレス文字列を、ハイフン区切り形式に変換します。
-
-.EXAMPLE
-    PS C:\> Format-MacAddress -MacAddress "00-4E-01-A3-83-EC"
-
-    00-4E-01-A3-83-EC
-
-    説明: すでにハイフン区切り形式のため、何も処理されずにそのまま返されます。
-
-.EXAMPLE
-    PS C:\> "001A7D0AC6E8" | Format-MacAddress
-
-    00-1A-7D-0A-C6-E8
-
-    説明: パイプライン経由でハイフンなしのMACアドレスを渡し、整形する例です。
+    整形されたMACアドレス文字列を返します。
 
 .NOTES
-    - パラメーターの `ValidatePattern` 属性により、不正な文字や長さの文字列が渡されると、関数が実行される前にエラーが発生します。
-    - 効率化のため、入力がすでにハイフン区切り形式である場合は、早期リターンによって不要な文字列置換処理をスキップします。
+    入力値は `[ValidatePattern]` 属性によって、一般的なMACアドレスの形式に一致するかどうかが事前に検証されます。
+    無効な形式の文字列を渡そうとすると、コマンドは実行されずにエラーとなります。
 #>
 Function Format-MacAddress {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
-        # 入力パターンをハイフン区切り、またはハイフンなしの12桁に限定
-        [ValidatePattern('(^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}$)|(^([0-9A-Fa-f]){12}$)')]
+        # 入力パターンをハイフン区切り、コロン区切り、またはハイフンなしの12桁とする
+        [ValidatePattern('^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$|^[0-9A-Fa-f]{12}$')]
         [System.String]$MacAddress
     )
 
-    # 既にハイフン区切り形式 (例: 00-1A-7D-0A-C6-E8) の場合は、何もせずそのまま返す
-    if ($MacAddress -like '*-*-*-*-*-*') {
-        return $MacAddress
-    }
-    
-    # ハイフンなしの12桁の16進数文字列であれば、2桁ごとにハイフンを挿入する
-    # 正規表現の置換機能を使用して、2文字ごとにハイフンを追加し、末尾の不要なハイフンを削除する
-    $formatted = $MacAddress -replace '(.{2})', '$1-' -replace '-$'
+    # 1. 入力文字列から区切り文字を削除して正規化
+    $normalizedMac = $MacAddress -replace '[:-]'
 
-    # 整形後のMACアドレスを返す
-    return $formatted
+    # 2. 2文字ごとにハイフンを挿入
+    $formatted = $normalizedMac -replace '(.{2})(?!$)', '$1-'
+    
+    # 3. 大文字に統一して返す
+    return $formatted.ToUpper()
 }
 ```
 
@@ -389,28 +382,112 @@ PS C:\WINDOWS\system32> Disable-MacAddress 004e01a383ec -Confirm
 PS C:\WINDOWS\system32>
 ```
 
-## 応用：画面でネットワークアダプター一覧を表示し操作
+## 応用：GUI画面操作で自作関数を呼び出してみる
 
-コンソールで貼り付けて実行すると、`Format-MacAddress`が正常動作しない。
-PowerShellスクリプトファイルとして保存し、実行すると正常動作する。
+MACアドレスでネットワークアダプターを有効にする `Enable-MacAddress` と 無効にする `Disable-MacAddress` を作成しましたが、
+この関数だけだと最初に対象のネットワークアダプターのMACアドレスを調べてから実行する必要があります。
 
-```powershell:xxx.ps1
+そこでPowerShellでフレームワーク「`.NET`」のライブラリを呼び出してGUIによる画面操作でネットワークアダプターの有効化・無効化が可能なPowerShellスクリプトを作成してみました。
+
+:::message
+**注意事項：コンソール上で実行すると想定外の動きに……**
+
+当初、コンソール上にすべてのコードを貼り付けてから実行する方法を検討していましたが、その方法だとなぜか `Format-MacAddress` が正常動作しません。
+
+```powershell:コンソール上で実行すると奇妙な動き
+PS C:\> Format-MacAddress -MacAddress "00-1A-7D-0A-C6-E8"
+# ❌ 想定外の動作
+#     すでにハイフン区切りだが、追加でハイフンが入ってしまう
+00--1-A--7D--0-A--C6--E-8
+PS C:\>
+PS C:\> Format-MacAddress -MacAddress "001A7D0AC6E8"
+# ✅ 正常動作
+#     区切り文字がない場合は正常動作
+00-1A-7D-0A-C6-E8
+PS C:\>
+PS C:\> Format-MacAddress -MacAddress "00:1A:7D:0A:C6:E8"
+# ❌ 想定外の動作
+#     コロンが区切り文字の場合はコロンが削除されずハイフンが入る
+00-:1-A:-7D-:0-A:-C6-:E-8
+```
+
+上記の事象後にあらためて `Format-MacAddress` をコンソール上で再定義すると、なぜか正常動作します。
+原因は不明ですが、おそらく**コンソール環境における文字コード周りの問題**のようです。
+
+これらの検証結果からコンソールによる実行はあきらめて、PowerShellスクリプトを`UTF-8BOM付き`で作成し**スクリプト経由で実行**することにしました。
+
+:::
+
+下記が作成したPowerShellスクリプトファイルです。
+
+```powershell:Manage-NetworkAdapters.ps1
 #Requires -RunAsAdministrator
 #Requires -Version 5.1
 
-#region WPFとXAMLの定義
-# --------------------------------------------------
-# WPFアセンブリの読み込み
-# --------------------------------------------------
+[CmdletBinding()]
+param(
+    # Specifies the UI language. 'en' for English (default), 'ja' for Japanese.
+    [ValidateSet('en', 'ja')]
+    [string]$Language = 'en'
+)
+
+#region UI Text and Strings
+#================================================================================
+# Define UI strings for multi-language support.
+#================================================================================
+$uiStrings = @{
+    en = @{
+        WindowTitle         = "Network Adapter Manager"
+        Header              = "Network Adapter List"
+        ButtonRefresh       = "🔄 REFRESH"
+        ButtonEnable        = "✅ ENABLE"
+        ButtonDisable       = "❌ DISABLE"
+        ToolTipRefresh      = "Refresh the list to the latest information."
+        ToolTipEnable       = "Enable the selected adapter."
+        ToolTipDisable      = "Disable the selected adapter."
+        ConfirmEnableTitle  = "Confirmation"
+        ConfirmEnableMsg    = "Are you sure you want to enable the adapter '{0}'?"
+        ConfirmDisableTitle = "Confirmation"
+        ConfirmDisableMsg   = "Are you sure you want to disable the adapter '{0}'?"
+        ErrorNotFoundEnable = "The target network adapter to be enabled was not found."
+        ErrorNotFoundDisable= "The target network adapter to be disabled was not found."
+        ErrorTitle          = "Error"
+    }
+    ja = @{
+        WindowTitle         = "ネットワークアダプター マネージャー"
+        Header              = "ネットワークアダプター一覧"
+        ButtonRefresh       = "🔄 更新"
+        ButtonEnable        = "✅ 有効化"
+        ButtonDisable       = "❌ 無効化"
+        ToolTipRefresh      = "一覧を最新の情報に更新します。"
+        ToolTipEnable       = "選択したアダプターを有効化します。"
+        ToolTipDisable      = "選択したアダプターを無効化します。"
+        ConfirmEnableTitle  = "確認"
+        ConfirmEnableMsg    = "アダプター '{0}' を有効化しますか？"
+        ConfirmDisableTitle = "確認"
+        ConfirmDisableMsg   = "アダプター '{0}' を無効化しますか？"
+        ErrorNotFoundEnable = "対象となる無効化状態のネットワークアダプターが見つかりませんでした。"
+        ErrorNotFoundDisable= "対象となる有効化状態のネットワークアダプターが見つかりませんでした。"
+        ErrorTitle          = "エラー"
+    }
+}
+# Select the language based on the script parameter.
+$lang = $uiStrings[$Language]
+#endregion
+
+#region WPF UI Definition
+#================================================================================
+# Load required WPF assemblies.
+#================================================================================
 Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
 
-# --------------------------------------------------
-# XAML: GUIのレイアウトを定義
-# --------------------------------------------------
-[xml]$xaml = @'
+#================================================================================
+# Define the GUI layout using XAML with data binding for text.
+#================================================================================
+$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ネットワークアダプター マネージャー" Height="450" Width="700"
+        Title="{Binding WindowTitle}" Height="450" Width="800"
         WindowStartupLocation="CenterScreen" MinHeight="300" MinWidth="500">
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -419,45 +496,38 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <TextBlock Grid.Row="0" Text="ネットワークアダプター一覧" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+        <TextBlock Grid.Row="0" Text="{Binding Header}" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
         
         <ListView Name="AdapterListView" Grid.Row="1" SelectionMode="Single">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="名前" Width="180" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="状態" Width="80" DisplayMemberBinding="{Binding Status}" />
-                    <GridViewColumn Header="MACアドレス" Width="140" DisplayMemberBinding="{Binding MacAddress}" />
-                    <GridViewColumn Header="IPv4アドレス" Width="150" DisplayMemberBinding="{Binding IPv4Address}" />
-                    <GridViewColumn Header="リンク速度" Width="100" DisplayMemberBinding="{Binding LinkSpeed}" />
+                    <GridViewColumn Header="Name" Width="220" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Status" Width="80" DisplayMemberBinding="{Binding Status}" />
+                    <GridViewColumn Header="MAC-Address" Width="140" DisplayMemberBinding="{Binding MacAddress}" />
+                    <GridViewColumn Header="IPv4-Address" Width="180" DisplayMemberBinding="{Binding IPv4Address}" />
+                    <GridViewColumn Header="Link-Speed" Width="100" DisplayMemberBinding="{Binding LinkSpeed}" />
                 </GridView>
             </ListView.View>
         </ListView>
         
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Name="RefreshButton" Content="🔄 更新" Width="100" Margin="0,0,10,0" ToolTip="一覧を最新の情報に更新します"/>
-            <Button Name="EnableButton" Content="✅ 有効化" Width="100" Margin="0,0,10,0" IsEnabled="False" ToolTip="選択したアダプターを有効化します"/>
-            <Button Name="DisableButton" Content="❌ 無効化" Width="100" IsEnabled="False" ToolTip="選択したアダプターを無効化します"/>
+            <Button Name="RefreshButton" Content="{Binding ButtonRefresh}" Width="100" Margin="0,0,10,0" ToolTip="{Binding ToolTipRefresh}"/>
+            <Button Name="EnableButton" Content="{Binding ButtonEnable}" Width="100" Margin="0,0,10,0" IsEnabled="False" ToolTip="{Binding ToolTipEnable}"/>
+            <Button Name="DisableButton" Content="{Binding ButtonDisable}" Width="100" IsEnabled="False" ToolTip="{Binding ToolTipDisable}"/>
         </StackPanel>
     </Grid>
 </Window>
-'@
+"@
 #endregion
 
-#region 提示された関数群 (バックエンドロジック)
-# --------------------------------------------------
-# 共通して使用する関数
-# --------------------------------------------------
+#region Backend Functions
+#================================================================================
+# Utility and Core Logic Functions
+#================================================================================
 function Test-IsAdmin {
-    # 現在のWindowsユーザーのIDを取得
     $win_id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-    
-    # WindowsPrincipalオブジェクトを作成
     $win_principal = New-Object System.Security.Principal.WindowsPrincipal($win_id)
-    
-    # 評価する管理者ロールを定義
     $admin_permission = [System.Security.Principal.WindowsBuiltInRole]::Administrator
-    
-    # 現在のユーザーが管理者ロールに属しているかを確認し、その結果（True/False）を返す
     return $win_principal.IsInRole($admin_permission)
 }
 
@@ -465,51 +535,31 @@ Function Format-MacAddress {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
-        # 入力パターンをハイフン区切り、またはハイフンなしの12桁に限定
-        [ValidatePattern('(^([0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2}$)|(^([0-9A-Fa-f]){12}$)')]
+        [ValidatePattern('^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$|^[0-9A-Fa-f]{12}$')]
         [System.String]$MacAddress
     )
-
-    # 既にハイフン区切り形式 (例: 00-1A-7D-0A-C6-E8) の場合は、何もせずそのまま返す
-    if ($MacAddress -like '*-*-*-*-*-*') {
-        return $MacAddress
-    }
-    
-    # ハイフンなしの12桁の16進数文字列であれば、2桁ごとにハイフンを挿入する
-    # 正規表現の置換機能を使用して、2文字ごとにハイフンを追加し、末尾の不要なハイフンを削除する
-    $formatted = $MacAddress -replace '(.{2})', '$1-' -replace '-$'
-
-    # 整形後のMACアドレスを返す
-    return $formatted
+    $normalizedMac = $MacAddress -replace '[:-]'
+    $formatted = $normalizedMac -replace '(.{2})(?!$)', '$1-'
+    return $formatted.ToUpper()
 }
 
-# --------------------------------------------------
-# ネットワークアダプターを有効化する関数
-# --------------------------------------------------
 Function Enable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     Param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateScript({ $_.Trim() -ne '' })]
         [System.String]$TargetMacAddress,
-
-        ### 変更点 ###
-        # GUIからの強制実行用スイッチを追加
         [Switch]$Force
     )
     $FormatedMacAddress = (Format-MacAddress $TargetMacAddress)
     $disconnectedAdapter = Get-NetAdapter | Where-Object { ($_.MacAddress -eq $FormatedMacAddress) -and ($_.Status -eq 'Disabled') }
 
     if (@($disconnectedAdapter).Count -ne 1) {
-        ### 変更点 ###
-        # エラー表示をMessageBoxに統一
-        [System.Windows.MessageBox]::Show('対象となる無効化状態のネットワークアダプターが見つかりませんでした。','エラー','OK','Warning')
+        [System.Windows.MessageBox]::Show($lang.ErrorNotFoundEnable, $lang.ErrorTitle, 'OK', 'Warning')
         return
     }
 
-    ### 変更点 ###
-    # -Forceスイッチが指定された場合はShouldProcessをスキップする
-    if ($Force -or $PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "有効化")) {
+    if ($Force -or $PSCmdlet.ShouldProcess($disconnectedAdapter.Name, "Enable")) {
         if (Test-IsAdmin) {
             Enable-NetAdapter -Name $disconnectedAdapter.Name -Confirm:$false
         }
@@ -520,33 +570,23 @@ Function Enable-MacAddress {
     }
 }
 
-# --------------------------------------------------
-# ネットワークアダプターを無効化する関数
-# --------------------------------------------------
 Function Disable-MacAddress {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     Param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateScript({ $_.Trim() -ne '' })]
         [System.String]$TargetMacAddress,
-        
-        ### 変更点 ###
-        # GUIからの強制実行用スイッチを追加
         [Switch]$Force
     )
     $FormatedMacAddress = (Format-MacAddress $TargetMacAddress)
     $connectedAdapter = Get-NetAdapter | Where-Object { ($_.MacAddress -eq $FormatedMacAddress) -and ($_.Status -eq 'Up') }
 
     if (@($connectedAdapter).Count -ne 1) {
-        ### 変更点 ###
-        # エラー表示をMessageBoxに統一
-        [System.Windows.MessageBox]::Show('対象となる有効化状態のネットワークアダプターが見つかりませんでした。','エラー','OK','Warning')
+        [System.Windows.MessageBox]::Show($lang.ErrorNotFoundDisable, $lang.ErrorTitle, 'OK', 'Warning')
         return
     }
     
-    ### 変更点 ###
-    # -Forceスイッチが指定された場合はShouldProcessをスキップする
-    if ($Force -or $PSCmdlet.ShouldProcess($connectedAdapter.Name, "無効化")) {
+    if ($Force -or $PSCmdlet.ShouldProcess($connectedAdapter.Name, "Disable")) {
         if (Test-IsAdmin) {
             Disable-NetAdapter -Name $connectedAdapter.Name -Confirm:$false
         }
@@ -558,47 +598,41 @@ Function Disable-MacAddress {
 }
 #endregion
 
-#region GUIの初期化とイベントハンドラ
-# --------------------------------------------------
-# XAMLからUI要素を読み込む
-# --------------------------------------------------
-$reader = (New-Object System.Xml.XmlNodeReader $xaml)
+#region GUI Initialization and Event Handlers
+#================================================================================
+# Load UI elements from XAML and wire up events.
+#================================================================================
 try {
-    $Window = [Windows.Markup.XamlReader]::Load($reader)
+    $Window = [Windows.Markup.XamlReader]::Parse($xaml)
 }
 catch {
-    Write-Error "XAMLの読み込みに失敗しました: $($_.Exception.Message)"
+    Write-Error "XAML loading failed: $($_.Exception.Message)"
     return
 }
 
-# --------------------------------------------------
-# UI要素を変数に格納
-# --------------------------------------------------
+# Set the DataContext for the window to enable data binding for UI strings.
+# * Convert the Hashtable to a PSCustomObject so that WPF can recognize its properties for data binding.
+$Window.DataContext = New-Object -TypeName PSObject -Property $lang
+
 $AdapterListView = $Window.FindName("AdapterListView")
 $RefreshButton = $Window.FindName("RefreshButton")
 $EnableButton = $Window.FindName("EnableButton")
 $DisableButton = $Window.FindName("DisableButton")
 
-# --------------------------------------------------
-# アダプター一覧を更新する関数
-# --------------------------------------------------
 Function Update-AdapterList {
-    # 選択状態を一時保存
     $selectedIndex = $AdapterListView.SelectedIndex
     
-    # データソースを更新
-    $AdapterListView.ItemsSource = Get-NetAdapter -IncludeHidden | Select-Object Name, Status, MacAddress, @{Name="IPv4Address";Expression={($_ | Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue).IPAddress -join ', '}}, LinkSpeed
+    # Get adapter list and calculate IPv4 address using a calculated property.
+    $adapters = Get-NetAdapter -IncludeHidden | Select-Object Name, Status, MacAddress, @{Name="IPv4Address";Expression={($_ | Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue).IPAddress -join ', '}}, LinkSpeed
+    $AdapterListView.ItemsSource = $adapters
     
-    # 選択状態を復元
+    # Restore previous selection if valid.
     if ($selectedIndex -ne -1 -and $selectedIndex -lt $AdapterListView.Items.Count) {
         $AdapterListView.SelectedIndex = $selectedIndex
     }
 }
 
-# --------------------------------------------------
-# イベントハンドラを定義
-# --------------------------------------------------
-# ListViewの選択が変更されたときの処理
+# --- Event Handlers ---
 $AdapterListView.add_SelectionChanged({
     $selectedItem = $AdapterListView.SelectedItem
     if ($null -ne $selectedItem) {
@@ -611,21 +645,18 @@ $AdapterListView.add_SelectionChanged({
     }
 })
 
-# 更新ボタンがクリックされたときの処理
 $RefreshButton.add_Click({
     Update-AdapterList
 })
 
-# 有効化ボタンがクリックされたときの処理
 $EnableButton.add_Click({
     $selectedItem = $AdapterListView.SelectedItem
     if ($null -ne $selectedItem) {
         $mac = $selectedItem.MacAddress
-        $result = [System.Windows.MessageBox]::Show("アダプター '$($selectedItem.Name)' を有効化しますか？", "確認", "YesNo", "Question")
+        # Format the confirmation message using the selected language.
+        $message = [string]::Format($lang.ConfirmEnableMsg, $selectedItem.Name)
+        $result = [System.Windows.MessageBox]::Show($message, $lang.ConfirmEnableTitle, "YesNo", "Question")
         if ($result -eq 'Yes') {
-            ### 変更点 ###
-            # -Forceスイッチを付けて関数を呼び出す
-            Write-Host "`$mac: $mac"
             Enable-MacAddress -TargetMacAddress $mac -Force
             Start-Sleep -Seconds 1
             Update-AdapterList
@@ -633,16 +664,14 @@ $EnableButton.add_Click({
     }
 })
 
-# 無効化ボタンがクリックされたときの処理
 $DisableButton.add_Click({
     $selectedItem = $AdapterListView.SelectedItem
     if ($null -ne $selectedItem) {
         $mac = $selectedItem.MacAddress
-        $result = [System.Windows.MessageBox]::Show("アダプター '$($selectedItem.Name)' を無効化しますか？", "確認", "YesNo", "Question")
+        # Format the confirmation message using the selected language.
+        $message = [string]::Format($lang.ConfirmDisableMsg, $selectedItem.Name)
+        $result = [System.Windows.MessageBox]::Show($message, $lang.ConfirmDisableTitle, "YesNo", "Question")
         if ($result -eq 'Yes') {
-            ### 変更点 ###
-            # -Forceスイッチを付けて関数を呼び出す
-            Write-Host "`$mac: $mac"
             Disable-MacAddress -TargetMacAddress $mac -Force
             Start-Sleep -Seconds 1
             Update-AdapterList
@@ -650,13 +679,10 @@ $DisableButton.add_Click({
     }
 })
 
-# --------------------------------------------------
-# ウィンドウの初期化と表示
-# --------------------------------------------------
-# 起動時にアダプター一覧を読み込む
+#================================================================================
+# Initialize and show the main window.
+#================================================================================
 Update-AdapterList
-
-# ウィンドウを表示
 $Window.ShowDialog() | Out-Null
 #endregion
 ```
