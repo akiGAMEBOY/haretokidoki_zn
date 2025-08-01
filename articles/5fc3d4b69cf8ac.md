@@ -48,7 +48,7 @@ PS>
 
 #### 現在のセッションが管理者権限で実行されているか判定
 
-:::details 現在のセッションが管理者権限で実行されているか判定
+:::details 現在のセッションが管理者権限で実行されているか判定「Test-IsAdmin」
 
 ```powershell:現在のセッションが管理者権限で実行されているか判定
 <#
@@ -106,7 +106,7 @@ function Test-IsAdmin {
 
 #### さまざまな形式のMACアドレス文字列を大文字のハイフン区切り形式に変換
 
-:::details さまざまな形式のMACアドレス文字列を大文字のハイフン区切り形式に変換
+:::details さまざまな形式のMACアドレス文字列を大文字のハイフン区切り形式に変換「Format-MacAddress」
 
 ```powershell:さまざまな形式のMACアドレス文字列を大文字のハイフン区切り形式に変換
 <#
@@ -180,7 +180,7 @@ Function Format-MacAddress {
 
 この記事のメインテーマ、ネットワークアダプターを操作する自作関数その1です。
 
-:::details ネットワークアダプターのMACアドレスを指定して有効化
+:::details ネットワークアダプターのMACアドレスを指定して有効化「Enable-MacAddress」
 
 ```powershell:ネットワークアダプターのMACアドレスを指定して有効化
 <#
@@ -318,7 +318,7 @@ PS C:\WINDOWS\system32>
 管理者権限を持っていない一般ユーザーで実行した場合にUACが起動するケースあり。
 :::
 
-:::details ネットワークアダプターのMACアドレスを指定して無効化
+:::details ネットワークアダプターのMACアドレスを指定して無効化「Disable-MacAddress」
 
 ```powershell:ネットワークアダプターのMACアドレスを指定して無効化
 <#
@@ -498,7 +498,7 @@ PS> pwsh -NoProfile -ExecutionPolicy RemoteSigned -File '.\Manage-NetworkAdapter
 
 ### PowerShellスクリプトのコード
 
-:::details PowerShellスクリプトファイル「Manage-NetworkAdapters.ps1」の内容
+:::details PowerShellスクリプトファイル「Manage-NetworkAdapters.ps1」
 
 ```powershell:Manage-NetworkAdapters.ps1
 #Requires -RunAsAdministrator
