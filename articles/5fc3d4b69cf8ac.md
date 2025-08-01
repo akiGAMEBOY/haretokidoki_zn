@@ -387,7 +387,7 @@ PS C:\WINDOWS\system32>
 MACアドレスでネットワークアダプターを有効にする `Enable-MacAddress` と 無効にする `Disable-MacAddress` を作成しましたが、
 この関数だけだと最初に対象のネットワークアダプターのMACアドレスを調べてから実行する必要があります。
 
-そこでPowerShellでフレームワーク「`.NET`」のライブラリを呼び出してGUIによる画面操作でネットワークアダプターの有効化・無効化が可能なPowerShellスクリプトを作成してみました。
+そこでPowerShellでフレームワーク「`.NET`」のライブラリを呼び出してGUI画面操作でネットワークアダプターの有効化・無効化が可能なPowerShellスクリプトを作成してみました。
 
 :::message
 **注意事項：コンソール上で実行すると想定外の動きに……**
@@ -418,7 +418,22 @@ PS C:\> Format-MacAddress -MacAddress "00:1A:7D:0A:C6:E8"
 
 :::
 
-下記が作成したPowerShellスクリプトファイルです。
+### 作成したPowerShellスクリプトを実行
+
+今回は、Windows Terminal上でPowerShell(v7.5.2)を管理者権限で呼び出して実行しました。
+
+```powershell:PowerShell 7で実行したコマンド
+PS>
+PS> pwsh -NoProfile -ExecutionPolicy RemoteSigned -File '.\Manage-NetworkAdapters.ps1' -Language ja
+```
+
+コマンド実行で下記の画面が表示されます。
+
+![GUI(WPF)画面でネットワークアダプター操作するPowerShellスクリプト](https://storage.googleapis.com/zenn-user-upload/9e8518cefcbb-20250801.png)
+
+右下のボタンにより**更新**や**有効化**、**無効化**を操作可能です。
+
+:::details PowerShellスクリプトのコード
 
 ```powershell:Manage-NetworkAdapters.ps1
 #Requires -RunAsAdministrator
@@ -686,6 +701,12 @@ Update-AdapterList
 $Window.ShowDialog() | Out-Null
 #endregion
 ```
+
+:::
+
+## まとめ
+
+- 
 
 ## 関連記事
 
